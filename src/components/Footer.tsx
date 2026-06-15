@@ -8,7 +8,7 @@ export default function Footer() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>
-              Karthik's <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>Pitwall</em>
+              Karthik's <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>Pit Wall</em>
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 4 }}>
               Personal F1 {year} Dashboard · Mercedes AMG Edition
