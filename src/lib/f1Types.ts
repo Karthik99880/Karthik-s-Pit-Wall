@@ -176,14 +176,8 @@ export function isFavoriteTeam(constructorId: string): boolean {
   return id === 'mercedes';
 }
 
-/** Safely parse F1 API date + time strings.
- *  The API returns time already with a trailing "Z" (e.g. "20:00:00Z"),
- *  so we strip it before appending to avoid "20:00:00ZZ" → Invalid Date.
- */
-export function parseF1DateTime(date: string, time?: string | null): Date {
-  const t = (time ?? '14:00:00').replace(/Z$/i, '');
-  return new Date(`${date}T${t}Z`);
-}
+/** Re-exported from the single source of truth in dateUtils. */
+export { f1Date as parseF1DateTime } from './dateUtils';
 
 export const NATIONALITY_FLAG: Record<string, string> = {
   British:    '🇬🇧', German:    '🇩🇪', Spanish:   '🇪🇸',

@@ -1,10 +1,6 @@
 import { useRaceSchedule } from '@/hooks/useF1Data';
 import { getFlag } from '@/lib/f1Types';
-
-function f1Date(date: string, time?: string | null) {
-  const t = (time ?? '14:00:00').replace(/Z$/i, '');
-  return new Date(`${date}T${t}Z`);
-}
+import { f1Date } from '@/lib/dateUtils';
 
 export default function Calendar() {
   const { data: races, isLoading } = useRaceSchedule();
