@@ -7,17 +7,17 @@ import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
 
 /* ─── hover card state ─────────────────────────────── */
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
-type HoveredCtor   = { ctor: ConstructorStanding; allDrivers: DriverStanding[]; rect: DOMRect };
+type HoveredCtor = { ctor: ConstructorStanding; allDrivers: DriverStanding[]; rect: DOMRect };
 
 /* ─── main component ───────────────────────────────── */
 export default function Standings() {
-  const { data: drivers,     isLoading: dLoad } = useDriverStandings();
-  const { data: constructors,isLoading: cLoad } = useConstructorStandings();
-  const { data: lastRace,    isLoading: rLoad } = useLastRaceResults();
+  const { data: drivers, isLoading: dLoad } = useDriverStandings();
+  const { data: constructors, isLoading: cLoad } = useConstructorStandings();
+  const { data: lastRace, isLoading: rLoad } = useLastRaceResults();
 
   const [hovD, setHovD] = useState<HoveredDriver | null>(null);
-  const [hovC, setHovC] = useState<HoveredCtor   | null>(null);
-  const [query, setQuery]   = useState('');
+  const [hovC, setHovC] = useState<HoveredCtor | null>(null);
+  const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
 
   const q = query.trim().toLowerCase();
@@ -31,7 +31,7 @@ export default function Standings() {
     );
   });
 
-  const onDriverEnter  = useCallback((driver: DriverStanding, el: HTMLElement) => {
+  const onDriverEnter = useCallback((driver: DriverStanding, el: HTMLElement) => {
     setHovC(null);
     setHovD({ driver, rect: el.getBoundingClientRect() });
   }, []);
@@ -55,9 +55,9 @@ export default function Standings() {
               No drivers match “{query}”.
             </div>
           ) : filteredDrivers.map((d, i) => {
-            const color  = getTeamColor(d.Constructors[0]?.constructorId ?? '');
+            const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
             const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
-            const team   = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
+            const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
             return (
               <DriverRow
                 key={d.Driver.driverId}
@@ -72,9 +72,9 @@ export default function Standings() {
         {/* ── Constructor Championship ── */}
         <ColWrap title="Constructor" subtitle="Championship" num="02">
           {cLoad ? <Skeleton /> : (constructors ?? []).map((c, i) => {
-            const color  = getTeamColor(c.Constructor.constructorId);
+            const color = getTeamColor(c.Constructor.constructorId);
             const isFav = isFavoriteTeam(c.Constructor.constructorId);
-            const name   = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
+            const name = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
             const maxPts = Number((constructors ?? [])[0]?.points ?? 1);
             return (
               <CtorRow
@@ -98,7 +98,7 @@ export default function Standings() {
           ) : (
             <>
               {(lastRace.results ?? []).slice(0, 3).map((r, i) => {
-                const color  = getTeamColor(r.Constructor.constructorId);
+                const color = getTeamColor(r.Constructor.constructorId);
                 const isFav = isFavoriteTeam(r.Constructor.constructorId);
                 const medals = ['🥇', '🥈', '🥉'];
                 return (
@@ -172,7 +172,7 @@ export default function Standings() {
 
       {/* Hover cards — rendered in document flow at fixed position */}
       {hovD && <DriverCard data={hovD} />}
-      {hovC && <CtorCard   data={hovC} />}
+      {hovC && <CtorCard data={hovC} />}
 
       {modalDriver && <DriverModal d={modalDriver} onClose={() => setModalDriver(null)} />}
     </div>
@@ -210,13 +210,13 @@ function SearchBox({ value, onChange }: { value: string; onChange: (v: string) =
 
 /* ─── Driver detail modal ──────────────────────────── */
 function DriverModal({ d, onClose }: { d: DriverStanding; onClose: () => void }) {
-  const color   = getTeamColor(d.Constructors[0]?.constructorId ?? '');
-  const isFav   = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
-  const team    = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
+  const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
+  const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
+  const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
   const natFlag = getNationalityFlag(d.Driver.nationality);
-  const code    = d.Driver.code ?? d.Driver.familyName.slice(0, 3).toUpperCase();
-  const num     = d.Driver.permanentNumber ?? '—';
-  const pos     = Number(d.position);
+  const code = d.Driver.code ?? d.Driver.familyName.slice(0, 3).toUpperCase();
+  const num = d.Driver.permanentNumber ?? '—';
+  const pos = Number(d.position);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
@@ -267,10 +267,10 @@ function DriverModal({ d, onClose }: { d: DriverStanding; onClose: () => void })
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', padding: '20px 26px 24px', gap: 14, position: 'relative' }}>
-          <BigStat label="Points" value={d.points}    accent={color} />
-          <BigStat label="Wins"   value={d.wins} />
+          <BigStat label="Points" value={d.points} accent={color} />
+          <BigStat label="Wins" value={d.wins} />
           <BigStat label="Number" value={`#${num}`} />
-          <BigStat label="Code"   value={code} />
+          <BigStat label="Code" value={code} />
         </div>
 
         {isFav && (
@@ -404,27 +404,27 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
 /* ─── hover card position helper ──────────────────── */
 function cardPos(rect: DOMRect, cardW: number, cardH = 320) {
   // position: fixed uses viewport coords — never add scrollY
-  const gap  = 10;
-  const vw   = window.innerWidth;
-  const vh   = window.innerHeight;
+  const gap = 10;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
   // prefer right side; fall back to left if it would overflow
   const left = rect.right + gap + cardW > vw
     ? Math.max(0, rect.left - cardW - gap)
     : rect.right + gap;
   // vertically center on the row; clamp within viewport
-  const top  = Math.min(Math.max(8, rect.top - cardH / 2 + rect.height / 2), vh - cardH - 8);
+  const top = Math.min(Math.max(8, rect.top - cardH / 2 + rect.height / 2), vh - cardH - 8);
   return { left, top };
 }
 
 /* ─── Driver hover card ────────────────────────────── */
 function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
-  const color   = getTeamColor(d.Constructors[0]?.constructorId ?? '');
-  const isFav   = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
-  const team    = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
+  const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
+  const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
+  const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
   const natFlag = getNationalityFlag(d.Driver.nationality);
-  const code    = d.Driver.code ?? d.Driver.familyName.slice(0, 3).toUpperCase();
-  const num     = d.Driver.permanentNumber ?? '';
-  const pos     = Number(d.position);
+  const code = d.Driver.code ?? d.Driver.familyName.slice(0, 3).toUpperCase();
+  const num = d.Driver.permanentNumber ?? '';
+  const pos = Number(d.position);
   const { left, top } = cardPos(rect, 260, 230);
 
   return createPortal(
@@ -453,9 +453,9 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '12px 18px 14px', gap: 10 }}>
-        <Stat2 label="Points"      value={d.points}  accent={color} />
-        <Stat2 label="Wins"        value={d.wins} />
-        <Stat2 label="Nat."        value={`${natFlag}`} small />
+        <Stat2 label="Points" value={d.points} accent={color} />
+        <Stat2 label="Wins" value={d.wins} />
+        <Stat2 label="Nat." value={`${natFlag}`} small />
       </div>
 
       {isFav && (
@@ -470,9 +470,9 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
 
 /* ─── Constructor hover card ───────────────────────── */
 function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }) {
-  const color       = getTeamColor(c.Constructor.constructorId);
-  const isFav       = isFavoriteTeam(c.Constructor.constructorId);
-  const name        = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
+  const color = getTeamColor(c.Constructor.constructorId);
+  const isFav = isFavoriteTeam(c.Constructor.constructorId);
+  const name = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
   const teamDrivers = allDrivers.filter(d => d.Constructors.some(co => co.constructorId === c.Constructor.constructorId));
   const { left, top } = cardPos(rect, 280, 280);
 
@@ -512,7 +512,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '12px 18px 14px', gap: 12 }}>
         <Stat2 label="Total Points" value={c.points} accent={color} />
-        <Stat2 label="Wins"         value={c.wins} />
+        <Stat2 label="Wins" value={c.wins} />
       </div>
 
       {isFav && (
