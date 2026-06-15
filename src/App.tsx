@@ -6,6 +6,7 @@ import SiteNav from "@/components/SiteNav";
 import ThemeToggle from "@/components/ThemeToggle";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SilverArrowLoader from "@/components/SilverArrowLoader";
+import EasterEgg from "@/components/EasterEgg";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
@@ -38,6 +39,7 @@ export default function App() {
             </Switch>
           </Suspense>
           <ThemeToggle />
+          <EasterEgg />
         </ErrorBoundary>
       </QueryClientProvider>
     </ThemeProvider>
