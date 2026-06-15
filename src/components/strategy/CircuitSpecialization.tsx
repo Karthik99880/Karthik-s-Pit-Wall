@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import { getCircuitCategory, CATEGORY_META, CATEGORY_ORDER, type CircuitCategory } from '@/lib/circuitTypes';
@@ -55,22 +55,171 @@ export default function CircuitSpecialization() {
       .filter((c): c is { cat: CircuitCategory; races: number; perf: Perf[] } => !!c);
   }, [races, rounds]);
 
+  const [showClue6Modal, setShowClue6Modal] = useState(false);
+  const [showDeniedModal, setShowDeniedModal] = useState(false);
+  const [stage, setStage] = useState(() => {
+    const s = localStorage.getItem('pitwall_hunt_stage');
+    return s ? Number(s) : 0;
+  });
+
+  useEffect(() => {
+    const onUpdate = () => {
+      const s = localStorage.getItem('pitwall_hunt_stage');
+      setStage(s ? Number(s) : 0);
+    };
+    window.addEventListener('pitwall-stage-update', onUpdate);
+    return () => window.removeEventListener('pitwall-stage-update', onUpdate);
+  }, []);
+
+  const handleStreetClick = () => {
+    const sVal = localStorage.getItem('pitwall_hunt_stage');
+    if (sVal && Number(sVal) >= 5) {
+      localStorage.setItem('pitwall_hunt_stage', '6');
+      window.dispatchEvent(new Event('pitwall-stage-update'));
+      setShowClue6Modal(true);
+    } else {
+      setShowDeniedModal(true);
+    }
+  };
+
   if (!byCategory) {
     return <Panel title="Circuit" accent="Specialization" num="05"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
   }
 
   return (
     <Panel title="Circuit" accent="Specialization" num="05" meta="Who excels where">
+      {showClue6Modal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid var(--mercedes)',
+            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+              📁 ARCHIVE ENCRYPTION: LEVEL 6
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Navigate to the Driver Roster. Seek the icon of the silver star, but do not look for a Mercedes cockpit. Instead, find the pilot who brought the most famous number in modern racing history over to Maranello. Click the emblem beside his name."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowClue6Modal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--mercedes)',
+                  color: 'var(--mercedes)',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--mercedes)';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = 'var(--mercedes)';
+                }}
+              >
+                CLOSE TRANSMISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeniedModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid #ff4a4a',
+            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
+              ⚠️ DECRYPTION ERROR
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Access Denied. Follow the clues in order starting from the footer classified archive."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowDeniedModal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4a4a',
+                  color: '#ff4a4a',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff4a4a';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = '#ff4a4a';
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
         {byCategory.map(({ cat, races: n, perf }) => {
           const meta = CATEGORY_META[cat];
+          const isStreet = cat === 'STREET';
           return (
             <div key={cat} style={{ background: 'var(--carbon)', color: '#fff', border: '2px solid rgba(255,255,255,0.08)', borderTop: `4px solid ${meta.color}`, padding: '18px 20px 20px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 }}>
-                <span style={{ fontFamily: 'var(--font-serif)', fontSize: 19, fontWeight: 700 }}>{meta.label}</span>
+                <span
+                  onClick={() => (isStreet && stage >= 5) && handleStreetClick()}
+                  style={{
+                    fontFamily: 'var(--font-serif)',
+                    fontSize: 19,
+                    fontWeight: 700,
+                    cursor: (isStreet && stage >= 5) ? 'pointer' : 'default',
+                    color: (isStreet && stage >= 5) ? 'var(--mercedes)' : '#fff',
+                    textDecoration: (isStreet && stage >= 5) ? 'underline' : 'none',
+                  }}
+                >
+                  {meta.label}
+                </span>
                 <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em' }}>{n} {n === 1 ? 'RACE' : 'RACES'}</span>
               </div>
               <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', marginBottom: 14 }}>{meta.blurb}</div>
+
 
               {perf.map((d, i) => (
                 <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', background: d.fav ? 'rgba(39,244,210,0.06)' : 'transparent' }}>

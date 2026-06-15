@@ -1,49 +1,28 @@
 import { useEffect, useState } from 'react';
 
 /**
- * Hidden Easter egg — reveals the meme when the Konami code is entered:
- *   ↑ ↑ ↓ ↓ ← → ← → B A
- * No visible hint anywhere; effectively impossible to stumble on by accident.
+ * The meme reveal. It has no trigger of its own — it only listens for the
+ * `trigger-easter-egg` window event, which the footer's riddle dispatches
+ * once someone cracks the misdirection. Keeps the unlock logic in one place.
  */
-const KONAMI = [
-  'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
-  'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
-  'b', 'a',
-];
-
 export default function EasterEgg() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    let progress = 0;
-    const onKey = (e: KeyboardEvent) => {
-      // ignore typing inside inputs so it never fires while searching
-      const el = e.target as HTMLElement | null;
-      if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
-
-      const key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
-      progress = key === KONAMI[progress] ? progress + 1 : (key === KONAMI[0] ? 1 : 0);
-      if (progress === KONAMI.length) {
-        progress = 0;
-        setOpen(true);
-      }
-    };
-
-    const handleCustomTrigger = () => {
-      setOpen(true);
-    };
-
-    window.addEventListener('keydown', onKey);
-    window.addEventListener('trigger-easter-egg', handleCustomTrigger);
-    return () => {
-      window.removeEventListener('keydown', onKey);
-      window.removeEventListener('trigger-easter-egg', handleCustomTrigger);
-    };
+    const reveal = () => setOpen(true);
+    window.addEventListener('trigger-easter-egg', reveal);
+    return () => window.removeEventListener('trigger-easter-egg', reveal);
   }, []);
+
+  const handleClose = () => {
+    localStorage.removeItem('pitwall_hunt_stage');
+    window.dispatchEvent(new Event('pitwall-stage-update'));
+    setOpen(false);
+  };
 
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && handleClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
@@ -52,7 +31,7 @@ export default function EasterEgg() {
 
   return (
     <div
-      onClick={() => setOpen(false)}
+      onClick={handleClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200000,
         background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)',
@@ -62,7 +41,7 @@ export default function EasterEgg() {
       }}
     >
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.4em', textTransform: 'uppercase', color: 'var(--mercedes)', animation: 'fadeUpSlow 0.5s ease both 0.1s' }}>
-        ★ Classified · Brackley Archives ★
+        ★ Decrypted · Brackley Archives ★
       </div>
 
       <img
@@ -78,7 +57,7 @@ export default function EasterEgg() {
       />
 
       <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 700, fontStyle: 'italic', color: '#fff', textAlign: 'center', animation: 'fadeUpSlow 0.5s ease both 0.3s' }}>
-        You found the legend. 🏁
+        You saw through the lie. 🏁
       </div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', animation: 'fadeUpSlow 0.5s ease both 0.45s' }}>
         Click anywhere or press Esc

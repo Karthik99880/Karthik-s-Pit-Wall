@@ -331,29 +331,30 @@ export function usePredictiveStints() {
     queryFn: async (): Promise<PredictiveStrategyResult | null> => {
       const now = Date.now();
       const completedRaces = (schedule ?? [])
-        .filter(r => f1Date(r.date, r.time).getTime() < now)
-        .sort((a, b) => Number(b.round) - Number(a.round))
-        .slice(0, 5); // Last 5 races
+        .filter(r => f1Date(r.date, r.time).getTime() < now);
 
       if (completedRaces.length === 0) return null;
 
-      // 1. Get OpenF1 session_keys for these 5 races
-      const sessionsMap = await Promise.all(
-        completedRaces.map(async (race) => {
-          const sessions = await openF1Fetch<OpenF1Session[]>('/sessions', {
-            country_name: race.Circuit.Location.country,
-            year: SEASON_YEAR,
-          });
-          return sessions.find(s => s.session_type === 'Race');
-        })
-      );
-      
-      const sessionKeys = sessionsMap.filter(Boolean).map(s => s!.session_key);
+      // 1. One request for every race session this year, then take the
+      //    most recent five locally — was 5 separate per-country calls.
+      const raceSessions = await openF1Fetch<OpenF1Session[]>('/sessions', {
+        year: SEASON_YEAR,
+        session_type: 'Race',
+      });
+
+      const sessionKeys = raceSessions
+        .filter(s => new Date(s.date_start).getTime() < now) // only races that have actually run
+        .sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime())
+        .slice(0, 5)
+        .map(s => s.session_key);
       if (sessionKeys.length === 0) return null;
 
-      // 2. Fetch stints for all 5 sessions
+      // 2. Fetch stints per session; tolerate one with no data so a single
+      //    missing/unprocessed session can't fail the whole prediction.
       const allStintsArrays = await Promise.all(
-        sessionKeys.map(sk => openF1Fetch<Stint[]>('/stints', { session_key: sk }))
+        sessionKeys.map(sk =>
+          openF1Fetch<Stint[]>('/stints', { session_key: sk }).catch(() => [] as Stint[]),
+        ),
       );
       
       const allStints = allStintsArrays.flat();

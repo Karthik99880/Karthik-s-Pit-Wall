@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import {
   ScatterChart, Scatter, XAxis, YAxis, ZAxis, CartesianGrid,
   ReferenceLine, Tooltip, ResponsiveContainer, Cell,
@@ -47,6 +47,33 @@ export default function OvertakingIndex() {
     })).filter(d => d.starts > 0);
   }, [rounds]);
 
+  const [showClue5Modal, setShowClue5Modal] = useState(false);
+  const [showDeniedModal, setShowDeniedModal] = useState(false);
+  const [stage, setStage] = useState(() => {
+    const s = localStorage.getItem('pitwall_hunt_stage');
+    return s ? Number(s) : 0;
+  });
+
+  useEffect(() => {
+    const onUpdate = () => {
+      const s = localStorage.getItem('pitwall_hunt_stage');
+      setStage(s ? Number(s) : 0);
+    };
+    window.addEventListener('pitwall-stage-update', onUpdate);
+    return () => window.removeEventListener('pitwall-stage-update', onUpdate);
+  }, []);
+
+  const handleTopDriverClick = () => {
+    const sVal = localStorage.getItem('pitwall_hunt_stage');
+    if (sVal && Number(sVal) >= 4) {
+      localStorage.setItem('pitwall_hunt_stage', '5');
+      window.dispatchEvent(new Event('pitwall-stage-update'));
+      setShowClue5Modal(true);
+    } else {
+      setShowDeniedModal(true);
+    }
+  };
+
   if (!drivers.length) {
     return <Panel title="Overtaking" accent="Index" num="03"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
   }
@@ -57,6 +84,114 @@ export default function OvertakingIndex() {
 
   return (
     <Panel title="Overtaking" accent="Index" num="03" meta="Grid → finish race craft">
+      {showClue5Modal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid var(--mercedes)',
+            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+              📁 ARCHIVE ENCRYPTION: LEVEL 5
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Descend to the base of the interface to find the Layout Demand Panel. Locate the geometry where the margin for error is absolute zero, track width is compressed to a minimum, and grid position is essentially destiny. Select the crown jewel of tight street circuits."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowClue5Modal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--mercedes)',
+                  color: 'var(--mercedes)',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--mercedes)';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = 'var(--mercedes)';
+                }}
+              >
+                CLOSE TRANSMISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeniedModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid #ff4a4a',
+            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
+              ⚠️ DECRYPTION ERROR
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Access Denied. Follow the clues in order starting from the footer classified archive."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowDeniedModal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4a4a',
+                  color: '#ff4a4a',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff4a4a';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = '#ff4a4a';
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 28, alignItems: 'start' }}>
         {/* Scatter: avg grid vs avg finish */}
         <div>
@@ -88,11 +223,25 @@ export default function OvertakingIndex() {
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
             Positions Gained · Season
           </div>
-          {ranked.map(d => {
+          {ranked.map((d, index) => {
             const pos = d.gained >= 0;
+            const isTop = index === 0;
             return (
               <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid var(--rule-light)', background: d.fav ? 'rgba(39,244,210,0.06)' : 'transparent' }}>
-                <span style={{ width: 36, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: d.fav ? 'var(--mercedes)' : 'var(--ink)' }}>{d.label}</span>
+                <span
+                  onClick={() => (isTop && stage >= 4) && handleTopDriverClick()}
+                  style={{
+                    width: 36,
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 11,
+                    fontWeight: 700,
+                    color: (isTop && stage >= 4) ? 'var(--mercedes)' : (d.fav ? 'var(--mercedes)' : 'var(--ink)'),
+                    cursor: (isTop && stage >= 4) ? 'pointer' : 'default',
+                    textDecoration: (isTop && stage >= 4) ? 'underline' : 'none',
+                  }}
+                >
+                  {d.label}
+                </span>
                 {/* diverging bar from a centre line */}
                 <div style={{ flex: 1, height: 14, position: 'relative', display: 'flex', alignItems: 'center' }}>
                   <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--ink-3)' }} />
@@ -111,6 +260,7 @@ export default function OvertakingIndex() {
           })}
         </div>
       </div>
+
     </Panel>
   );
 }

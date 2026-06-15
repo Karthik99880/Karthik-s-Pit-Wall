@@ -1,9 +1,11 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import { useDriverStandings, useConstructorStandings, useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import type { DriverStanding, RaceResult } from '@/lib/f1Types';
+import { Lock } from 'lucide-react';
 import Panel from './Panel';
+
 
 interface DriverAgg {
   id: string; name: string; points: number;
