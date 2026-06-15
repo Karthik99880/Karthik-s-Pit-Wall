@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, X } from 'lucide-react';
 import { useDriverStandings, useConstructorStandings, useLastRaceResults } from '@/hooks/useF1Data';
-import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag } from '@/lib/f1Types';
+import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
 import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
 
 /* ─── hover card state ─────────────────────────────── */
@@ -21,7 +21,7 @@ export default function Standings() {
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
 
   const q = query.trim().toLowerCase();
-  const filteredDrivers = (drivers ?? []).slice(0, 12).filter(d => {
+  const filteredDrivers = (drivers ?? []).filter(d => {
     if (!q) return true;
     const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
     return (
@@ -252,18 +252,26 @@ function DriverModal({ d, onClose }: { d: DriverStanding; onClose: () => void })
           <X size={16} />
         </button>
 
-        <div style={{ padding: '26px 26px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)', position: 'relative' }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>
-            Championship · P{pos}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '26px 26px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)', position: 'relative', minHeight: 120 }}>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>
+              Championship · P{pos}
+            </div>
+            <div style={{ fontFamily: 'var(--font-serif)', fontSize: 30, fontWeight: 800, lineHeight: 1.02 }}>
+              {d.Driver.givenName} {d.Driver.familyName}
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{team}</span>
+              <span style={{ fontSize: 18 }}>{natFlag}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{d.Driver.nationality}</span>
+            </div>
           </div>
-          <div style={{ fontFamily: 'var(--font-serif)', fontSize: 34, fontWeight: 800, lineHeight: 1.02 }}>
-            {d.Driver.givenName} {d.Driver.familyName}
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{team}</span>
-            <span style={{ fontSize: 18 }}>{natFlag}</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{d.Driver.nationality}</span>
-          </div>
+          <img 
+            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)} 
+            alt={`${d.Driver.givenName} ${d.Driver.familyName}`}
+            style={{ width: 90, height: 90, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1.5px solid ${color}`, marginLeft: 16 }}
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
         </div>
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', padding: '20px 26px 24px', gap: 14, position: 'relative' }}>
@@ -425,41 +433,68 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
   const code = d.Driver.code ?? d.Driver.familyName.slice(0, 3).toUpperCase();
   const num = d.Driver.permanentNumber ?? '';
   const pos = Number(d.position);
-  const { left, top } = cardPos(rect, 260, 230);
+  const { left, top } = cardPos(rect, 290, 230);
 
   return createPortal(
     <div style={{
-      position: 'fixed', left, top, width: 260, zIndex: 99999,
+      position: 'fixed', left, top, width: 290, zIndex: 99999,
       background: '#111', color: '#fff',
       borderTop: `4px solid ${color}`,
       boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)',
       animation: 'hoverCardIn 0.18s cubic-bezier(0.2,0,0,1) both',
       pointerEvents: 'none',
+      overflow: 'hidden',
     }}>
-      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(255,242,0,0.12) 0%,transparent 55%)', pointerEvents: 'none' }} />}
+      {/* Car zooming in from right */}
+      <img
+        src={getCarPhoto(d.Constructors[0]?.constructorId ?? '')}
+        alt=""
+        style={{
+          position: 'absolute',
+          bottom: -8,
+          right: -30,
+          width: '85%',
+          opacity: 0.85,
+          zIndex: 0,
+          pointerEvents: 'none',
+          animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
+          filter: `drop-shadow(0 4px 16px ${color}55)`,
+        }}
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      />
+      
+      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(39,244,210,0.12) 0%,transparent 55%)', zIndex: 0, pointerEvents: 'none' }} />}
 
-      <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative' }}>
-        <div>
+      <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
+        <div style={{ flex: 1 }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 5 }}>Driver · P{pos}</div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 19, fontWeight: 700, lineHeight: 1.1 }}>
             {d.Driver.givenName}<br />{d.Driver.familyName}
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 6 }}>{team}</div>
         </div>
-        <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          {num && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 34, fontWeight: 800, lineHeight: 1, color, opacity: 0.9 }}>#{num}</div>}
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.45)', marginTop: 3 }}>{code}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <img 
+            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)} 
+            alt=""
+            style={{ width: 50, height: 50, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1px solid ${color}` }}
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+          />
+          <div style={{ textAlign: 'right', flexShrink: 0 }}>
+            {num && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 26, fontWeight: 800, lineHeight: 1, color, opacity: 0.9 }}>#{num}</div>}
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.45)', marginTop: 3 }}>{code}</div>
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '12px 18px 14px', gap: 10 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', padding: '12px 18px 14px', gap: 10, position: 'relative', zIndex: 1 }}>
         <Stat2 label="Points" value={d.points} accent={color} />
         <Stat2 label="Wins" value={d.wins} />
         <Stat2 label="Nat." value={`${natFlag}`} small />
       </div>
 
       {isFav && (
-        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'var(--carbon)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)' }}>
+        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(4px)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)', position: 'relative', zIndex: 1 }}>
           ★ Mercedes AMG Driver
         </div>
       )}
@@ -484,10 +519,28 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
       boxShadow: '0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.08)',
       animation: 'hoverCardIn 0.18s cubic-bezier(0.2,0,0,1) both',
       pointerEvents: 'none',
+      overflow: 'hidden',
     }}>
-      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(255,242,0,0.12) 0%,transparent 55%)', pointerEvents: 'none' }} />}
+      {/* Car zooming in from right */}
+      <img
+        src={getCarPhoto(c.Constructor.constructorId)}
+        alt=""
+        style={{
+          position: 'absolute',
+          bottom: 20,
+          right: -20,
+          width: '90%',
+          opacity: 0.85,
+          zIndex: 0,
+          pointerEvents: 'none',
+          animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
+          filter: `drop-shadow(0 4px 16px ${color}55)`,
+        }}
+        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+      />
+      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(255,242,0,0.12) 0%,transparent 55%)', zIndex: 0, pointerEvents: 'none' }} />}
 
-      <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative' }}>
+      <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 5 }}>Constructor · P{c.position}</div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, fontWeight: 700 }}>{name}</div>
@@ -495,7 +548,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
         <div style={{ width: 32, height: 32, borderRadius: '50%', background: color, border: '2px solid rgba(255,255,255,0.15)', flexShrink: 0 }} />
       </div>
 
-      <div style={{ padding: '10px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ padding: '10px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'relative', zIndex: 1 }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 8, fontWeight: 600 }}>Drivers</div>
         {teamDrivers.length > 0 ? teamDrivers.map(td => (
           <div key={td.Driver.driverId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
@@ -510,13 +563,13 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
         )) : <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>No driver data</div>}
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '12px 18px 14px', gap: 12 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '12px 18px 14px', gap: 12, position: 'relative', zIndex: 1 }}>
         <Stat2 label="Total Points" value={c.points} accent={color} />
         <Stat2 label="Wins" value={c.wins} />
       </div>
 
       {isFav && (
-        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'var(--carbon)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)' }}>
+        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(4px)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)', position: 'relative', zIndex: 1 }}>
           ★ Mercedes AMG · Brackley
         </div>
       )}

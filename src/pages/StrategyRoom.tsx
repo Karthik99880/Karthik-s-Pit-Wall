@@ -1,0 +1,54 @@
+import { Suspense, lazy } from 'react';
+import Footer from '@/components/Footer';
+
+const ChampionPredictor = lazy(() => import('@/components/strategy/ChampionPredictor'));
+const TeammateBattle = lazy(() => import('@/components/strategy/TeammateBattle'));
+const OvertakingIndex = lazy(() => import('@/components/strategy/OvertakingIndex'));
+const TyreStrategy = lazy(() => import('@/components/strategy/TyreStrategy'));
+const CircuitSpecialization = lazy(() => import('@/components/strategy/CircuitSpecialization'));
+
+export default function StrategyRoom() {
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--paper)', overflowX: 'hidden' }}>
+      {/* Header */}
+      <header style={{ maxWidth: 1440, margin: '0 auto', padding: '48px 36px 28px', position: 'relative' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink-2)', marginBottom: 22, animation: 'fadeUpSlow 0.8s ease both' }}>
+          <span style={{ width: 28, height: 3, background: 'var(--mercedes)', display: 'inline-block' }} />
+          Karthik's Pit Wall · Analysis
+        </div>
+
+        <h1 style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink)', animation: 'fadeUpSlow 0.9s ease both 0.1s' }}>
+          <span style={{ display: 'block', fontSize: 'clamp(44px, 7vw, 92px)' }}>The Strategy</span>
+          <span style={{ display: 'block', fontSize: 'clamp(44px, 7vw, 92px)', fontStyle: 'italic', color: 'var(--mercedes)' }}>Room</span>
+        </h1>
+
+        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--ink-2)', maxWidth: 620, marginTop: 18, lineHeight: 1.6, animation: 'fadeUpSlow 1s ease both 0.3s' }}>
+          Where the numbers get interrogated — title projections, the teammate
+          benchmark that decides careers, and the race-craft that grid position
+          alone never tells you.
+        </p>
+
+        <div style={{ marginTop: 26, paddingTop: 18, borderTop: '1px solid var(--ink)', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', animation: 'fadeUpSlow 1s ease both 0.5s' }}>
+          Projections · Head-to-Head · Race Craft · Tyre Strategy · Circuits
+        </div>
+      </header>
+
+      {/* Sections */}
+      <main style={{ maxWidth: 1440, margin: '0 auto', padding: '12px 36px 0' }}>
+        <Suspense fallback={
+          <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            Loading Analysis Modules...
+          </div>
+        }>
+          <ChampionPredictor />
+          <TeammateBattle />
+          <OvertakingIndex />
+          <TyreStrategy />
+          <CircuitSpecialization />
+        </Suspense>
+      </main>
+
+      <Footer />
+    </div>
+  );
+}

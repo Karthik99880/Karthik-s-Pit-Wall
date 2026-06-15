@@ -195,3 +195,36 @@ export const NATIONALITY_FLAG: Record<string, string> = {
 export function getNationalityFlag(nationality: string): string {
   return NATIONALITY_FLAG[nationality] ?? '🏁';
 }
+
+/** Generates official F1 driver headshot media URL */
+export function getDriverPhoto(givenName: string, familyName: string): string {
+  const normalize = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "");
+  const first = normalize(givenName);
+  const last = normalize(familyName);
+  const initial = first.charAt(0).toUpperCase();
+  const code = (first.slice(0, 3).toUpperCase() + last.slice(0, 3).toUpperCase()).padEnd(6, 'X') + '01';
+  const folder = `${code}_${first}_${last}`;
+  const filename = `${code.toLowerCase()}.png`;
+  return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${initial}/${folder}/${filename}.transform/1col/image.png`;
+}
+
+/** Generates official F1 team car media URL */
+export function getCarPhoto(constructorId: string): string {
+  // Direct CDN URLs confirmed working from media.formula1.com
+  const carMap: Record<string, string> = {
+    mercedes:      'mercedes',
+    ferrari:       'ferrari',
+    red_bull:      'red-bull-racing',
+    mclaren:       'mclaren',
+    aston_martin:  'aston-martin',
+    alpine:        'alpine',
+    haas:          'haas-f1-team',
+    rb:            'rb',
+    racing_bulls:  'rb',
+    williams:      'williams',
+    sauber:        'kick-sauber',
+    kick_sauber:   'kick-sauber',
+  };
+  const slug = carMap[constructorId.toLowerCase()] ?? constructorId.toLowerCase();
+  return `https://media.formula1.com/content/dam/fom-website/teams/2024/${slug}.png`;
+}

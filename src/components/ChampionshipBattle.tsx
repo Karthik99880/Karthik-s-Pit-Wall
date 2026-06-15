@@ -32,7 +32,7 @@ export default function ChampionshipBattle() {
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px 36px 0', animation: 'fadeUpSlow 1s ease both 3.4s' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Title <em style={{ fontStyle: 'italic', color: 'var(--racing)', fontWeight: 700 }}>Fight</em>
+          Title <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Fight</em>
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 }}>
           {remaining} of {totalRaces} races left
