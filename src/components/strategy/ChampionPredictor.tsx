@@ -1,9 +1,10 @@
-import { useMemo } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useDriverStandings, useRaceSchedule } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
 import { POINTS } from '@/lib/constants';
 import Panel from './Panel';
+
 
 /**
  * Projects the final championship from each driver's average points per
@@ -58,6 +59,33 @@ export default function ChampionPredictor() {
     return { projected, remaining, completed, clinchRace, champion: projected[0] };
   }, [drivers, races]);
 
+  const [showClue4Modal, setShowClue4Modal] = useState(false);
+  const [showDeniedModal, setShowDeniedModal] = useState(false);
+  const [stage, setStage] = useState(() => {
+    const s = localStorage.getItem('pitwall_hunt_stage');
+    return s ? Number(s) : 0;
+  });
+
+  useEffect(() => {
+    const onUpdate = () => {
+      const s = localStorage.getItem('pitwall_hunt_stage');
+      setStage(s ? Number(s) : 0);
+    };
+    window.addEventListener('pitwall-stage-update', onUpdate);
+    return () => window.removeEventListener('pitwall-stage-update', onUpdate);
+  }, []);
+
+  const handleP3Click = () => {
+    const sVal = localStorage.getItem('pitwall_hunt_stage');
+    if (sVal && Number(sVal) >= 3) {
+      localStorage.setItem('pitwall_hunt_stage', '4');
+      window.dispatchEvent(new Event('pitwall-stage-update'));
+      setShowClue4Modal(true);
+    } else {
+      setShowDeniedModal(true);
+    }
+  };
+
   if (!model) {
     return <Panel title="Champion" accent="Projection" num="01"><Msg>Crunching the numbers…</Msg></Panel>;
   }
@@ -68,6 +96,114 @@ export default function ChampionPredictor() {
   return (
     <Panel title="Champion" accent="Projection" num="01"
       meta={`${model.completed} run · ${model.remaining} to go`}>
+      {showClue4Modal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid var(--mercedes)',
+            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+              📁 ARCHIVE ENCRYPTION: LEVEL 4
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Numbers project, but overtaking defines raw craft. Seek the index of passes. Find the driver who has carved his way forward the most positions this season and click their code."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowClue4Modal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--mercedes)',
+                  color: 'var(--mercedes)',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--mercedes)';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = 'var(--mercedes)';
+                }}
+              >
+                CLOSE TRANSMISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeniedModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid #ff4a4a',
+            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
+              ⚠️ DECRYPTION ERROR
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Access Denied. Follow the clues in order starting from the footer classified archive."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowDeniedModal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4a4a',
+                  color: '#ff4a4a',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff4a4a';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = '#ff4a4a';
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Headline projection */}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', marginBottom: 22, padding: '16px 18px', background: 'var(--carbon)', borderLeft: `4px solid ${model.champion.color}` }}>
         <div>
@@ -97,7 +233,18 @@ export default function ChampionPredictor() {
           borderBottom: '1px solid var(--rule-light)',
           background: d.fav ? 'rgba(39,244,210,0.06)' : 'transparent',
         }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: 'var(--ink-3)', width: 24 }}>P{i + 1}</span>
+          <span
+            onClick={() => i === 2 && handleP3Click()}
+            style={{
+              fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700,
+              color: (i === 2 && stage >= 3) ? 'var(--mercedes)' : 'var(--ink-3)',
+              width: 24,
+              cursor: (i === 2 && stage >= 3) ? 'pointer' : 'default',
+              textDecoration: (i === 2 && stage >= 3) ? 'underline' : 'none',
+            }}
+          >
+            P{i + 1}
+          </span>
           <span style={{ width: 8, height: 8, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
           <span style={{ flex: 1, fontFamily: 'var(--font-serif)', fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>
             {d.name}{d.fav && <Star small />}
@@ -113,6 +260,7 @@ export default function ChampionPredictor() {
       <div style={{ marginTop: 12, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.05em', lineHeight: 1.5 }}>
         Model: average points per race × {model.remaining} remaining rounds. A simple linear projection — safety cars and DNFs not included.
       </div>
+
     </Panel>
   );
 }

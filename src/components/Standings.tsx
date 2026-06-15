@@ -4,6 +4,7 @@ import { Search, X } from 'lucide-react';
 import { useDriverStandings, useConstructorStandings, useLastRaceResults } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
 import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 /* ─── hover card state ─────────────────────────────── */
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
@@ -19,13 +20,16 @@ export default function Standings() {
   const [hovC, setHovC] = useState<HoveredCtor | null>(null);
   const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
+  const isMobile = useIsMobile();
+  const [tab, setTab] = useState(0); // mobile: which standings column is shown
 
   useEffect(() => {
-    if (query.trim().toLowerCase() === 'siweh') {
+    if (query.trim().toLowerCase() === 'llessur') {
       const stage = localStorage.getItem('pitwall_hunt_stage');
-      if (stage === '2') {
-        localStorage.setItem('pitwall_hunt_stage', '3');
+      if (stage === '7') {
+        localStorage.setItem('pitwall_hunt_stage', '8');
         setQuery('');
+        window.dispatchEvent(new Event('pitwall-stage-update'));
         window.dispatchEvent(new CustomEvent('trigger-easter-egg'));
       }
     }
@@ -52,11 +56,260 @@ export default function Standings() {
   }, []);
   const clearHov = useCallback(() => { setHovD(null); setHovC(null); }, []);
 
+  const [showClue3Modal, setShowClue3Modal] = useState(false);
+  const [showDeniedCtorModal, setShowDeniedCtorModal] = useState(false);
+  const [showClue7Modal, setShowClue7Modal] = useState(false);
+  const [showDeniedTagModal, setShowDeniedTagModal] = useState(false);
+
+  const handleCtorClick = (isFav: boolean) => {
+    if (!isFav) return;
+    const stage = localStorage.getItem('pitwall_hunt_stage');
+    if (stage && Number(stage) >= 2) {
+      localStorage.setItem('pitwall_hunt_stage', '3');
+      window.dispatchEvent(new Event('pitwall-stage-update'));
+      setShowClue3Modal(true);
+    } else {
+      setShowDeniedCtorModal(true);
+    }
+  };
+
+  const handleTagClick = (num: string) => {
+    if (num !== '44') return;
+    const stage = localStorage.getItem('pitwall_hunt_stage');
+    if (stage && Number(stage) >= 6) {
+      localStorage.setItem('pitwall_hunt_stage', '7');
+      window.dispatchEvent(new Event('pitwall-stage-update'));
+      setShowClue7Modal(true);
+    } else {
+      setShowDeniedTagModal(true);
+    }
+  };
+
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px 36px 0' }}>
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1fr 1fr', border: '2px solid var(--ink)', background: 'var(--paper)' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: isMobile ? '32px 16px 0' : '56px 36px 0' }}>
+      {showClue3Modal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid var(--mercedes)',
+            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+              📁 ARCHIVE ENCRYPTION: LEVEL 3
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Enter the Strategy Room and pull up the Champion Projection Panel. Scan the data matrix predicting the final hierarchy. Do not select the leader, nor the runner-up chasing the crown. Click the designation for the final step on the championship's theoretical podium."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowClue3Modal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--mercedes)',
+                  color: 'var(--mercedes)',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--mercedes)';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = 'var(--mercedes)';
+                }}
+              >
+                CLOSE TRANSMISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeniedCtorModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid #ff4a4a',
+            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
+              ⚠️ DECRYPTION ERROR
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Access Denied. Follow the clues in order starting from the footer classified archive."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowDeniedCtorModal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4a4a',
+                  color: '#ff4a4a',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff4a4a';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = '#ff4a4a';
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showClue7Modal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid var(--mercedes)',
+            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+              📁 ARCHIVE ENCRYPTION: LEVEL 7 (FINAL)
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "To unseal the final vault, look to the apex of the 2018 feeder series. A rookie king took the crown before ascending to the silver arrows. Find his family name on the grid, but do not look at it head-on. Like a trailing driver chasing his slipstream, enter it in reverse."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowClue7Modal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid var(--mercedes)',
+                  color: 'var(--mercedes)',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--mercedes)';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = 'var(--mercedes)';
+                }}
+              >
+                CLOSE TRANSMISSION
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showDeniedTagModal && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 100000,
+          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: 24,
+        }}>
+          <div style={{
+            background: 'var(--carbon)',
+            border: '2px solid #ff4a4a',
+            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
+            maxWidth: 460, width: '100%',
+            color: '#fff',
+            fontFamily: 'var(--font-mono)',
+            padding: 28,
+            position: 'relative',
+            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
+          }}>
+            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
+              ⚠️ DECRYPTION ERROR
+            </div>
+            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
+              "Access Denied. Follow the clues in order starting from the footer classified archive."
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
+              <button
+                onClick={() => setShowDeniedTagModal(false)}
+                style={{
+                  background: 'none',
+                  border: '1px solid #ff4a4a',
+                  color: '#ff4a4a',
+                  padding: '6px 16px',
+                  fontSize: 10,
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#ff4a4a';
+                  e.currentTarget.style.color = '#000';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'none';
+                  e.currentTarget.style.color = '#ff4a4a';
+                }}
+              >
+                CLOSE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {isMobile && (
+        <SegmentedControl tabs={['Drivers', 'Constructors', 'Last Race']} active={tab} onChange={setTab} />
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr 1fr', border: '2px solid var(--ink)', background: 'var(--paper)' }}>
 
         {/* ── Driver Championship ── */}
+        {(!isMobile || tab === 0) && (
         <ColWrap
           title="Driver" subtitle="Championship" num="01"
           headerExtra={<SearchBox value={query} onChange={setQuery} />}
@@ -75,12 +328,15 @@ export default function Standings() {
                 d={d} color={color} isFav={isFav} team={team} delay={i * 0.055}
                 onEnter={onDriverEnter} onLeave={clearHov}
                 onClick={() => setModalDriver(d)}
+                onTagClick={handleTagClick}
               />
             );
           })}
         </ColWrap>
+        )}
 
         {/* ── Constructor Championship ── */}
+        {(!isMobile || tab === 1) && (
         <ColWrap title="Constructor" subtitle="Championship" num="02">
           {cLoad ? <Skeleton /> : (constructors ?? []).map((c, i) => {
             const color = getTeamColor(c.Constructor.constructorId);
@@ -94,12 +350,15 @@ export default function Standings() {
                 maxPts={maxPts} delay={i * 0.07}
                 allDrivers={drivers ?? []}
                 onEnter={onCtorEnter} onLeave={clearHov}
+                onClick={() => handleCtorClick(isFav)}
               />
             );
           })}
         </ColWrap>
+        )}
 
         {/* ── Last Race Podium ── */}
+        {(!isMobile || tab === 2) && (
         <ColWrap
           title={lastRace?.race?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
           subtitle="Podium Results" num="03"
@@ -176,16 +435,17 @@ export default function Standings() {
             </>
           )}
         </ColWrap>
+        )}
       </div>
 
 
       {/* Hover cards — rendered in document flow at fixed position */}
 
       {/* Hover cards — rendered in document flow at fixed position */}
-      {hovD && <DriverCard data={hovD} />}
-      {hovC && <CtorCard data={hovC} />}
+      {!isMobile && hovD && <DriverCard data={hovD} />}
+      {!isMobile && hovC && <CtorCard data={hovC} />}
 
-      {modalDriver && <DriverModal d={modalDriver} onClose={() => setModalDriver(null)} />}
+      {modalDriver && <DriverModal d={modalDriver} sheet={isMobile} onClose={() => setModalDriver(null)} />}
     </div>
   );
 }
@@ -219,8 +479,39 @@ function SearchBox({ value, onChange }: { value: string; onChange: (v: string) =
   );
 }
 
-/* ─── Driver detail modal ──────────────────────────── */
-function DriverModal({ d, onClose }: { d: DriverStanding; onClose: () => void }) {
+/* ─── Mobile segmented control ─────────────────────── */
+function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: number; onChange: (i: number) => void }) {
+  return (
+    <div role="tablist" style={{
+      display: 'grid', gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
+      gap: 4, marginBottom: 12, padding: 4,
+      background: 'var(--paper-2)', border: '2px solid var(--ink)',
+    }}>
+      {tabs.map((t, i) => {
+        const on = i === active;
+        return (
+          <button
+            key={t} role="tab" aria-selected={on}
+            onClick={() => onChange(i)}
+            style={{
+              minHeight: 44, cursor: 'pointer', border: 'none',
+              background: on ? 'var(--carbon)' : 'transparent',
+              color: on ? 'var(--mercedes)' : 'var(--ink-3)',
+              fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
+              letterSpacing: '0.1em', textTransform: 'uppercase',
+              transition: 'background 0.2s, color 0.2s',
+            }}
+          >
+            {t}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─── Driver detail modal (bottom sheet on mobile) ──── */
+function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => void; sheet?: boolean }) {
   const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
   const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
   const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
@@ -241,19 +532,24 @@ function DriverModal({ d, onClose }: { d: DriverStanding; onClose: () => void })
       style={{
         position: 'fixed', inset: 0, zIndex: 100001,
         background: 'rgba(0,0,0,0.62)', backdropFilter: 'blur(3px)',
-        display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 20,
+        display: 'flex', alignItems: sheet ? 'flex-end' : 'center', justifyContent: 'center',
+        padding: sheet ? 0 : 20,
         animation: 'fadeSlow 0.2s ease both',
       }}
     >
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width: 'min(440px, 100%)', background: '#111', color: '#fff',
+          width: sheet ? '100%' : 'min(440px, 100%)', background: '#111', color: '#fff',
           borderTop: `5px solid ${color}`, position: 'relative',
           boxShadow: '0 30px 80px rgba(0,0,0,0.7)',
-          animation: 'fadeUpSlow 0.3s cubic-bezier(.2,.9,.25,1) both',
+          borderTopLeftRadius: sheet ? 18 : 0, borderTopRightRadius: sheet ? 18 : 0,
+          paddingTop: sheet ? 6 : 0,
+          maxHeight: sheet ? '88vh' : undefined, overflowY: sheet ? 'auto' : undefined,
+          animation: sheet ? 'sheetUp 0.34s cubic-bezier(.2,.9,.25,1) both' : 'fadeUpSlow 0.3s cubic-bezier(.2,.9,.25,1) both',
         }}
       >
+        {sheet && <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.25)', margin: '0 auto 4px' }} />}
         {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(39,244,210,0.10) 0%,transparent 55%)', pointerEvents: 'none' }} />}
 
         <button
@@ -328,14 +624,29 @@ function ColWrap({ title, subtitle, num, children, headerExtra }: { title: strin
 }
 
 /* ─── Driver row ───────────────────────────────────── */
-function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick }: {
+function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, onTagClick }: {
   d: DriverStanding; color: string; isFav: boolean; team: string; delay: number;
   onEnter: (d: DriverStanding, el: HTMLElement) => void;
   onLeave: () => void;
   onClick?: () => void;
+  onTagClick?: (num: string) => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const pos = Number(d.position);
+  const [stage, setStage] = useState(() => {
+    const s = localStorage.getItem('pitwall_hunt_stage');
+    return s ? Number(s) : 0;
+  });
+
+  useEffect(() => {
+    const onUpdate = () => {
+      const s = localStorage.getItem('pitwall_hunt_stage');
+      setStage(s ? Number(s) : 0);
+    };
+    window.addEventListener('pitwall-stage-update', onUpdate);
+    return () => window.removeEventListener('pitwall-stage-update', onUpdate);
+  }, []);
+
   return (
     <div
       ref={ref}
@@ -363,7 +674,23 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick }: 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 14, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {d.Driver.givenName[0]}. {d.Driver.familyName}
-            {isFav && <MercedesTag />}
+            {isFav && <MercedesTag onClick={onTagClick ? (e) => { e.stopPropagation(); onTagClick(d.Driver.permanentNumber || ''); } : undefined} />}
+            {d.Driver.permanentNumber === '44' && stage >= 6 && (
+              <span
+                onClick={onTagClick ? (e) => { e.stopPropagation(); onTagClick('44'); } : undefined}
+                style={{
+                  color: 'var(--mercedes)',
+                  marginLeft: 8,
+                  cursor: onTagClick ? 'pointer' : 'default',
+                  fontSize: 14,
+                  verticalAlign: 'middle',
+                  display: 'inline-block',
+                }}
+                title="Silver Star"
+              >
+                ★
+              </span>
+            )}
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginTop: 2, fontWeight: 600 }}>{team}</div>
         </div>
@@ -377,26 +704,42 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick }: 
 }
 
 /* ─── Constructor row ──────────────────────────────── */
-function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, onLeave }: {
+function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, onLeave, onClick }: {
   c: ConstructorStanding; color: string; isFav: boolean; name: string;
   maxPts: number; delay: number; allDrivers: DriverStanding[];
   onEnter: (c: ConstructorStanding, all: DriverStanding[], el: HTMLElement) => void;
   onLeave: () => void;
+  onClick: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const bar = maxPts > 0 ? Math.max(4, (Number(c.points) / maxPts) * 100) : 4;
+  const [stage, setStage] = useState(() => {
+    const s = localStorage.getItem('pitwall_hunt_stage');
+    return s ? Number(s) : 0;
+  });
+
+  useEffect(() => {
+    const onUpdate = () => {
+      const s = localStorage.getItem('pitwall_hunt_stage');
+      setStage(s ? Number(s) : 0);
+    };
+    window.addEventListener('pitwall-stage-update', onUpdate);
+    return () => window.removeEventListener('pitwall-stage-update', onUpdate);
+  }, []);
+
   return (
     <div
       ref={ref}
       onMouseEnter={() => ref.current && onEnter(c, allDrivers, ref.current)}
       onMouseLeave={onLeave}
+      onClick={onClick}
       style={{
         padding: '13px 24px', borderBottom: '1px solid var(--rule-light)',
         background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
         animation: `rowSlide 0.5s ease both ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
         boxShadow: isFav ? 'inset 0 0 10px rgba(39,244,210,0.1)' : 'none',
-        outlineOffset: -1, cursor: 'default', transition: 'background 0.15s',
+        outlineOffset: -1, cursor: (isFav && stage >= 2) ? 'pointer' : 'default', transition: 'background 0.15s',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
@@ -609,21 +952,25 @@ function Skeleton() {
   );
 }
 
-function MercedesTag() {
+function MercedesTag({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
   return (
-    <span style={{
-      marginLeft: 8,
-      padding: '2px 6px',
-      background: 'var(--ink)',
-      color: 'var(--mercedes)',
-      fontFamily: 'var(--font-mono)',
-      fontSize: 8,
-      fontWeight: 800,
-      letterSpacing: '0.12em',
-      verticalAlign: 'middle',
-      borderRadius: '2px',
-      boxShadow: '0 0 10px rgba(39,244,210,0.2)',
-    }}>
+    <span
+      onClick={onClick}
+      style={{
+        marginLeft: 8,
+        padding: '2px 6px',
+        background: 'var(--ink)',
+        color: 'var(--mercedes)',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 8,
+        fontWeight: 800,
+        letterSpacing: '0.12em',
+        verticalAlign: 'middle',
+        borderRadius: '2px',
+        boxShadow: '0 0 10px rgba(39,244,210,0.2)',
+        cursor: onClick ? 'pointer' : 'default',
+      }}
+    >
       AMG
     </span>
   );

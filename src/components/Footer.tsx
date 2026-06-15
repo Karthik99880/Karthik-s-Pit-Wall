@@ -7,6 +7,7 @@ export default function Footer() {
 
   const handleClassifiedClick = () => {
     localStorage.setItem('pitwall_hunt_stage', '1');
+    window.dispatchEvent(new Event('pitwall-stage-update'));
     setShowClueModal(true);
   };
 
@@ -37,7 +38,7 @@ export default function Footer() {
               📁 ARCHIVE ENCRYPTION: LEVEL 1
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "The Brackley legends are judged by the teammate benchmark. Seek the **Strategy Room**, inspect the **Head-to-Head** panel, and click the secret lock icon."
+              "Access the Calendar of Rounds. Track the journey to the birthplace of the world championship, where the apexes slice across old wartime runways and the local heroes claim the ultimate home advantage. Click the nation that guards the gates of Silverstone."
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
