@@ -2,7 +2,7 @@
 export default function Panel({
   title, accent, num, meta, children,
 }: {
-  title: string; accent: string; num: string; meta?: string; children: React.ReactNode;
+  title: string; accent: string; num: string; meta?: React.ReactNode; children: React.ReactNode;
 }) {
   return (
     <section style={{ marginBottom: 36, animation: 'fadeUpSlow 0.8s ease both' }}>
@@ -14,7 +14,7 @@ export default function Panel({
           </h2>
         </div>
         {meta && (
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>{meta}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', display: 'flex', alignItems: 'center', gap: 8 }}>{meta}</span>
         )}
       </div>
       <div style={{ border: '2px solid var(--ink)', background: 'var(--paper-2)', padding: '22px 24px 24px' }}>

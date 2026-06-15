@@ -20,6 +20,17 @@ export default function Standings() {
   const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
 
+  useEffect(() => {
+    if (query.trim().toLowerCase() === 'siweh') {
+      const stage = localStorage.getItem('pitwall_hunt_stage');
+      if (stage === '2') {
+        localStorage.setItem('pitwall_hunt_stage', '3');
+        setQuery('');
+        window.dispatchEvent(new CustomEvent('trigger-easter-egg'));
+      }
+    }
+  }, [query]);
+
   const q = query.trim().toLowerCase();
   const filteredDrivers = (drivers ?? []).filter(d => {
     if (!q) return true;
