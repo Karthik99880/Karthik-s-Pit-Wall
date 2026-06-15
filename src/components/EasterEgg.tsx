@@ -14,9 +14,15 @@ export default function EasterEgg() {
     return () => window.removeEventListener('trigger-easter-egg', reveal);
   }, []);
 
+  const handleClose = () => {
+    localStorage.removeItem('pitwall_hunt_stage');
+    window.dispatchEvent(new Event('pitwall-stage-update'));
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!open) return;
-    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && handleClose();
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
@@ -25,7 +31,7 @@ export default function EasterEgg() {
 
   return (
     <div
-      onClick={() => setOpen(false)}
+      onClick={handleClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200000,
         background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)',
