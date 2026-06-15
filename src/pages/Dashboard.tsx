@@ -1,9 +1,12 @@
 import Ticker from '@/components/Ticker';
 import Hero from '@/components/Hero';
 import NextRace from '@/components/NextRace';
+import ChampionshipBattle from '@/components/ChampionshipBattle';
 import Calendar from '@/components/Calendar';
+import ProgressionChart from '@/components/ProgressionChart';
 import Standings from '@/components/Standings';
 import Footer from '@/components/Footer';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function Dashboard() {
   return (
@@ -11,9 +14,12 @@ export default function Dashboard() {
       <Ticker />
       <Hero />
       <NextRace />
+      <ChampionshipBattle />
       <Calendar />
+      <ProgressionChart />
       <Standings />
       <Footer />
+      <ThemeToggle />
     </div>
   );
 }
