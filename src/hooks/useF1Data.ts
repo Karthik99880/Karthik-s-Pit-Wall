@@ -1,37 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueries } from '@tanstack/react-query';
 import type { DriverStanding, ConstructorStanding, Race, RaceResult } from '@/lib/f1Types';
+import {
+  jolpicaFetch,
+  firstStandingsList,
+  racesOf,
+  type DriverStandingsResponse,
+  type ConstructorStandingsResponse,
+  type RaceTableResponse,
+} from '@/lib/f1Api';
+import { CACHE, SEASON_YEAR } from '@/lib/constants';
+import { f1Date, msUntil, breakdown } from '@/lib/dateUtils';
 
-const BASE = 'https://api.jolpi.ca/ergast/f1';
-const YEAR = new Date().getFullYear();
-
-const FIVE_MINUTES   = 5  * 60 * 1000;
-const THIRTY_MINUTES = 30 * 60 * 1000;
-
-/** Safely parse F1 API date+time — strips trailing Z so we don't produce "20:00:00ZZ" */
-function f1Date(date: string, time?: string | null): Date {
-  const t = (time ?? '14:00:00').replace(/Z$/i, '');
-  return new Date(`${date}T${t}Z`);
-}
-
-async function jolpicaFetch<T>(path: string): Promise<T> {
-  const url = `${BASE}${path}?format=json&limit=100`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`F1 API ${res.status}`);
-  return res.json() as Promise<T>;
-}
+const YEAR = SEASON_YEAR;
 
 /* ── Driver Standings ──────────────────────────────── */
 export function useDriverStandings() {
   return useQuery({
     queryKey: ['f1', 'driverStandings', YEAR],
     queryFn: async () => {
-      const data = await jolpicaFetch<any>(`/${YEAR}/driverStandings/`);
-      const standings: DriverStanding[] =
-        data?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings ?? [];
-      return standings;
+      const data = await jolpicaFetch<DriverStandingsResponse>(`/${YEAR}/driverStandings/`);
+      return firstStandingsList(data.MRData)?.DriverStandings ?? [];
     },
-    staleTime: THIRTY_MINUTES,
-    refetchInterval: THIRTY_MINUTES,
+    staleTime: CACHE.STANDINGS,
+    refetchInterval: CACHE.STANDINGS,
     retry: 3,
   });
 }
@@ -41,13 +32,11 @@ export function useConstructorStandings() {
   return useQuery({
     queryKey: ['f1', 'constructorStandings', YEAR],
     queryFn: async () => {
-      const data = await jolpicaFetch<any>(`/${YEAR}/constructorStandings/`);
-      const standings: ConstructorStanding[] =
-        data?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings ?? [];
-      return standings;
+      const data = await jolpicaFetch<ConstructorStandingsResponse>(`/${YEAR}/constructorStandings/`);
+      return firstStandingsList(data.MRData)?.ConstructorStandings ?? [];
     },
-    staleTime: THIRTY_MINUTES,
-    refetchInterval: THIRTY_MINUTES,
+    staleTime: CACHE.STANDINGS,
+    refetchInterval: CACHE.STANDINGS,
     retry: 3,
   });
 }
@@ -57,11 +46,10 @@ export function useRaceSchedule() {
   return useQuery({
     queryKey: ['f1', 'schedule', YEAR],
     queryFn: async () => {
-      const data = await jolpicaFetch<any>(`/${YEAR}/`);
-      const races: Race[] = data?.MRData?.RaceTable?.Races ?? [];
-      return races;
+      const data = await jolpicaFetch<RaceTableResponse>(`/${YEAR}/`);
+      return racesOf(data.MRData);
     },
-    staleTime: 60 * 60 * 1000,
+    staleTime: CACHE.SCHEDULE,
     retry: 3,
   });
 }
@@ -71,14 +59,13 @@ export function useLastRaceResults() {
   return useQuery({
     queryKey: ['f1', 'lastRace', YEAR],
     queryFn: async () => {
-      const data = await jolpicaFetch<any>(`/${YEAR}/last/results/`);
-      const races: Race[] = data?.MRData?.RaceTable?.Races ?? [];
-      const race    = races[0] ?? null;
+      const data = await jolpicaFetch<RaceTableResponse>(`/${YEAR}/last/results/`);
+      const race = racesOf(data.MRData)[0] ?? null;
       const results: RaceResult[] = race?.Results ?? [];
       return { race, results };
     },
-    staleTime: THIRTY_MINUTES,
-    refetchInterval: THIRTY_MINUTES,
+    staleTime: CACHE.LAST_RACE,
+    refetchInterval: CACHE.LAST_RACE,
     retry: 3,
   });
 }
@@ -88,14 +75,59 @@ export function useNextRace() {
   return useQuery({
     queryKey: ['f1', 'nextRace'],
     queryFn: async () => {
-      const data = await jolpicaFetch<any>('/current/next/');
-      const races: Race[] = data?.MRData?.RaceTable?.Races ?? [];
-      return races[0] ?? null;
+      const data = await jolpicaFetch<RaceTableResponse>('/current/next/');
+      return racesOf(data.MRData)[0] ?? null;
     },
-    staleTime: FIVE_MINUTES,
-    refetchInterval: FIVE_MINUTES,
+    staleTime: CACHE.NEXT_RACE,
+    refetchInterval: CACHE.NEXT_RACE,
     retry: 3,
   });
+}
+
+/* ── Season points progression (per completed round) ──
+ * Fetches the driver standings *as of* each completed round so we can
+ * chart how the championship developed. One query per round, each cached
+ * for an hour — completed rounds never change.
+ */
+export interface ProgressionPoint {
+  round: number;
+  raceName: string;
+  /** driverId -> cumulative points after this round */
+  points: Record<string, number>;
+}
+
+export function useSeasonProgression(races: Race[] | undefined) {
+  const now = Date.now();
+  const completed = (races ?? []).filter(r => f1Date(r.date, r.time).getTime() < now);
+
+  const results = useQueries({
+    queries: completed.map(race => ({
+      queryKey: ['f1', 'roundStandings', YEAR, race.round],
+      queryFn: async (): Promise<ProgressionPoint> => {
+        const data = await jolpicaFetch<DriverStandingsResponse>(
+          `/${YEAR}/${race.round}/driverStandings/`,
+        );
+        const standings = firstStandingsList(data.MRData)?.DriverStandings ?? [];
+        const points: Record<string, number> = {};
+        for (const s of standings) points[s.Driver.driverId] = Number(s.points);
+        return {
+          round: Number(race.round),
+          raceName: race.raceName.replace('Grand Prix', '').trim(),
+          points,
+        };
+      },
+      staleTime: CACHE.PROGRESSION,
+      retry: 2,
+    })),
+  });
+
+  const isLoading = results.some(r => r.isLoading);
+  const data = results
+    .map(r => r.data)
+    .filter((p): p is ProgressionPoint => !!p)
+    .sort((a, b) => a.round - b.round);
+
+  return { data, isLoading };
 }
 
 /* ── Build ordered session list from Race object ────── */
@@ -130,15 +162,10 @@ export function useCountdown(targetDate: string | undefined, targetTime: string 
     queryKey: ['countdown', targetDate, targetTime],
     queryFn: () => {
       if (!target) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-      const diff    = Math.max(0, target - Date.now());
-      const seconds = Math.floor(diff / 1000) % 60;
-      const minutes = Math.floor(diff / (1000 * 60)) % 60;
-      const hours   = Math.floor(diff / (1000 * 60 * 60)) % 24;
-      const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
-      return { days, hours, minutes, seconds };
+      return breakdown(msUntil(target));
     },
     enabled: !!target,
-    refetchInterval: 1000,
+    refetchInterval: CACHE.TICK,
     staleTime: 0,
   });
 }

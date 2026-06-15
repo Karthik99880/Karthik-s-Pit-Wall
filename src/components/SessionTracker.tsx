@@ -1,12 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Race } from '@/lib/f1Types';
 import { buildSessions } from '@/hooks/useF1Data';
-
-/** Strip trailing Z so "20:00:00Z" + "Z" doesn't produce Invalid Date */
-function f1Date(date: string, time: string): Date {
-  const t = time.replace(/Z$/i, '');
-  return new Date(`${date}T${t}Z`);
-}
+import { f1Date } from '@/lib/dateUtils';
 
 function useLiveCountdowns(sessions: ReturnType<typeof buildSessions>) {
   return useQuery({

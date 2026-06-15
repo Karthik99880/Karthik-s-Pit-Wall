@@ -89,6 +89,22 @@
   --app-font-mono: 'JetBrains Mono', monospace;
 }
 
+/* ── Dark mode — flips the paper/ink palette ──────────────── */
+.dark {
+  --paper:      #0d0e10;
+  --paper-2:    #16181b;
+  --paper-3:    #23262a;
+  --ink:        #f2ece0;
+  --ink-2:      #c7c1b4;
+  --ink-3:      #8a8172;
+  --rule-light: #2a2d31;
+  --gold:       #e6b938;
+}
+.dark body { background: var(--paper); color: var(--ink); }
+
+/* Smooth the swap so the whole page doesn't hard-cut */
+html, body { transition: background 0.3s ease, color 0.3s ease; }
+
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
