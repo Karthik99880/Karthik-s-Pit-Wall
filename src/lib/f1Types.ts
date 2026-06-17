@@ -222,9 +222,15 @@ export function getCarPhoto(constructorId: string): string {
     rb:            'rb',
     racing_bulls:  'rb',
     williams:      'williams',
+    williams_racing: 'williams',
+    'williams-racing': 'williams',
     sauber:        'kick-sauber',
     kick_sauber:   'kick-sauber',
+    audi:          'kick-sauber', // Audi replaces Sauber in 2026, fallback to 2024 Sauber car
+    cadillac:      'haas-f1-team', // Cadillac is new in 2026, fallback to Haas or similar generic shape
   };
   const slug = carMap[constructorId.toLowerCase()] ?? constructorId.toLowerCase();
+  
+  // Use 2024 CDN as a baseline since 2026 isn't fully populated yet
   return `https://media.formula1.com/content/dam/fom-website/teams/2024/${slug}.png`;
 }
