@@ -1,12 +1,26 @@
 import { useState, useEffect } from 'react';
 import { getCarPhoto } from '@/lib/f1Types';
 
-export default function SilverArrowLoader() {
+interface SilverArrowLoaderProps {
+  loop?: boolean;
+}
+
+export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderProps) {
   const [visible, setVisible] = useState(true);
   const [shouldRender, setShouldRender] = useState(true);
 
+  // Live telemetry state for interactive immersion
+  const [telemetry, setTelemetry] = useState({
+    speed: 312,
+    gear: 7,
+    ers: 84,
+    lap: 1,
+  });
+
   useEffect(() => {
-    // Fade out after 3.5 seconds
+    if (loop) return;
+
+    // Fade out after 3.5 seconds in splash mode
     const fadeTimeout = setTimeout(() => {
       setVisible(false);
     }, 3500);
@@ -20,6 +34,46 @@ export default function SilverArrowLoader() {
       clearTimeout(fadeTimeout);
       clearTimeout(removeTimeout);
     };
+  }, [loop]);
+
+  // Telemetry updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTelemetry((prev) => {
+        // Speed fluctuations (simulation of track curves)
+        const speedChange = Math.floor(Math.random() * 13) - 6;
+        let newSpeed = prev.speed + speedChange;
+        if (newSpeed > 338) newSpeed = 338;
+        if (newSpeed < 275) newSpeed = 275;
+
+        // Gear shifts correlating with speed
+        let newGear = prev.gear;
+        if (newSpeed > 320 && Math.random() > 0.4) newGear = 8;
+        else if (newSpeed < 290 && Math.random() > 0.4) newGear = 6;
+        else if (newSpeed >= 290 && newSpeed <= 320 && Math.random() > 0.6) newGear = 7;
+
+        // ERS state
+        let newErs = prev.ers - (Math.random() > 0.7 ? 1 : 0);
+        if (newErs < 12) newErs = 98;
+
+        return {
+          speed: newSpeed,
+          gear: newGear,
+          ers: newErs,
+          lap: prev.lap,
+        };
+      });
+    }, 150);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Increment laps based on the animation cycle (4s)
+  useEffect(() => {
+    const lapInterval = setInterval(() => {
+      setTelemetry((prev) => ({ ...prev, lap: prev.lap + 1 }));
+    }, 4000);
+    return () => clearInterval(lapInterval);
   }, []);
 
   if (!shouldRender) return null;
@@ -77,7 +131,7 @@ export default function SilverArrowLoader() {
 
         {/* Mercedes F1 Car Photo */}
         <div style={{
-          animation: 'zoomAcross 3.6s cubic-bezier(0.25, 1, 0.3, 1) forwards',
+          animation: 'zoomAcross 4.0s cubic-bezier(0.25, 1, 0.3, 1) infinite',
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
@@ -92,9 +146,51 @@ export default function SilverArrowLoader() {
         </div>
       </div>
 
-      {/* Glow text */}
+      {/* Live Telemetry Display Panel */}
       <div style={{
-        marginTop: 20,
+        marginTop: 10,
+        background: 'rgba(22, 22, 26, 0.75)',
+        border: '1px solid rgba(39, 244, 210, 0.15)',
+        borderRadius: 6,
+        padding: '10px 24px',
+        display: 'flex',
+        gap: 24,
+        fontFamily: 'var(--font-mono)',
+        fontSize: 11,
+        color: '#8a9099',
+        letterSpacing: '0.08em',
+        boxShadow: '0 4px 20px rgba(0,0,0,0.4)',
+        backdropFilter: 'blur(4px)',
+      }}>
+        <div>
+          LAP: <span style={{ color: '#fff', fontWeight: 700 }}>{String(telemetry.lap).padStart(2, '0')}</span>
+        </div>
+        <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+        <div>
+          SPEED: <span style={{ color: 'var(--mercedes)', fontWeight: 700 }}>{telemetry.speed}</span> <span style={{ fontSize: 9 }}>KM/H</span>
+        </div>
+        <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+        <div>
+          GEAR: <span style={{ color: '#fff', fontWeight: 700 }}>{telemetry.gear}</span>
+        </div>
+        <div style={{ width: 1, height: 14, background: 'rgba(255,255,255,0.1)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span>ERS:</span>
+          <div style={{ width: 50, height: 6, background: '#222', borderRadius: 3, overflow: 'hidden', display: 'inline-flex' }}>
+            <div style={{
+              width: `${telemetry.ers}%`,
+              height: '100%',
+              background: telemetry.ers > 20 ? 'var(--mercedes)' : '#ff4a4a',
+              transition: 'width 0.15s ease',
+            }} />
+          </div>
+          <span style={{ color: '#fff', fontWeight: 700, minWidth: 26, textAlign: 'right' }}>{telemetry.ers}%</span>
+        </div>
+      </div>
+
+      {/* Status Info */}
+      <div style={{
+        marginTop: 24,
         fontFamily: 'var(--font-mono)',
         fontSize: 12,
         fontWeight: 700,
@@ -108,7 +204,9 @@ export default function SilverArrowLoader() {
         gap: 6,
       }}>
         <span>Karthik's Pit Wall</span>
-        <span style={{ fontSize: 9, color: 'var(--mercedes)', letterSpacing: '0.18em', opacity: 0.8 }}>Initializing Silver Arrow telemetry...</span>
+        <span style={{ fontSize: 9, color: 'var(--mercedes)', letterSpacing: '0.18em', opacity: 0.8 }}>
+          {loop ? 'Streaming live session telemetry...' : 'Initializing Silver Arrow telemetry...'}
+        </span>
       </div>
     </div>
   );

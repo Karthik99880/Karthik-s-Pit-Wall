@@ -7,6 +7,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SilverArrowLoader from "@/components/SilverArrowLoader";
 import EasterEgg from "@/components/EasterEgg";
+import { Analytics } from "@vercel/analytics/react";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
@@ -29,7 +30,7 @@ export default function App() {
           <SiteNav />
           <Suspense fallback={
             <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
-              <SilverArrowLoader />
+              <SilverArrowLoader loop={true} />
             </div>
           }>
             <Switch>
@@ -40,6 +41,7 @@ export default function App() {
           </Suspense>
           <ThemeToggle />
           <EasterEgg />
+          <Analytics />
         </ErrorBoundary>
       </QueryClientProvider>
     </ThemeProvider>
