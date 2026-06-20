@@ -110,7 +110,7 @@ export default function Footer() {
             Silver Arrows · Race hard · {year}
           </span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Mercedes-AMG Petronas · Brackley Legend
+            Mercedes-AMG Petronas · 2026 Edition
           </span>
         </div>
       </div>

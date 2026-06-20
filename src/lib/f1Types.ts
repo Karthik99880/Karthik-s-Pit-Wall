@@ -198,6 +198,9 @@ export function getNationalityFlag(nationality: string): string {
 
 /** Generates official F1 driver headshot media URL */
 export function getDriverPhoto(givenName: string, familyName: string): string {
+  if (familyName.toLowerCase() === 'antonelli') {
+    return 'https://upload.wikimedia.org/wikipedia/commons/6/69/Andrea_Kimi_Antonelli_2023.jpg';
+  }
   const normalize = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z]/g, "");
   const first = normalize(givenName);
   const last = normalize(familyName);
