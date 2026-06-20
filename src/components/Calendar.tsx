@@ -68,7 +68,7 @@ export default function Calendar() {
               📁 ARCHIVE ENCRYPTION: LEVEL 2
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Return to the primary Scoreboard. Look to the pinnacle of the engineering war. Identify the manufacturer badge of the outfit currently routing the rest of the field in the Constructors' title race, commanding the top tier from Brackley."
+              "Return to the primary Scoreboard. Look to the pinnacle of the engineering war. Identify the manufacturer badge of the outfit currently routing the rest of the field in the Constructors' title race, commanding the top tier from the factory."
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button

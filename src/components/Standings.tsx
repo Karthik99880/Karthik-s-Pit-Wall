@@ -590,7 +590,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
 
         {isFav && (
           <div style={{ margin: '0 26px 22px', padding: '10px 14px', background: 'var(--carbon)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', fontWeight: 800, boxShadow: '0 0 18px rgba(39,244,210,0.3)' }}>
-            ★ Mercedes AMG Petronas · Brackley
+            ★ Mercedes-AMG F1 Team
           </div>
         )}
       </div>
@@ -790,7 +790,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
   const { left, top } = cardPos(rect, 290, 230);
 
   return createPortal(
-    <div style={{
+    <div key={d.Driver.driverId} style={{
       position: 'fixed', left, top, width: 290, zIndex: 99999,
       background: '#111', color: '#fff',
       borderTop: `4px solid ${color}`,
@@ -809,7 +809,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
           right: -30,
           width: '85%',
           opacity: 0.85,
-          zIndex: 0,
+          zIndex: 2,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
           filter: `drop-shadow(0 4px 16px ${color}55)`,
@@ -866,7 +866,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
   const { left, top } = cardPos(rect, 280, 280);
 
   return createPortal(
-    <div style={{
+    <div key={c.Constructor.constructorId} style={{
       position: 'fixed', left, top, width: 280, zIndex: 99999,
       background: '#111', color: '#fff',
       borderTop: `4px solid ${color}`,
@@ -885,7 +885,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
           right: -20,
           width: '90%',
           opacity: 0.85,
-          zIndex: 0,
+          zIndex: 2,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
           filter: `drop-shadow(0 4px 16px ${color}55)`,
@@ -924,7 +924,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
 
       {isFav && (
         <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(4px)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)', position: 'relative', zIndex: 1 }}>
-          ★ Mercedes AMG · Brackley
+          ★ Mercedes-AMG F1 Team
         </div>
       )}
     </div>,

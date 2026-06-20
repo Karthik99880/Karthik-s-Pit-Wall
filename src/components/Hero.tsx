@@ -39,7 +39,7 @@ export default function Hero() {
         </div>
         <div style={{ textAlign: 'right', animation: 'fadeUpSlow 1s ease both 0.7s' }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink-2)', marginBottom: 4 }}>
-            Silver Arrows · Brackley Edition
+            Silver Arrows · 2026 Edition
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
             {dateStr}
@@ -116,7 +116,7 @@ function LiveBadge() {
         background: 'var(--mercedes)', borderRadius: '50%',
         animation: 'blink 1.6s ease infinite',
       }} />
-      BRACKLEY · LIVE
+      TRACKSIDE · LIVE
     </div>
   );
 }
