@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useTheme } from 'next-themes';
 import { Moon, Sun } from 'lucide-react';
 
-/** Floating dark/light switch, pinned bottom-right. */
+
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // next-themes only knows the real theme after hydration
+  
   useEffect(() => setMounted(true), []);
   if (!mounted) return null;
 

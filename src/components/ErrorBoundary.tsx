@@ -3,7 +3,7 @@ import { Component, type ReactNode } from 'react';
 interface Props { children: ReactNode }
 interface State { error: Error | null }
 
-/** Catches render-time crashes so one bad section can't blank the whole app. */
+
 export default class ErrorBoundary extends Component<Props, State> {
   state: State = { error: null };
 
@@ -12,7 +12,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: unknown) {
-    // eslint-disable-next-line no-console
+    
     console.error('[PitWall] render error:', error, info);
   }
 

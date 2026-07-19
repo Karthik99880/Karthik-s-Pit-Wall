@@ -47,7 +47,7 @@ export interface Race {
   date: string;
   time?: string;
   Results?: RaceResult[];
-  // Weekend sessions (present on /current/next/ response)
+  
   FirstPractice?: SessionTime;
   SecondPractice?: SessionTime;
   ThirdPractice?: SessionTime;
@@ -176,7 +176,7 @@ export function isFavoriteTeam(constructorId: string): boolean {
   return id === 'mercedes';
 }
 
-/** Re-exported from the single source of truth in dateUtils. */
+
 export { f1Date as parseF1DateTime } from './dateUtils';
 
 export const NATIONALITY_FLAG: Record<string, string> = {
@@ -196,7 +196,7 @@ export function getNationalityFlag(nationality: string): string {
   return NATIONALITY_FLAG[nationality] ?? '🏁';
 }
 
-/** Generates official F1 driver headshot media URL */
+
 export function getDriverPhoto(givenName: string, familyName: string): string {
   if (familyName.toLowerCase() === 'antonelli') {
     return 'https://upload.wikimedia.org/wikipedia/commons/6/69/Andrea_Kimi_Antonelli_2023.jpg';
@@ -211,9 +211,9 @@ export function getDriverPhoto(givenName: string, familyName: string): string {
   return `https://media.formula1.com/d_driver_fallback_image.png/content/dam/fom-website/drivers/${initial}/${folder}/${filename}.transform/1col/image.png`;
 }
 
-/** Generates official F1 team car media URL */
+
 export function getCarPhoto(constructorId: string): string {
-  // Direct CDN URLs confirmed working from media.formula1.com
+  
   const carMap: Record<string, string> = {
     mercedes:      'mercedes',
     ferrari:       'ferrari',
@@ -229,11 +229,11 @@ export function getCarPhoto(constructorId: string): string {
     'williams-racing': 'williams',
     sauber:        'kick-sauber',
     kick_sauber:   'kick-sauber',
-    audi:          'kick-sauber', // Audi replaces Sauber in 2026, fallback to 2024 Sauber car
-    cadillac:      'haas-f1-team', // Cadillac is new in 2026, fallback to Haas or similar generic shape
+    audi:          'kick-sauber', 
+    cadillac:      'haas-f1-team', 
   };
   const slug = carMap[constructorId.toLowerCase()] ?? constructorId.toLowerCase();
   
-  // Use 2024 CDN as a baseline since 2026 isn't fully populated yet
+  
   return `https://media.formula1.com/content/dam/fom-website/teams/2024/${slug}.png`;
 }

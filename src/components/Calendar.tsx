@@ -164,7 +164,7 @@ export default function Calendar() {
       </div>
 
       <div style={{ position: 'relative', overflow: 'hidden', border: '2px solid var(--ink)', background: 'var(--paper-2)' }}>
-        {/* Progress bar */}
+        {}
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: 'rgba(0,0,0,0.08)', zIndex: 3 }}>
           <div style={{
             height: '100%', background: 'var(--racing)',

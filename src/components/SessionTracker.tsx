@@ -51,7 +51,7 @@ export default function SessionTracker({ race }: { race: Race }) {
   return (
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 36px', animation: 'fadeUpSlow 1s ease both 4s' }}>
       <div style={{ background: 'var(--paper-2)', border: '2px solid var(--ink)', borderTop: 'none' }}>
-        {/* Header */}
+        {}
         <div style={{ padding: '14px 28px 12px', borderBottom: '1px solid var(--rule-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Race Weekend Sessions</span>
@@ -67,7 +67,7 @@ export default function SessionTracker({ race }: { race: Race }) {
           </span>
         </div>
 
-        {/* Sessions */}
+        {}
         <div style={{ display: 'grid', gridTemplateColumns: `repeat(${sessions.length}, 1fr)`, overflowX: 'auto' }}>
           {sessions.map((s, i) => {
             const cd     = cds?.[i];
@@ -87,7 +87,7 @@ export default function SessionTracker({ race }: { race: Race }) {
                 borderTop: isLive ? '3px solid var(--mercedes)' : isNext ? '3px solid var(--mercedes)' : isDone ? '3px solid var(--gold)' : '3px solid transparent',
                 minWidth: 120, transition: 'background 0.3s',
               }}>
-                {/* Label */}
+                {}
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: isLive ? '#fff' : accent, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 5 }}>
                   {s.shortLabel}
                   {isLive && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--mercedes)', display: 'inline-block', animation: 'ferrariPulse 1s ease infinite' }} />}

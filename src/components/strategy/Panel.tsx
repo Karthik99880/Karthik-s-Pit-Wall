@@ -1,11 +1,11 @@
-/** Shared section shell for Strategy Room features — keeps them visually consistent. */
+
 export default function Panel({
   title, accent, num, meta, children,
 }: {
   title: string; accent: string; num: string; meta?: React.ReactNode; children: React.ReactNode;
 }) {
   return (
-    <section style={{ marginBottom: 36, animation: 'fadeUpSlow 0.8s ease both' }}>
+    <section id={`strat-${num}`} style={{ marginBottom: 36, scrollMarginTop: 80, animation: 'fadeUpSlow 0.8s ease both' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: 'var(--ink-3)' }}>{num}</span>

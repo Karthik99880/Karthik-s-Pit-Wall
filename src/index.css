@@ -51,7 +51,7 @@
   --destructive: 4 90% 46%;
   --radius: 0.25rem;
 
-  /* F1 Design tokens */
+  
   --carbon:     #0a0a0a;
   --carbon-2:   #131313;
   --carbon-3:   #1d1d1d;
@@ -89,7 +89,7 @@
   --app-font-mono: 'JetBrains Mono', monospace;
 }
 
-/* ── Dark mode — flips the paper/ink palette ──────────────── */
+
 .dark {
   --paper:      #0d0e10;
   --paper-2:    #16181b;
@@ -102,7 +102,7 @@
 }
 .dark body { background: var(--paper); color: var(--ink); }
 
-/* Smooth the swap so the whole page doesn't hard-cut */
+
 html, body { transition: background 0.3s ease, color 0.3s ease; }
 
 @layer base {
@@ -119,7 +119,7 @@ html, body { transition: background 0.3s ease, color 0.3s ease; }
   }
 }
 
-/* ── Animations ───────────────────────────────────────────── */
+
 @keyframes maskRevealUp {
   0%   { clip-path: inset(100% 0 0 0); transform: translateY(20px); }
   100% { clip-path: inset(0 0 0 0);   transform: translateY(0); }

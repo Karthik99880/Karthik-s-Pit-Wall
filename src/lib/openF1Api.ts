@@ -1,4 +1,4 @@
-/** OpenF1 API client — mirrors the jolpicaFetch pattern. */
+
 
 const BASE  = 'https://api.openf1.org/v1';
 const TIMEOUT_MS = 10_000;
@@ -10,12 +10,7 @@ export class OpenF1Error extends Error {
   }
 }
 
-/* ── Client-side throttle ──────────────────────────────
- * OpenF1's free tier rate-limits bursts (HTTP 429). We funnel every
- * request through a small queue: at most MAX_CONCURRENCY in flight, with
- * a minimum gap between starts, so a page that needs a dozen calls drips
- * them out instead of firing them all at once.
- */
+
 const MAX_CONCURRENCY = 2;
 const MIN_GAP_MS = 300;
 const MAX_RETRIES = 4;
@@ -68,7 +63,7 @@ async function attemptFetch<T>(url: string): Promise<Attempt<T>> {
     return { ok: false, error: err as Error };
   } finally {
     clearTimeout(timer);
-    release(); // free the slot while we back off, so retries don't starve others
+    release(); 
   }
 }
 
@@ -81,7 +76,7 @@ export async function openF1Fetch<T>(path: string, params: Record<string, string
     const r = await attemptFetch<T>(href);
     if (r.ok) return r.data as T;
     if (r.retryable && attempt < MAX_RETRIES) {
-      // honour Retry-After if sent, else exponential backoff with jitter
+      
       const backoff = r.retryAfterMs ?? Math.min(8000, 500 * 2 ** attempt) + Math.random() * 250;
       await sleep(backoff);
       continue;
@@ -90,7 +85,7 @@ export async function openF1Fetch<T>(path: string, params: Record<string, string
   }
 }
 
-/* ── OpenF1 response types ─────────────────────────── */
+
 
 export type TyreCompound = 'SOFT' | 'MEDIUM' | 'HARD' | 'INTERMEDIATE' | 'WET' | 'UNKNOWN';
 
@@ -107,8 +102,8 @@ export interface Stint {
 
 export interface OpenF1Session {
   session_key:  number;
-  session_name: string;  // e.g. "Race", "Qualifying", "Practice 1"
-  session_type: string;  // e.g. "Race"
+  session_name: string;  
+  session_type: string;  
   meeting_key:  number;
   date_start:   string;
   year:         number;
@@ -118,9 +113,9 @@ export interface OpenF1Driver {
   driver_number: number;
   broadcast_name: string;
   full_name: string;
-  name_acronym: string;  // 3-letter code
+  name_acronym: string;  
   team_name: string;
-  team_colour: string;   // hex without #
+  team_colour: string;   
   session_key: number;
   meeting_key: number;
 }

@@ -7,7 +7,7 @@ import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import Panel from './Panel';
 
-/** Pit-lane start counts as starting from the back of the grid. */
+
 const startPos = (g: string) => { const n = Number(g); return n === 0 ? 20 : n; };
 
 interface DriverCraft {
@@ -193,7 +193,7 @@ export default function OvertakingIndex() {
       )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 28, alignItems: 'start' }}>
-        {/* Scatter: avg grid vs avg finish */}
+        {}
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
             Avg Start vs Avg Finish — below the line = net gainer
@@ -218,7 +218,7 @@ export default function OvertakingIndex() {
           </div>
         </div>
 
-        {/* Positions-gained ranking */}
+        {}
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
             Positions Gained · Season
@@ -242,7 +242,7 @@ export default function OvertakingIndex() {
                 >
                   {d.label}
                 </span>
-                {/* diverging bar from a centre line */}
+                {}
                 <div style={{ flex: 1, height: 14, position: 'relative', display: 'flex', alignItems: 'center' }}>
                   <div style={{ position: 'absolute', left: '50%', top: 0, bottom: 0, width: 1, background: 'var(--ink-3)' }} />
                   <div style={{

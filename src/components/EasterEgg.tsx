@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 
-/**
- * The meme reveal. It has no trigger of its own — it only listens for the
- * `trigger-easter-egg` window event, which the footer's riddle dispatches
- * once someone cracks the misdirection. Keeps the unlock logic in one place.
- */
+
 export default function EasterEgg() {
   const [open, setOpen] = useState(false);
 

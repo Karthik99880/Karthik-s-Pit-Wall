@@ -5,7 +5,7 @@ import type {
   Race,
 } from './f1Types';
 
-/* ── Jolpica/Ergast response envelopes ─────────────── */
+
 export interface MRDataEnvelope<T> {
   MRData: T;
 }
@@ -29,7 +29,7 @@ export type DriverStandingsResponse      = MRDataEnvelope<StandingsTable>;
 export type ConstructorStandingsResponse = MRDataEnvelope<StandingsTable>;
 export type RaceTableResponse            = MRDataEnvelope<RaceTable>;
 
-/* ── Error type so callers can distinguish failures ── */
+
 export class F1ApiError extends Error {
   constructor(message: string, readonly status?: number) {
     super(message);
@@ -37,10 +37,7 @@ export class F1ApiError extends Error {
   }
 }
 
-/**
- * Fetch a path from the F1 API as JSON, with an AbortController timeout
- * so a hung connection can't keep a query "pending" forever.
- */
+
 export async function jolpicaFetch<T>(path: string): Promise<T> {
   const url = `${API.BASE}${path}?format=json&limit=${API.PAGE_LIMIT}`;
   const controller = new AbortController();
@@ -60,7 +57,7 @@ export async function jolpicaFetch<T>(path: string): Promise<T> {
   }
 }
 
-/* ── Small typed extractors ────────────────────────── */
+
 export function firstStandingsList(res: StandingsTable): StandingsList | undefined {
   return res?.StandingsTable?.StandingsLists?.[0];
 }

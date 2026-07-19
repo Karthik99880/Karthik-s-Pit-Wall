@@ -14,7 +14,7 @@ import { f1Date, msUntil, breakdown } from '@/lib/dateUtils';
 
 const YEAR = SEASON_YEAR;
 
-/* ── Driver Standings ──────────────────────────────── */
+
 export function useDriverStandings() {
   return useQuery({
     queryKey: ['f1', 'driverStandings', YEAR],
@@ -28,7 +28,7 @@ export function useDriverStandings() {
   });
 }
 
-/* ── Constructor Standings ─────────────────────────── */
+
 export function useConstructorStandings() {
   return useQuery({
     queryKey: ['f1', 'constructorStandings', YEAR],
@@ -42,7 +42,7 @@ export function useConstructorStandings() {
   });
 }
 
-/* ── Race Schedule ─────────────────────────────────── */
+
 export function useRaceSchedule() {
   return useQuery({
     queryKey: ['f1', 'schedule', YEAR],
@@ -55,7 +55,7 @@ export function useRaceSchedule() {
   });
 }
 
-/* ── Last Race Results ─────────────────────────────── */
+
 export function useLastRaceResults() {
   return useQuery({
     queryKey: ['f1', 'lastRace', YEAR],
@@ -71,7 +71,7 @@ export function useLastRaceResults() {
   });
 }
 
-/* ── Next Race — dedicated endpoint, always correct ── */
+
 export function useNextRace() {
   return useQuery({
     queryKey: ['f1', 'nextRace'],
@@ -85,15 +85,11 @@ export function useNextRace() {
   });
 }
 
-/* ── Season points progression (per completed round) ──
- * Fetches the driver standings *as of* each completed round so we can
- * chart how the championship developed. One query per round, each cached
- * for an hour — completed rounds never change.
- */
+
 export interface ProgressionPoint {
   round: number;
   raceName: string;
-  /** driverId -> cumulative points after this round */
+  
   points: Record<string, number>;
 }
 
@@ -131,11 +127,7 @@ export function useSeasonProgression(races: Race[] | undefined) {
   return { data, isLoading };
 }
 
-/* ── Full results for each completed round ────────────
- * One request per completed round (cached an hour — finished rounds
- * never change). Powers teammate H2H and the overtaking index from a
- * single source: every RaceResult carries `grid` and `position`.
- */
+
 export interface RoundResults {
   round: number;
   raceName: string;
@@ -172,7 +164,7 @@ export function useSeasonResults(races: Race[] | undefined) {
   return { data, isLoading };
 }
 
-/* ── Build ordered session list from Race object ────── */
+
 export function buildSessions(race: Race) {
   const sessions: Array<{
     key: string; label: string; shortLabel: string;
@@ -196,7 +188,7 @@ export function buildSessions(race: Race) {
   return sessions;
 }
 
-/* ── Countdown helper ──────────────────────────────── */
+
 export function useCountdown(targetDate: string | undefined, targetTime: string | undefined) {
   const target = targetDate ? f1Date(targetDate, targetTime).getTime() : null;
 
@@ -212,10 +204,7 @@ export function useCountdown(targetDate: string | undefined, targetTime: string 
   });
 }
 
-/* ── OpenF1: latest race session key ───────────────────
- * Fetches all sessions for the latest meeting and finds
- * the one whose session_type is "Race" (not Sprint).
- */
+
 export function useLatestRaceSession() {
   return useQuery({
     queryKey: ['openf1', 'latestRaceSession'],
@@ -224,7 +213,7 @@ export function useLatestRaceSession() {
         meeting_key: 'latest',
         year: SEASON_YEAR,
       });
-      // Prefer 'Race' session_type; fall back to last session
+      
       const race = sessions.find(s => s.session_type === 'Race')
         ?? sessions[sessions.length - 1]
         ?? null;
@@ -235,22 +224,20 @@ export function useLatestRaceSession() {
   });
 }
 
-/* ── OpenF1 Stint data ─────────────────────────────────
- * Returns stints + driver info for the latest race session.
- */
+
 export interface StintRow extends Stint {
-  code:      string;   // 3-letter driver code
+  code:      string;   
   fullName:  string;
   teamName:  string;
-  teamColour: string;  // hex without #
+  teamColour: string;  
 }
 
 export interface RaceStintsResult {
   raceName:    string;
   sessionKey:  number;
-  /** driver_number → ordered stints */
+  
   byDriver: Map<number, StintRow[]>;
-  /** ordered list of driver numbers (by first stint appearance) */
+  
   driverOrder: number[];
 }
 
@@ -265,21 +252,21 @@ export function useRaceStints() {
     queryFn: async (): Promise<RaceStintsResult> => {
       const sk = session!.session_key;
 
-      // Fetch stints and drivers in parallel
+      
       const [stints, drivers] = await Promise.all([
         openF1Fetch<Stint[]>('/stints', { session_key: sk }),
         openF1Fetch<OpenF1Driver[]>('/drivers', { session_key: sk }),
       ]);
 
-      // Build driver lookup by number
+      
       const driverMap = new Map<number, OpenF1Driver>();
       for (const d of drivers) driverMap.set(d.driver_number, d);
 
-      // Group stints by driver, enriched with driver info
+      
       const byDriver = new Map<number, StintRow[]>();
       const seen: number[] = [];
 
-      // Sort stints by stint_number so rows are in lap order
+      
       const sorted = [...stints].sort((a, b) =>
         a.driver_number - b.driver_number || a.stint_number - b.stint_number
       );
@@ -310,10 +297,7 @@ export function useRaceStints() {
   });
 }
 
-/* ── OpenF1 Predictive Strategy (Last 5 Races) ─────────
- * Fetches stints from the last 5 completed races to predict
- * the upcoming race's strategy.
- */
+
 export interface PredictiveStrategyResult {
   racesAnalyzed: number;
   avgPitStops: number;
@@ -335,22 +319,22 @@ export function usePredictiveStints() {
 
       if (completedRaces.length === 0) return null;
 
-      // 1. One request for every race session this year, then take the
-      //    most recent five locally — was 5 separate per-country calls.
+      
+      
       const raceSessions = await openF1Fetch<OpenF1Session[]>('/sessions', {
         year: SEASON_YEAR,
         session_type: 'Race',
       });
 
       const sessionKeys = raceSessions
-        .filter(s => new Date(s.date_start).getTime() < now) // only races that have actually run
+        .filter(s => new Date(s.date_start).getTime() < now) 
         .sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime())
         .slice(0, 5)
         .map(s => s.session_key);
       if (sessionKeys.length === 0) return null;
 
-      // 2. Fetch stints per session; tolerate one with no data so a single
-      //    missing/unprocessed session can't fail the whole prediction.
+      
+      
       const allStintsArrays = await Promise.all(
         sessionKeys.map(sk =>
           openF1Fetch<Stint[]>('/stints', { session_key: sk }).catch(() => [] as Stint[]),
@@ -359,7 +343,7 @@ export function usePredictiveStints() {
       
       const allStints = allStintsArrays.flat();
 
-      // 3. Aggregate data
+      
       let totalDrivers = 0;
       let totalPitStops = 0;
       const startCompounds: Record<string, number> = {};
@@ -379,7 +363,7 @@ export function usePredictiveStints() {
           if (sorted.length === 0) continue;
 
           totalDrivers++;
-          totalPitStops += (sorted.length - 1); // 2 stints = 1 pit stop
+          totalPitStops += (sorted.length - 1); 
 
           const startComp = sorted[0].compound;
           startCompounds[startComp] = (startCompounds[startComp] || 0) + 1;
@@ -389,7 +373,7 @@ export function usePredictiveStints() {
         }
       }
 
-      // Find modes
+      
       const likelyStart = Object.keys(startCompounds).reduce((a, b) => startCompounds[a] > startCompounds[b] ? a : b) as TyreCompound;
       const likelyCombo = Object.keys(combos).reduce((a, b) => combos[a] > combos[b] ? a : b);
       const avgPitStops = totalDrivers > 0 ? (totalPitStops / totalDrivers) : 0;

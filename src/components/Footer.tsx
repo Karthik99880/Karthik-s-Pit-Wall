@@ -233,7 +233,7 @@ function RiddleGate({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        {/* Feedback */}
+        {}
         {taunt && (
           <div style={{ marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 11, color: '#ff8c7a', letterSpacing: '0.04em' }}>
             {taunt}

@@ -5,13 +5,13 @@ import {
 import { useDriverStandings, useRaceSchedule, useSeasonProgression } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 
-/** Animated line chart of the top drivers' cumulative points across the season. */
+
 export default function ProgressionChart() {
   const { data: races }    = useRaceSchedule();
   const { data: standings } = useDriverStandings();
   const { data: progression, isLoading } = useSeasonProgression(races);
 
-  // Top 5 drivers by current standings — the only lines worth plotting.
+  
   const topDrivers = useMemo(
     () => (standings ?? []).slice(0, 5).map(s => ({
       id: s.Driver.driverId,
@@ -22,7 +22,7 @@ export default function ProgressionChart() {
     [standings],
   );
 
-  // Shape per-round data for recharts: one row per round, a key per driver.
+  
   const chartData = useMemo(
     () => progression.map(p => {
       const row: Record<string, number | string> = { round: `R${p.round}`, name: p.raceName };
