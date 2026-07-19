@@ -17,7 +17,7 @@ A premium, highly interactive F1 Dashboard built for the current Formula 1 seaso
 * **Tyre Strategy & Degradation Simulator**: Interactive tool to model tyre compounds (Soft, Medium, Hard) and trace lap-time drop-off.
 * **Overtaking & Specialization Indices**: Dynamic metrics displaying driver overtake statistics and track-type specializations (Street circuits vs. High-speed temples).
 
-### 3.  Classified Archives (Easter Egg Hunt)
+### 3. Classified Archives (Easter Egg Hunt)
 For those willing to search deeper, the Pit Wall contains a classified terminal easter egg:
 1. Scroll down to the page footer and locate the dim `🔒 Classified` lock badge.
 2. Click it to initiate a **Level 1 Encryption Decryption Riddle** related to the Scuderia vs. Silver Arrows rivalry.
