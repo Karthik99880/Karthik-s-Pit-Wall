@@ -13,11 +13,11 @@ export default function CircuitSpecialization() {
   const byCategory = useMemo(() => {
     if (!races?.length || !rounds.length) return null;
 
-    // round number -> circuit category
+    
     const roundCat = new Map<number, CircuitCategory>();
     for (const r of races) roundCat.set(Number(r.round), getCircuitCategory(r.Circuit.circuitId));
 
-    // category -> driverId -> { finishes, color, code, fav }
+    
     type Agg = { sum: number; n: number; code: string; color: string; fav: boolean };
     const cats = new Map<CircuitCategory, { drivers: Map<string, Agg>; rounds: Set<number> }>();
 

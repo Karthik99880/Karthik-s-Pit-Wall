@@ -3,10 +3,7 @@ import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
 import { POINTS } from '@/lib/constants';
 
-/**
- * Title-fight analysis: how big is the lead, how many points are still
- * on the table, and is the championship mathematically settled?
- */
+
 export default function ChampionshipBattle() {
   const { data: drivers }      = useDriverStandings();
   const { data: constructors } = useConstructorStandings();
@@ -17,9 +14,9 @@ export default function ChampionshipBattle() {
   const remaining  = allRaces.filter(r => f1Date(r.date, r.time).getTime() > now).length;
   const totalRaces = allRaces.length;
 
-  // Max points a driver could still score: 26 per race (win + FL) + 8 per sprint.
-  // We can't know exactly which rounds have sprints from the schedule list here,
-  // so use a conservative race-only ceiling (still useful for "is it locked?").
+  
+  
+  
   const maxDriverRemaining = remaining * (POINTS.RACE_WIN + POINTS.RACE_FASTEST_LAP);
   const maxCtorRemaining   = remaining * (POINTS.RACE_WIN + POINTS.RACE_FASTEST_LAP) * 2;
 
@@ -80,10 +77,10 @@ function BattleCard({
   leaderColor: string; chaserColor: string; leaderFav: boolean;
   leadPts: number; leaderPts: number; maxRemaining: number;
 }) {
-  // Magic number: lead must exceed everything the chaser could still score.
+  
   const clinched   = maxRemaining > 0 && leadPts > maxRemaining;
-  const magicNumber = Math.max(0, maxRemaining - leadPts + 1); // pts to guarantee
-  // How much of the chaser's max-possible swing the lead already covers.
+  const magicNumber = Math.max(0, maxRemaining - leadPts + 1); 
+  
   const safety = maxRemaining > 0 ? Math.min(100, (leadPts / maxRemaining) * 100) : 100;
 
   return (
@@ -108,7 +105,7 @@ function BattleCard({
           <span style={{ color: '#fff', fontWeight: 700 }}>{leadPts}</span> pts
         </div>
 
-        {/* Safety bar — how locked-in the lead is vs points still available */}
+        {}
         <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', overflow: 'hidden', marginBottom: 8 }}>
           <div style={{ height: '100%', width: `${safety}%`, background: clinched ? 'var(--mercedes)' : leaderColor, transition: 'width 0.8s ease' }} />
         </div>

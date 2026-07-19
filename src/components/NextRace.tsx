@@ -17,7 +17,7 @@ export default function NextRace() {
   }
   if (!race) return null;
 
-  // Safe date parse (strips trailing Z from API time)
+  
   const raceDate = parseF1DateTime(race.date, race.time);
   const now = Date.now();
   const raceTs = raceDate.getTime();
@@ -33,7 +33,7 @@ export default function NextRace() {
       <Wrapper>
         <RaceBlockShell>
           <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 48 }}>
-            {/* Left */}
+            {}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
                 <span style={{
@@ -76,7 +76,7 @@ export default function NextRace() {
               </div>
             </div>
 
-            {/* Right: countdown */}
+            {}
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
               <div style={{
                 fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.26em',

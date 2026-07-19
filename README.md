@@ -1,4 +1,4 @@
-#  Karthik's Pit Wall — Mercedes-AMG F1 Dashboard
+# Karthik's Pit Wall — Mercedes-AMG F1 Dashboard
 
 A premium, highly interactive F1 Dashboard built for the current Formula 1 season. Fully themed with the iconic Mercedes-AMG Petronas styling, featuring live telemetry indicators, constructor progress trackers, championship simulators, and hidden team secrets.
 
@@ -11,7 +11,7 @@ A premium, highly interactive F1 Dashboard built for the current Formula 1 seaso
 * **Constructor Progression**: Dynamic visual representation of team points tracking across the current season.
 * **Next Race Countdown**: Precise lights-out tracker with automated session state transition mechanics.
 
-### 2.  The Strategy Room
+### 2. The Strategy Room
 * **Champion Predictor**: Simulate mathematical probabilities and point distribution to predict the driver's championship resolution.
 * **Teammate Battles**: Head-to-head performance grids showcasing qualifying and race differentials between teammates.
 * **Tyre Strategy & Degradation Simulator**: Interactive tool to model tyre compounds (Soft, Medium, Hard) and trace lap-time drop-off.

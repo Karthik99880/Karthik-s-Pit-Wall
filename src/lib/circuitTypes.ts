@@ -1,12 +1,8 @@
-/**
- * Curated track-type classification — the F1 API has no "circuit type"
- * field, so we map circuitId → category by hand. Categories follow the
- * commonly accepted demands each layout places on car + driver.
- */
+
 export type CircuitCategory = 'STREET' | 'POWER' | 'TECHNICAL' | 'BALANCED';
 
 export const CIRCUIT_CATEGORY: Record<string, CircuitCategory> = {
-  // Street / temporary — walls close, low margin, qualifying-critical
+  
   monaco:       'STREET',
   jeddah:       'STREET',
   baku:         'STREET',
@@ -15,21 +11,21 @@ export const CIRCUIT_CATEGORY: Record<string, CircuitCategory> = {
   miami:        'STREET',
   albert_park:  'STREET',
 
-  // Power / low-downforce — long straights, engine + top speed
+  
   monza:        'POWER',
   spa:          'POWER',
   silverstone:  'POWER',
   red_bull_ring:'POWER',
   villeneuve:   'POWER',
 
-  // Technical / high-downforce — twisty, aero + mechanical grip
+  
   hungaroring:  'TECHNICAL',
   zandvoort:    'TECHNICAL',
   catalunya:    'TECHNICAL',
   suzuka:       'TECHNICAL',
   imola:        'TECHNICAL',
 
-  // Balanced / permanent all-rounders
+  
   bahrain:      'BALANCED',
   shanghai:     'BALANCED',
   americas:     'BALANCED',

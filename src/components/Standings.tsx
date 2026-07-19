@@ -6,11 +6,11 @@ import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDr
 import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
 
-/* ─── hover card state ─────────────────────────────── */
+
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
 type HoveredCtor = { ctor: ConstructorStanding; allDrivers: DriverStanding[]; rect: DOMRect };
 
-/* ─── main component ───────────────────────────────── */
+
 export default function Standings() {
   const { data: drivers, isLoading: dLoad } = useDriverStandings();
   const { data: constructors, isLoading: cLoad } = useConstructorStandings();
@@ -21,7 +21,7 @@ export default function Standings() {
   const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
   const isMobile = useIsMobile();
-  const [tab, setTab] = useState(0); // mobile: which standings column is shown
+  const [tab, setTab] = useState(0); 
 
   useEffect(() => {
     if (query.trim().toLowerCase() === 'llessur') {
@@ -217,7 +217,7 @@ export default function Standings() {
               📁 ARCHIVE ENCRYPTION: LEVEL 7 (FINAL)
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "To unseal the final vault, look to the apex of the 2018 feeder series. A rookie king took the crown before ascending to the silver arrows. Find his family name on the grid, but do not look at it head-on. Like a trailing driver chasing his slipstream, enter it in reverse."
+              "To unseal the final vault, look to the apex of the 2018 feeder series. A rookie king took the crown before ascending to the silver arrows. Find his family name on the grid, but do not look at it head-on. Like a trailing driver chasing his slipstream."
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -308,140 +308,139 @@ export default function Standings() {
       )}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr 1fr', border: '2px solid var(--ink)', background: 'var(--paper)' }}>
 
-        {/* ── Driver Championship ── */}
+        {}
         {(!isMobile || tab === 0) && (
-        <ColWrap
-          title="Driver" subtitle="Championship" num="01"
-          headerExtra={<SearchBox value={query} onChange={setQuery} />}
-        >
-          {dLoad ? <Skeleton /> : filteredDrivers.length === 0 ? (
-            <div style={{ padding: '28px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>
-              No drivers match “{query}”.
-            </div>
-          ) : filteredDrivers.map((d, i) => {
-            const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
-            const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
-            const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
-            return (
-              <DriverRow
-                key={d.Driver.driverId}
-                d={d} color={color} isFav={isFav} team={team} delay={i * 0.055}
-                onEnter={onDriverEnter} onLeave={clearHov}
-                onClick={() => setModalDriver(d)}
-                onTagClick={handleTagClick}
-              />
-            );
-          })}
-        </ColWrap>
+          <ColWrap
+            title="Driver" subtitle="Championship" num="01"
+            headerExtra={<SearchBox value={query} onChange={setQuery} />}
+          >
+            {dLoad ? <Skeleton /> : filteredDrivers.length === 0 ? (
+              <div style={{ padding: '28px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>
+                No drivers match “{query}”.
+              </div>
+            ) : filteredDrivers.map((d, i) => {
+              const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
+              const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
+              const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
+              return (
+                <DriverRow
+                  key={d.Driver.driverId}
+                  d={d} color={color} isFav={isFav} team={team} delay={i * 0.055}
+                  onEnter={onDriverEnter} onLeave={clearHov}
+                  onClick={() => setModalDriver(d)}
+                  onTagClick={handleTagClick}
+                />
+              );
+            })}
+          </ColWrap>
         )}
 
-        {/* ── Constructor Championship ── */}
+        {}
         {(!isMobile || tab === 1) && (
-        <ColWrap title="Constructor" subtitle="Championship" num="02">
-          {cLoad ? <Skeleton /> : (constructors ?? []).map((c, i) => {
-            const color = getTeamColor(c.Constructor.constructorId);
-            const isFav = isFavoriteTeam(c.Constructor.constructorId);
-            const name = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
-            const maxPts = Number((constructors ?? [])[0]?.points ?? 1);
-            return (
-              <CtorRow
-                key={c.Constructor.constructorId}
-                c={c} color={color} isFav={isFav} name={name}
-                maxPts={maxPts} delay={i * 0.07}
-                allDrivers={drivers ?? []}
-                onEnter={onCtorEnter} onLeave={clearHov}
-                onClick={() => handleCtorClick(isFav)}
-              />
-            );
-          })}
-        </ColWrap>
+          <ColWrap title="Constructor" subtitle="Championship" num="02">
+            {cLoad ? <Skeleton /> : (constructors ?? []).map((c, i) => {
+              const color = getTeamColor(c.Constructor.constructorId);
+              const isFav = isFavoriteTeam(c.Constructor.constructorId);
+              const name = getTeamDisplay(c.Constructor.constructorId, c.Constructor.name);
+              const maxPts = Number((constructors ?? [])[0]?.points ?? 1);
+              return (
+                <CtorRow
+                  key={c.Constructor.constructorId}
+                  c={c} color={color} isFav={isFav} name={name}
+                  maxPts={maxPts} delay={i * 0.07}
+                  allDrivers={drivers ?? []}
+                  onEnter={onCtorEnter} onLeave={clearHov}
+                  onClick={() => handleCtorClick(isFav)}
+                />
+              );
+            })}
+          </ColWrap>
         )}
 
-        {/* ── Last Race Podium ── */}
+        {}
         {(!isMobile || tab === 2) && (
-        <ColWrap
-          title={lastRace?.race?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
-          subtitle="Podium Results" num="03"
-        >
-          {rLoad ? <Skeleton /> : !lastRace?.race ? (
-            <div style={{ padding: '32px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>No results yet</div>
-          ) : (
-            <>
-              {(lastRace.results ?? []).slice(0, 3).map((r, i) => {
-                const color = getTeamColor(r.Constructor.constructorId);
-                const isFav = isFavoriteTeam(r.Constructor.constructorId);
-                const medals = ['🥇', '🥈', '🥉'];
-                return (
-                  <div key={r.Driver.driverId} style={{
-                    padding: '18px 24px', borderBottom: '1px solid var(--rule-light)',
-                    display: 'flex', gap: 14, alignItems: 'center',
-                    background: isFav ? 'rgba(255,242,0,0.08)' : 'transparent',
-                    animation: `rowSlide 0.5s ease both ${i * 0.1}s`,
-                  }}>
-                    <span style={{ fontSize: 22 }}>{medals[i]}</span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>
-                        {r.Driver.givenName[0]}. {r.Driver.familyName}
-                        {isFav && <MercedesTag />}
-                      </div>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 3 }}>
-                        {getTeamDisplay(r.Constructor.constructorId, r.Constructor.name)}
-                      </div>
-                    </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</div>
-                      {r.Time && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', marginTop: 2 }}>{r.Time.time}</div>}
-                    </div>
-                  </div>
-                );
-              })}
-
-              {/* P4-P10 compact */}
-              <div style={{ padding: '14px 24px 6px', borderBottom: '1px solid var(--rule-light)' }}>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 10, fontWeight: 600 }}>Points · P4 – P10</div>
-                {(lastRace.results ?? []).slice(3, 10).map((r, i) => {
+          <ColWrap
+            title={lastRace?.race?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
+            subtitle="Podium Results" num="03"
+          >
+            {rLoad ? <Skeleton /> : !lastRace?.race ? (
+              <div style={{ padding: '32px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>No results yet</div>
+            ) : (
+              <>
+                {(lastRace.results ?? []).slice(0, 3).map((r, i) => {
+                  const color = getTeamColor(r.Constructor.constructorId);
                   const isFav = isFavoriteTeam(r.Constructor.constructorId);
+                  const medals = ['🥇', '🥈', '🥉'];
                   return (
                     <div key={r.Driver.driverId} style={{
-                      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                      padding: '5px 0', borderBottom: '1px solid rgba(0,0,0,0.04)',
-                      background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
-                      animation: `rowSlide 0.5s ease both ${(i + 3) * 0.06}s`,
+                      padding: '18px 24px', borderBottom: '1px solid var(--rule-light)',
+                      display: 'flex', gap: 14, alignItems: 'center',
+                      background: isFav ? 'rgba(255,242,0,0.08)' : 'transparent',
+                      animation: `rowSlide 0.5s ease both ${i * 0.1}s`,
                     }}>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{r.position}</span>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1 }}>
-                        {r.Driver.givenName[0]}. {r.Driver.familyName}
-                        {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
-                      </span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</span>
+                      <span style={{ fontSize: 22 }}>{medals[i]}</span>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>
+                          {r.Driver.givenName[0]}. {r.Driver.familyName}
+                        </div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 3 }}>
+                          {getTeamDisplay(r.Constructor.constructorId, r.Constructor.name)}
+                        </div>
+                      </div>
+                      <div style={{ textAlign: 'right' }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</div>
+                        {r.Time && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', marginTop: 2 }}>{r.Time.time}</div>}
+                      </div>
                     </div>
                   );
                 })}
-              </div>
 
-              {/* Fastest lap */}
-              {(() => {
-                const fl = (lastRace.results ?? []).find(r => r.FastestLap?.rank === '1');
-                return fl ? (
-                  <div style={{ padding: '14px 24px' }}>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 7, fontWeight: 600 }}>Fastest Lap</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', fontWeight: 500 }}>{fl.Driver.givenName[0]}. {fl.Driver.familyName}</span>
-                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--ferrari-red)', fontWeight: 700 }}>{fl.FastestLap?.Time.time}</span>
+                {}
+                <div style={{ padding: '14px 24px 6px', borderBottom: '1px solid var(--rule-light)' }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 10, fontWeight: 600 }}>Points · P4 – P10</div>
+                  {(lastRace.results ?? []).slice(3, 10).map((r, i) => {
+                    const isFav = isFavoriteTeam(r.Constructor.constructorId);
+                    return (
+                      <div key={r.Driver.driverId} style={{
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                        padding: '5px 0', borderBottom: '1px solid rgba(0,0,0,0.04)',
+                        background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
+                        animation: `rowSlide 0.5s ease both ${(i + 3) * 0.06}s`,
+                      }}>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{r.position}</span>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1 }}>
+                          {r.Driver.givenName[0]}. {r.Driver.familyName}
+                          {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
+                        </span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {}
+                {(() => {
+                  const fl = (lastRace.results ?? []).find(r => r.FastestLap?.rank === '1');
+                  return fl ? (
+                    <div style={{ padding: '14px 24px' }}>
+                      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 7, fontWeight: 600 }}>Fastest Lap</div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', fontWeight: 500 }}>{fl.Driver.givenName[0]}. {fl.Driver.familyName}</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--ferrari-red)', fontWeight: 700 }}>{fl.FastestLap?.Time.time}</span>
+                      </div>
                     </div>
-                  </div>
-                ) : null;
-              })()}
-            </>
-          )}
-        </ColWrap>
+                  ) : null;
+                })()}
+              </>
+            )}
+          </ColWrap>
         )}
       </div>
 
 
-      {/* Hover cards — rendered in document flow at fixed position */}
+      {}
 
-      {/* Hover cards — rendered in document flow at fixed position */}
+      {}
       {!isMobile && hovD && <DriverCard data={hovD} />}
       {!isMobile && hovC && <CtorCard data={hovC} />}
 
@@ -450,7 +449,7 @@ export default function Standings() {
   );
 }
 
-/* ─── Search box ───────────────────────────────────── */
+
 function SearchBox({ value, onChange }: { value: string; onChange: (v: string) => void }) {
   return (
     <div style={{ position: 'relative', marginTop: 12 }}>
@@ -479,7 +478,7 @@ function SearchBox({ value, onChange }: { value: string; onChange: (v: string) =
   );
 }
 
-/* ─── Mobile segmented control ─────────────────────── */
+
 function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: number; onChange: (i: number) => void }) {
   return (
     <div role="tablist" style={{
@@ -510,7 +509,7 @@ function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: 
   );
 }
 
-/* ─── Driver detail modal (bottom sheet on mobile) ──── */
+
 function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => void; sheet?: boolean }) {
   const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
   const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
@@ -573,8 +572,8 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{d.Driver.nationality}</span>
             </div>
           </div>
-          <img 
-            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)} 
+          <img
+            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)}
             alt={`${d.Driver.givenName} ${d.Driver.familyName}`}
             style={{ width: 90, height: 90, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1.5px solid ${color}`, marginLeft: 16 }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -588,11 +587,6 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
           <BigStat label="Code" value={code} />
         </div>
 
-        {isFav && (
-          <div style={{ margin: '0 26px 22px', padding: '10px 14px', background: 'var(--carbon)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.16em', textTransform: 'uppercase', color: '#fff', fontWeight: 800, boxShadow: '0 0 18px rgba(39,244,210,0.3)' }}>
-            ★ Mercedes-AMG F1 Team
-          </div>
-        )}
       </div>
     </div>,
     document.body,
@@ -608,7 +602,7 @@ function BigStat({ label, value, accent }: { label: string; value: string; accen
   );
 }
 
-/* ─── Column wrapper ───────────────────────────────── */
+
 function ColWrap({ title, subtitle, num, children, headerExtra }: { title: string; subtitle: string; num: string; children: React.ReactNode; headerExtra?: React.ReactNode }) {
   return (
     <div style={{ borderRight: '1px solid var(--rule-light)', display: 'flex', flexDirection: 'column' }}>
@@ -623,7 +617,7 @@ function ColWrap({ title, subtitle, num, children, headerExtra }: { title: strin
   );
 }
 
-/* ─── Driver row ───────────────────────────────────── */
+
 function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, onTagClick }: {
   d: DriverStanding; color: string; isFav: boolean; team: string; delay: number;
   onEnter: (d: DriverStanding, el: HTMLElement) => void;
@@ -674,7 +668,6 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 14, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {d.Driver.givenName[0]}. {d.Driver.familyName}
-            {isFav && <MercedesTag onClick={onTagClick ? (e) => { e.stopPropagation(); onTagClick(d.Driver.permanentNumber || ''); } : undefined} />}
             {d.Driver.permanentNumber === '44' && stage >= 6 && (
               <span
                 onClick={onTagClick ? (e) => { e.stopPropagation(); onTagClick('44'); } : undefined}
@@ -703,7 +696,7 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
   );
 }
 
-/* ─── Constructor row ──────────────────────────────── */
+
 function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, onLeave, onClick }: {
   c: ConstructorStanding; color: string; isFav: boolean; name: string;
   maxPts: number; delay: number; allDrivers: DriverStanding[];
@@ -747,7 +740,7 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', fontWeight: 600 }}>P{c.position}</span>
           <div style={{ width: 10, height: 10, borderRadius: '50%', background: color, flexShrink: 0 }} />
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>
-            {name}{isFav && <MercedesTag />}
+            {name}
           </span>
         </div>
         <div>
@@ -763,22 +756,22 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
   );
 }
 
-/* ─── hover card position helper ──────────────────── */
+
 function cardPos(rect: DOMRect, cardW: number, cardH = 320) {
-  // position: fixed uses viewport coords — never add scrollY
+  
   const gap = 10;
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  // prefer right side; fall back to left if it would overflow
+  
   const left = rect.right + gap + cardW > vw
     ? Math.max(0, rect.left - cardW - gap)
     : rect.right + gap;
-  // vertically center on the row; clamp within viewport
+  
   const top = Math.min(Math.max(8, rect.top - cardH / 2 + rect.height / 2), vh - cardH - 8);
   return { left, top };
 }
 
-/* ─── Driver hover card ────────────────────────────── */
+
 function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
   const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
   const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
@@ -799,7 +792,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
       pointerEvents: 'none',
       overflow: 'hidden',
     }}>
-      {/* Car zooming in from right */}
+      {}
       <img
         src={getCarPhoto(d.Constructors[0]?.constructorId ?? '')}
         alt=""
@@ -809,14 +802,14 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
           right: -30,
           width: '85%',
           opacity: 0.85,
-          zIndex: 2,
+          zIndex: 0,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
           filter: `drop-shadow(0 4px 16px ${color}55)`,
         }}
         onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
-      
+
       {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(39,244,210,0.12) 0%,transparent 55%)', zIndex: 0, pointerEvents: 'none' }} />}
 
       <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
@@ -828,8 +821,8 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 6 }}>{team}</div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-          <img 
-            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)} 
+          <img
+            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)}
             alt=""
             style={{ width: 50, height: 50, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1px solid ${color}` }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -847,17 +840,12 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
         <Stat2 label="Nat." value={`${natFlag}`} small />
       </div>
 
-      {isFav && (
-        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(4px)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)', position: 'relative', zIndex: 1 }}>
-          ★ Mercedes AMG Driver
-        </div>
-      )}
     </div>,
     document.body
   );
 }
 
-/* ─── Constructor hover card ───────────────────────── */
+
 function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }) {
   const color = getTeamColor(c.Constructor.constructorId);
   const isFav = isFavoriteTeam(c.Constructor.constructorId);
@@ -875,7 +863,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
       pointerEvents: 'none',
       overflow: 'hidden',
     }}>
-      {/* Car zooming in from right */}
+      {}
       <img
         src={getCarPhoto(c.Constructor.constructorId)}
         alt=""
@@ -885,7 +873,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
           right: -20,
           width: '90%',
           opacity: 0.85,
-          zIndex: 2,
+          zIndex: 0,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
           filter: `drop-shadow(0 4px 16px ${color}55)`,
@@ -932,7 +920,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
   );
 }
 
-/* ─── Shared atoms ─────────────────────────────────── */
+
 function Stat2({ label, value, accent, small }: { label: string; value: string; accent?: string; small?: boolean }) {
   return (
     <div>
@@ -952,26 +940,4 @@ function Skeleton() {
   );
 }
 
-function MercedesTag({ onClick }: { onClick?: (e: React.MouseEvent) => void }) {
-  return (
-    <span
-      onClick={onClick}
-      style={{
-        marginLeft: 8,
-        padding: '2px 6px',
-        background: 'var(--ink)',
-        color: 'var(--mercedes)',
-        fontFamily: 'var(--font-mono)',
-        fontSize: 8,
-        fontWeight: 800,
-        letterSpacing: '0.12em',
-        verticalAlign: 'middle',
-        borderRadius: '2px',
-        boxShadow: '0 0 10px rgba(39,244,210,0.2)',
-        cursor: onClick ? 'pointer' : 'default',
-      }}
-    >
-      AMG
-    </span>
-  );
-}
+

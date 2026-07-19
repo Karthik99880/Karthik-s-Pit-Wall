@@ -4,7 +4,7 @@ import type { StintRow } from '@/hooks/useF1Data';
 import type { TyreCompound } from '@/lib/openF1Api';
 import Panel from './Panel';
 
-/* ── Pirelli official tyre colours ──────────────────── */
+
 const COMPOUND_COLOR: Record<TyreCompound, string> = {
   SOFT:         '#E8002D',
   MEDIUM:       '#FFC906',
@@ -23,7 +23,7 @@ const COMPOUND_LABEL: Record<TyreCompound, string> = {
   UNKNOWN:      '?',
 };
 
-/* ── Tooltip ─────────────────────────────────────────── */
+
 interface TooltipData {
   stint: StintRow;
   x: number;
@@ -68,7 +68,7 @@ function TipRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-/* ── Legend ──────────────────────────────────────────── */
+
 function CompoundLegend() {
   const items: TyreCompound[] = ['SOFT', 'MEDIUM', 'HARD', 'INTERMEDIATE', 'WET'];
   return (
@@ -83,7 +83,7 @@ function CompoundLegend() {
   );
 }
 
-/* ── Single driver row ───────────────────────────────── */
+
 function DriverStintRow({
   driverNum,
   stints,
@@ -112,7 +112,7 @@ function DriverStintRow({
       borderBottom: '1px solid var(--rule-light)',
       background: isMercedes ? 'rgba(39,244,210,0.05)' : 'transparent',
     }}>
-      {/* Driver label */}
+      {}
       <span style={{
         width: 38,
         fontFamily: 'var(--font-mono)',
@@ -125,7 +125,7 @@ function DriverStintRow({
         {code}
       </span>
 
-      {/* Stint bars */}
+      {}
       <div style={{ flex: 1, height: 20, display: 'flex', position: 'relative', overflow: 'hidden' }}>
         {stints.map((s, i) => {
           const lapSpan = (s.lap_end - s.lap_start + 1);
@@ -153,7 +153,7 @@ function DriverStintRow({
               }}
               title=""
             >
-              {/* Show compound letter only if wide enough */}
+              {}
               {widthPct > 8 && (
                 <span style={{
                   fontFamily: 'var(--font-mono)',
@@ -171,7 +171,7 @@ function DriverStintRow({
         })}
       </div>
 
-      {/* Stint count */}
+      {}
       <span style={{
         width: 16,
         fontFamily: 'var(--font-mono)',
@@ -186,7 +186,7 @@ function DriverStintRow({
   );
 }
 
-/* ── Lap axis ────────────────────────────────────────── */
+
 function LapAxis({ totalLaps }: { totalLaps: number }) {
   const ticks = [];
   const step  = totalLaps <= 30 ? 5 : totalLaps <= 60 ? 10 : 15;
@@ -209,14 +209,14 @@ function LapAxis({ totalLaps }: { totalLaps: number }) {
   );
 }
 
-/* ── Main Component ─────────────────────────────────── */
+
 export default function TyreStrategy() {
   const { data: stintsData, isLoading, isError } = useRaceStints();
   const { data: predictiveData } = usePredictiveStints();
   const { data: lastRace } = useLastRaceResults();
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
 
-  /* derive ordered driver list + total laps from last race results */
+  
   const finishOrder: number[] = (lastRace?.results ?? []).map(r => {
     const num = r.Driver.permanentNumber ? Number(r.Driver.permanentNumber) : null;
     return num;
@@ -240,15 +240,15 @@ export default function TyreStrategy() {
 
   const { byDriver, driverOrder, raceName } = stintsData;
 
-  /* Calculate total race laps */
+  
   let totalLaps = 0;
   for (const stints of byDriver.values()) {
     const last = stints[stints.length - 1];
     if (last && last.lap_end > totalLaps) totalLaps = last.lap_end;
   }
-  if (totalLaps < 1) totalLaps = 60; // fallback
+  if (totalLaps < 1) totalLaps = 60; 
 
-  /* Sort drivers: use finishing order if available, else appearance order */
+  
   const sortedDrivers = finishOrder.length > 0
     ? [
         ...finishOrder.filter(n => byDriver.has(n)),
@@ -265,7 +265,7 @@ export default function TyreStrategy() {
     >
       {tooltip && <StintTooltip data={tooltip} />}
 
-      {/* Predictive Strategy Section */}
+      {}
       {predictiveData && (
         <div style={{
           background: 'var(--carbon)',
@@ -304,7 +304,7 @@ export default function TyreStrategy() {
 
       <CompoundLegend />
 
-      {/* Header row */}
+      {}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -320,7 +320,7 @@ export default function TyreStrategy() {
         <span style={{ width: 16, fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', textAlign: 'right' }}>STS</span>
       </div>
 
-      {/* Driver rows */}
+      {}
       {sortedDrivers.map(dNum => {
         const stints = byDriver.get(dNum) ?? [];
         const teamColour = (stints[0]?.teamColour ?? '888888').toLowerCase();
@@ -339,10 +339,10 @@ export default function TyreStrategy() {
         );
       })}
 
-      {/* Lap number axis */}
+      {}
       <LapAxis totalLaps={totalLaps} />
 
-      {/* Footer note */}
+      {}
       <div style={{ marginTop: 16, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', lineHeight: 1.5, letterSpacing: '0.04em' }}>
         Data: OpenF1.org · Sorted by finishing position · STS = number of stints
       </div>

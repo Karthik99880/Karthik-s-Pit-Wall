@@ -15,11 +15,11 @@ interface TeamH2H {
   a: DriverAgg; b: DriverAgg;
   raceA: number; raceB: number;
   qualiA: number; qualiB: number;
-  avgGridDelta: number; // negative => A starts ahead on average
+  avgGridDelta: number; 
   rounds: number;
 }
 
-/** grid "0" means a pit-lane start — sort it last, not first. */
+
 const gridVal = (g: string) => { const n = Number(g); return n === 0 ? 99 : n; };
 
 export default function TeammateBattle() {
@@ -70,7 +70,7 @@ export default function TeammateBattle() {
         rounds: counted,
       } as TeamH2H;
     }).filter((t): t is TeamH2H => !!t)
-      .sort((x, y) => (y.fav ? 1 : 0) - (x.fav ? 1 : 0)); // favourite first
+      .sort((x, y) => (y.fav ? 1 : 0) - (x.fav ? 1 : 0)); 
   }, [drivers, constructors, rounds]);
 
   if (!teams.length) {
@@ -109,7 +109,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-        {/* Donut */}
+        {}
         <div style={{ width: 96, height: 96, position: 'relative', flexShrink: 0 }}>
           <ResponsiveContainer>
             <PieChart>
@@ -125,7 +125,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
           </div>
         </div>
 
-        {/* H2H tallies */}
+        {}
         <div style={{ flex: 1 }}>
           <H2HRow label="Quali" a={t.qualiA} b={t.qualiB} color={t.color} />
           <H2HRow label="Race"  a={t.raceA}  b={t.raceB}  color={t.color} />
@@ -136,7 +136,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
         </div>
       </div>
 
-      {/* Driver legend */}
+      {}
       <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 14, fontFamily: 'var(--font-mono)', fontSize: 10 }}>
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: t.color, fontWeight: 700 }}>
           <span style={{ width: 9, height: 9, background: t.color, display: 'inline-block' }} />{t.a.name} · {t.a.points}

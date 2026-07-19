@@ -19,7 +19,7 @@ export default function Hero() {
       position: 'relative',
       overflow: 'hidden',
     }}>
-      {/* Speed lines */}
+      {}
       {[18, 42, 68].map((top, i) => (
         <div key={i} style={{
           position: 'absolute', top: `${top}%`, left: 0,
@@ -31,7 +31,7 @@ export default function Hero() {
         }} />
       ))}
 
-      {/* Top bar */}
+      {}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, animation: 'fadeUpSlow 1s ease both 0.2s' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink)', animation: 'checkerFadeIn 0.9s cubic-bezier(.2,.8,.2,1) both 0.5s' }}>
           <CheckerFlag />
@@ -70,7 +70,7 @@ export default function Hero() {
         }} />
       </div>
 
-      {/* Sub bar */}
+      {}
       <div style={{
         fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.2em', textTransform: 'uppercase',
         color: 'var(--ink-2)', paddingTop: 20, borderTop: '1px solid var(--ink)',

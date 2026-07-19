@@ -9,7 +9,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
   const [visible, setVisible] = useState(true);
   const [shouldRender, setShouldRender] = useState(true);
 
-  // Live telemetry state for interactive immersion
+  
   const [telemetry, setTelemetry] = useState({
     speed: 312,
     gear: 7,
@@ -20,12 +20,12 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
   useEffect(() => {
     if (loop) return;
 
-    // Fade out after 3.5 seconds in splash mode
+    
     const fadeTimeout = setTimeout(() => {
       setVisible(false);
     }, 3500);
 
-    // Remove from DOM after transition completes (0.6s fade)
+    
     const removeTimeout = setTimeout(() => {
       setShouldRender(false);
     }, 4100);
@@ -36,23 +36,23 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
     };
   }, [loop]);
 
-  // Telemetry updates
+  
   useEffect(() => {
     const interval = setInterval(() => {
       setTelemetry((prev) => {
-        // Speed fluctuations (simulation of track curves)
+        
         const speedChange = Math.floor(Math.random() * 13) - 6;
         let newSpeed = prev.speed + speedChange;
         if (newSpeed > 338) newSpeed = 338;
         if (newSpeed < 275) newSpeed = 275;
 
-        // Gear shifts correlating with speed
+        
         let newGear = prev.gear;
         if (newSpeed > 320 && Math.random() > 0.4) newGear = 8;
         else if (newSpeed < 290 && Math.random() > 0.4) newGear = 6;
         else if (newSpeed >= 290 && newSpeed <= 320 && Math.random() > 0.6) newGear = 7;
 
-        // ERS state
+        
         let newErs = prev.ers - (Math.random() > 0.7 ? 1 : 0);
         if (newErs < 12) newErs = 98;
 
@@ -68,7 +68,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
     return () => clearInterval(interval);
   }, []);
 
-  // Increment laps based on the animation cycle (4s)
+  
   useEffect(() => {
     const lapInterval = setInterval(() => {
       setTelemetry((prev) => ({ ...prev, lap: prev.lap + 1 }));
@@ -110,9 +110,9 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
         }
       `}</style>
 
-      {/* Loading animation container */}
+      {}
       <div style={{ position: 'relative', width: '100%', maxWidth: 700, height: 180, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-        {/* Speed lines */}
+        {}
         <div style={{
           position: 'absolute',
           height: 2,
@@ -129,7 +129,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
           top: '53%',
         }} />
 
-        {/* Mercedes F1 Car Photo */}
+        {}
         <div style={{
           animation: 'zoomAcross 4.0s cubic-bezier(0.25, 1, 0.3, 1) infinite',
           display: 'flex',
@@ -146,7 +146,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
         </div>
       </div>
 
-      {/* Live Telemetry Display Panel */}
+      {}
       <div style={{
         marginTop: 10,
         background: 'rgba(22, 22, 26, 0.75)',
@@ -188,7 +188,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
         </div>
       </div>
 
-      {/* Status Info */}
+      {}
       <div style={{
         marginTop: 24,
         fontFamily: 'var(--font-mono)',

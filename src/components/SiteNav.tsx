@@ -1,7 +1,7 @@
 import { Link, useRoute } from 'wouter';
 import { Gauge, FlaskConical } from 'lucide-react';
 
-/** Slim top nav for switching between the dashboard and the analysis page. */
+
 export default function SiteNav() {
   return (
     <nav style={{

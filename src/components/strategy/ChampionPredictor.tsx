@@ -6,11 +6,7 @@ import { POINTS } from '@/lib/constants';
 import Panel from './Panel';
 
 
-/**
- * Projects the final championship from each driver's average points per
- * race (APPR), and estimates the round at which the projected leader
- * clinches (lead exceeds the max a rival could still score).
- */
+
 export default function ChampionPredictor() {
   const { data: drivers }  = useDriverStandings();
   const { data: races }    = useRaceSchedule();
@@ -40,9 +36,9 @@ export default function ChampionPredictor() {
       };
     }).sort((a, b) => b.final - a.final);
 
-    // Clinch estimate: walk remaining rounds, accruing APPR for the top two.
-    // Champion is mathematically safe once the lead exceeds what the rival
-    // could still score at a maximum of 26 pts/round (win + fastest lap).
+    
+    
+    
     let clinchRace: string | null = null;
     const [p1, p2] = projected;
     if (p1 && p2) {
@@ -204,7 +200,7 @@ export default function ChampionPredictor() {
         </div>
       )}
 
-      {/* Headline projection */}
+      {}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', marginBottom: 22, padding: '16px 18px', background: 'var(--carbon)', borderLeft: `4px solid ${model.champion.color}` }}>
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>Projected Champion</div>
@@ -223,7 +219,7 @@ export default function ChampionPredictor() {
         </div>
       </div>
 
-      {/* Projected final table */}
+      {}
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 10, fontWeight: 700 }}>
         Projected Final Standings
       </div>
@@ -249,7 +245,7 @@ export default function ChampionPredictor() {
           <span style={{ flex: 1, fontFamily: 'var(--font-serif)', fontSize: 15, fontWeight: 700, color: 'var(--ink)' }}>
             {d.name}{d.fav && <Star small />}
           </span>
-          {/* projection bar */}
+          {}
           <div style={{ flex: 1.4, height: 6, background: 'var(--paper-3)', overflow: 'hidden', maxWidth: 180 }}>
             <div style={{ height: '100%', width: `${(d.final / maxFinal) * 100}%`, background: d.color, transition: 'width 0.7s ease' }} />
           </div>
