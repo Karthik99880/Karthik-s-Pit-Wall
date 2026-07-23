@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://karthik-pit-wall.vercel.app/sitemap.xml
