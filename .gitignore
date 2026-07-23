@@ -43,4 +43,6 @@ build/
 .DS_Store
 Thumbs.db
 image.png
+.playwright-mcp
+
 
