@@ -11,13 +11,17 @@ import { Analytics } from "@vercel/analytics/react";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
+const RaceDay = lazy(() => import("@/pages/RaceDay"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 3,
+      // jolpicaFetch/openF1Fetch already retry with backoff internally, so keep
+      // this layer shallow — otherwise a rate-limited call multiplies out.
+      retry: 1,
       retryDelay: (attempt) => Math.min(1000 * 2 ** attempt, 30000),
+      refetchOnWindowFocus: false,
     },
   },
 });
@@ -36,6 +40,7 @@ export default function App() {
             <Switch>
               <Route path="/" component={Dashboard} />
               <Route path="/strategy" component={StrategyRoom} />
+              <Route path="/raceday" component={RaceDay} />
               <Route component={NotFound} />
             </Switch>
           </Suspense>

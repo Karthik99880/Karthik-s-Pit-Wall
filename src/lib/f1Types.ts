@@ -35,6 +35,7 @@ export interface SessionTime {
 
 export interface Race {
   round: string;
+  season?: string;
   raceName: string;
   Circuit: {
     circuitId: string;
@@ -42,6 +43,8 @@ export interface Race {
     Location: {
       country: string;
       locality: string;
+      lat?: string;
+      long?: string;
     };
   };
   date: string;
