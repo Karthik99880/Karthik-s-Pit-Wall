@@ -273,7 +273,7 @@ export default function TyreStrategy() {
           padding: '16px 20px',
           marginBottom: 24,
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(140px, 100%), 1fr))',
           gap: 16,
           boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.2)'
         }}>

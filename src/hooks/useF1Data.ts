@@ -298,6 +298,72 @@ export function useRaceStints() {
 }
 
 
+/* ── Season pit stops (Jolpica) ─────────────────────── */
+
+interface PitStopsResponse {
+  MRData: {
+    RaceTable: {
+      Races: Array<{
+        round: string;
+        raceName: string;
+        PitStops?: Array<{ driverId: string; lap: string; stop: string; time: string; duration: string }>;
+      }>;
+    };
+  };
+}
+
+export interface SeasonPitStop {
+  driverId: string;
+  round: number;
+  raceName: string;
+  lap: number;
+  stopNo: number;
+  duration: number;
+}
+
+/** Ergast durations come as "24.976" or occasionally "1:05.234". */
+function parsePitDuration(d: string): number {
+  if (!d) return NaN;
+  if (d.includes(':')) {
+    const [m, s] = d.split(':');
+    return Number(m) * 60 + Number(s);
+  }
+  return Number(d);
+}
+
+export function useSeasonPitStops(races: Race[] | undefined) {
+  const now = Date.now();
+  const completed = (races ?? []).filter(r => f1Date(r.date, r.time).getTime() < now);
+
+  const queries = useQueries({
+    queries: completed.map(race => ({
+      queryKey: ['f1', 'pitstops', YEAR, race.round],
+      queryFn: async (): Promise<SeasonPitStop[]> => {
+        const data = await jolpicaFetch<PitStopsResponse>(`/${YEAR}/${race.round}/pitstops/`);
+        const r = data.MRData?.RaceTable?.Races?.[0];
+        const name = (r?.raceName ?? race.raceName).replace('Grand Prix', '').trim();
+        return (r?.PitStops ?? [])
+          .map(p => ({
+            driverId: p.driverId,
+            round: Number(race.round),
+            raceName: name,
+            lap: Number(p.lap),
+            stopNo: Number(p.stop),
+            duration: parsePitDuration(p.duration),
+          }))
+          .filter(p => Number.isFinite(p.duration) && p.duration > 0);
+      },
+      staleTime: CACHE.PROGRESSION,
+      retry: 1,
+    })),
+  });
+
+  const isLoading = queries.some(q => q.isLoading);
+  const data = queries.flatMap(q => q.data ?? []);
+  return { data, isLoading };
+}
+
+
 export interface PredictiveStrategyResult {
   racesAnalyzed: number;
   avgPitStops: number;

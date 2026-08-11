@@ -79,7 +79,7 @@ export default function TeammateBattle() {
 
   return (
     <Panel title="Teammate" accent="Head-to-Head" num="02" meta="Same car · true baseline">
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(330px, 1fr))', gap: 16 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(330px, 100%), 1fr))', gap: 16 }}>
         {teams.map(t => <TeamCard key={t.id} t={t} />)}
       </div>
     </Panel>
