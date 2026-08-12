@@ -2,18 +2,17 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mercedes Pit Wall · F1 2026 Live Dashboard</title>
 
-
-    <meta name="description" content="A broadcaster-quality F1 2026 dashboard — live countdown to the next Grand Prix, real-time standings, season calendar, and paddock intel. Mercedes AMG Petronas edition." />
+    <meta name="description" content="Live F1 2026 dashboard — standings, next race countdown, calendar, weekend weather and race-day timing. Mercedes AMG Petronas edition." />
     <meta name="author" content="Anirudh Goel" />
-    <meta name="keywords" content="F1 2026 dashboard, Mercedes F1 dashboard, Formula 1 live dashboard, F1 countdown, F1 standings tracker, Mercedes AMG Petronas" />
+    <meta name="keywords" content="F1 2026 dashboard, Mercedes F1 dashboard, Formula 1 live dashboard, F1 countdown, F1 standings tracker, Mercedes AMG Petronas, Pit Wall F1, Silver Arrows" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#27F4D2" />
 
-    
     <link rel="canonical" href="https://karthik-pit-wall.vercel.app/" />
+    <link rel="manifest" href="/manifest.json" />
 
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://karthik-pit-wall.vercel.app/" />
@@ -31,9 +30,39 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;0,800;1,400;1,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Mercedes Pit Wall",
+      "url": "https://karthik-pit-wall.vercel.app/",
+      "description": "Live F1 2026 dashboard with standings, next race countdown, season calendar, weekend weather and race-day timing.",
+      "applicationCategory": "SportsApplication",
+      "operatingSystem": "Any",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "inLanguage": "en"
+    }
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main>
+        <h1>Mercedes Pit Wall — F1 2026 Live Standings &amp; Race Dashboard</h1>
+        <p>
+          Mercedes Pit Wall is a free, real-time Formula 1 2026 dashboard. Track live
+          driver and constructor standings, the full season calendar, next race
+          countdown, weekend weather, and race-day timing with sector splits and tyre
+          strategy — updated automatically throughout the season.
+        </p>
+        <nav aria-label="Site">
+          <a href="/">Dashboard &amp; Standings</a>
+          <a href="/strategy">Strategy Room — Tyre &amp; Race Analysis</a>
+          <a href="/raceday">Race Day — Live Timing</a>
+        </nav>
+        <p>Loading live data…</p>
+      </main>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
