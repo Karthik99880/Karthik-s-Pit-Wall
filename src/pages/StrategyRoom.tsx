@@ -59,7 +59,7 @@ export default function StrategyRoom() {
       <SectionNav sections={SECTIONS} />
 
       {/* Sections */}
-      <main style={{ maxWidth: 1440, margin: '0 auto', padding: '12px 36px 0' }}>
+      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '12px 36px 0' }}>
         <Suspense fallback={
           <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             Loading Analysis Modules...
@@ -75,7 +75,7 @@ export default function StrategyRoom() {
           <TitleSimulator />
           <PitLaneLeaderboard />
         </Suspense>
-      </main>
+      </div>
 
       <Footer />
     </div>

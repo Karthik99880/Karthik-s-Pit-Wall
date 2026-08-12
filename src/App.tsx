@@ -31,19 +31,38 @@ export default function App() {
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary>
+          <a
+            href="#main-content"
+            style={{
+              position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, overflow: 'hidden', zIndex: 1000,
+            }}
+            onFocus={e => Object.assign(e.currentTarget.style, {
+              position: 'fixed', left: 12, top: 12, width: 'auto', height: 'auto',
+              padding: '10px 16px', background: 'var(--carbon)', color: 'var(--mercedes)',
+              fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700,
+              letterSpacing: '0.08em', textTransform: 'uppercase', border: '2px solid var(--mercedes)',
+            })}
+            onBlur={e => Object.assign(e.currentTarget.style, {
+              position: 'absolute', left: -9999, top: 'auto', width: 1, height: 1, padding: 0, border: 'none',
+            })}
+          >
+            Skip to content
+          </a>
           <SiteNav />
-          <Suspense fallback={
-            <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
-              <SilverArrowLoader loop={true} />
-            </div>
-          }>
-            <Switch>
-              <Route path="/" component={Dashboard} />
-              <Route path="/strategy" component={StrategyRoom} />
-              <Route path="/raceday" component={RaceDay} />
-              <Route component={NotFound} />
-            </Switch>
-          </Suspense>
+          <main id="main-content">
+            <Suspense fallback={
+              <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
+                <SilverArrowLoader loop={true} />
+              </div>
+            }>
+              <Switch>
+                <Route path="/" component={Dashboard} />
+                <Route path="/strategy" component={StrategyRoom} />
+                <Route path="/raceday" component={RaceDay} />
+                <Route component={NotFound} />
+              </Switch>
+            </Suspense>
+          </main>
           <ThemeToggle />
           <EasterEgg />
           <Analytics />
