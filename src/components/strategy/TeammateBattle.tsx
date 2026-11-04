@@ -20,7 +20,8 @@ interface TeamH2H {
 }
 
 
-const gridVal = (g: string) => { const n = Number(g); return n === 0 ? 99 : n; };
+// Grid 0 = pit-lane start: treat as starting from the back of that round's field.
+const gridVal = (g: string, field: number) => { const n = Number(g); return n === 0 ? field : n; };
 
 export default function TeammateBattle() {
   const { data: drivers }      = useDriverStandings();
@@ -51,10 +52,12 @@ export default function TeammateBattle() {
         const find = (id: string): RaceResult | undefined => round.results.find(r => r.Driver.driverId === id);
         const ra = find(da.Driver.driverId);
         const rb = find(db.Driver.driverId);
-        if (!ra || !rb) continue;
+        // Only rounds where both raced for this team (drivers can switch mid-season).
+        if (!ra || !rb || ra.Constructor.constructorId !== cid || rb.Constructor.constructorId !== cid) continue;
         counted++;
         if (Number(ra.position) < Number(rb.position)) raceA++; else raceB++;
-        const ga = gridVal(ra.grid), gb = gridVal(rb.grid);
+        const field = round.results.length;
+        const ga = gridVal(ra.grid, field), gb = gridVal(rb.grid, field);
         if (ga < gb) qualiA++; else qualiB++;
         gridDeltaSum += ga - gb;
       }

@@ -14,7 +14,7 @@ export default function Footer() {
 
   return (
     <footer style={{
-      maxWidth: 1440, margin: '0 auto', padding: '48px 36px 36px',
+      maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 36px',
       position: 'relative',
     }}>
       {showClueModal && (

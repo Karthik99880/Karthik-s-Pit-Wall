@@ -32,7 +32,7 @@ export default function NextRace() {
     <>
       <Wrapper>
         <RaceBlockShell>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.3fr 1fr', gap: 48 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(280px, 100%), 1fr))', gap: 'clamp(24px, 4vw, 48px)' }}>
             {}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
@@ -69,7 +69,7 @@ export default function NextRace() {
                 <strong style={{ color: '#fff', fontWeight: 500 }}>{race.Circuit.circuitName}</strong> · {city}, {country}
               </div>
 
-              <div style={{ display: 'flex', gap: 36, marginTop: 24, paddingTop: 22, borderTop: '1px solid rgba(255,255,255,0.15)' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px 36px', marginTop: 24, paddingTop: 22, borderTop: '1px solid rgba(255,255,255,0.15)' }}>
                 <Stat label="Race Date" value={raceDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} />
                 <Stat label="Race Time (local)" value={raceDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} />
                 <Stat label="Circuit" value={race.Circuit.circuitId.replace(/_/g, ' ').toUpperCase()} />
@@ -124,14 +124,14 @@ export default function NextRace() {
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 36px', animation: 'fadeUpSlow 1.1s ease both 3.2s' }}>{children}</div>;
+  return <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 clamp(16px, 4vw, 36px)', animation: 'fadeUpSlow 1.1s ease both 3.2s' }}>{children}</div>;
 }
 function Msg({ children, warn }: { children: React.ReactNode; warn?: boolean }) {
   return <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: warn ? 'rgba(255,181,168,0.8)' : 'rgba(255,255,255,0.4)' }}>{children}</div>;
 }
 function RaceBlockShell({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ background: 'var(--carbon)', color: '#fff', padding: '44px 48px 46px', marginTop: 16, position: 'relative', overflow: 'hidden', borderTop: '5px solid var(--mercedes)' }}>
+    <div style={{ background: 'var(--carbon)', color: '#fff', padding: '44px clamp(18px, 5vw, 48px) 46px', marginTop: 16, position: 'relative', overflow: 'hidden', borderTop: '5px solid var(--mercedes)' }}>
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg, rgba(39,244,210,0.04) 0 2px, transparent 2px 16px)', pointerEvents: 'none', zIndex: 0 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
     </div>

@@ -24,7 +24,6 @@ export function useDriverStandings() {
     },
     staleTime: CACHE.STANDINGS,
     refetchInterval: CACHE.STANDINGS,
-    retry: 3,
   });
 }
 
@@ -38,7 +37,6 @@ export function useConstructorStandings() {
     },
     staleTime: CACHE.STANDINGS,
     refetchInterval: CACHE.STANDINGS,
-    retry: 3,
   });
 }
 
@@ -51,7 +49,6 @@ export function useRaceSchedule() {
       return racesOf(data.MRData);
     },
     staleTime: CACHE.SCHEDULE,
-    retry: 3,
   });
 }
 
@@ -67,7 +64,6 @@ export function useLastRaceResults() {
     },
     staleTime: CACHE.LAST_RACE,
     refetchInterval: CACHE.LAST_RACE,
-    retry: 3,
   });
 }
 
@@ -81,7 +77,6 @@ export function useNextRace() {
     },
     staleTime: CACHE.NEXT_RACE,
     refetchInterval: CACHE.NEXT_RACE,
-    retry: 3,
   });
 }
 
@@ -114,7 +109,6 @@ export function useSeasonProgression(races: Race[] | undefined) {
         };
       },
       staleTime: CACHE.PROGRESSION,
-      retry: 2,
     })),
   });
 
@@ -144,6 +138,9 @@ export function useSeasonResults(races: Race[] | undefined) {
       queryFn: async (): Promise<RoundResults> => {
         const data = await jolpicaFetch<RaceTableResponse>(`/${YEAR}/${race.round}/results/`);
         const r = racesOf(data.MRData)[0];
+        // Race started but results not published yet: fail so it's retried
+        // later instead of caching an empty round for an hour.
+        if (!r?.Results?.length) throw new Error(`No results yet for round ${race.round}`);
         return {
           round: Number(race.round),
           raceName: race.raceName.replace('Grand Prix', '').trim(),
@@ -151,7 +148,6 @@ export function useSeasonResults(races: Race[] | undefined) {
         };
       },
       staleTime: CACHE.PROGRESSION,
-      retry: 2,
     })),
   });
 
@@ -209,18 +205,21 @@ export function useLatestRaceSession() {
   return useQuery({
     queryKey: ['openf1', 'latestRaceSession'],
     queryFn: async (): Promise<OpenF1Session | null> => {
+      // OpenF1 tags Sprints as session_type 'Race' too, so match on the name.
+      // Look at the whole season, not just meeting_key=latest: from Friday of
+      // a race weekend 'latest' is a meeting whose race hasn't run yet.
       const sessions = await openF1Fetch<OpenF1Session[]>('/sessions', {
-        meeting_key: 'latest',
         year: SEASON_YEAR,
+        session_name: 'Race',
       });
-      
-      const race = sessions.find(s => s.session_type === 'Race')
-        ?? sessions[sessions.length - 1]
+      const now = Date.now();
+      const race = sessions
+        .filter(s => s.session_name === 'Race' && new Date(s.date_start).getTime() + 3 * 3600_000 < now)
+        .sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime())[0]
         ?? null;
       return race;
     },
     staleTime: CACHE.LAST_RACE,
-    retry: 2,
   });
 }
 
@@ -248,7 +247,6 @@ export function useRaceStints() {
     queryKey: ['openf1', 'stints', session?.session_key],
     enabled: !!session?.session_key,
     staleTime: CACHE.PROGRESSION,
-    retry: 2,
     queryFn: async (): Promise<RaceStintsResult> => {
       const sk = session!.session_key;
 
@@ -354,7 +352,6 @@ export function useSeasonPitStops(races: Race[] | undefined) {
           .filter(p => Number.isFinite(p.duration) && p.duration > 0);
       },
       staleTime: CACHE.PROGRESSION,
-      retry: 1,
     })),
   });
 
@@ -389,11 +386,13 @@ export function usePredictiveStints() {
       
       const raceSessions = await openF1Fetch<OpenF1Session[]>('/sessions', {
         year: SEASON_YEAR,
-        session_type: 'Race',
+        session_name: 'Race',
       });
 
       const sessionKeys = raceSessions
-        .filter(s => new Date(s.date_start).getTime() < now) 
+        // Grands Prix only (Sprints are session_type 'Race' too), and only
+        // ones that have finished.
+        .filter(s => s.session_name === 'Race' && new Date(s.date_start).getTime() + 3 * 3600_000 < now)
         .sort((a, b) => new Date(b.date_start).getTime() - new Date(a.date_start).getTime())
         .slice(0, 5)
         .map(s => s.session_key);
@@ -440,6 +439,7 @@ export function usePredictiveStints() {
       }
 
       
+      if (totalDrivers === 0) return null;
       const likelyStart = Object.keys(startCompounds).reduce((a, b) => startCompounds[a] > startCompounds[b] ? a : b) as TyreCompound;
       const likelyCombo = Object.keys(combos).reduce((a, b) => combos[a] > combos[b] ? a : b);
       const avgPitStops = totalDrivers > 0 ? (totalPitStops / totalDrivers) : 0;

@@ -65,7 +65,7 @@ export default function CircuitGuide() {
   const meta = CATEGORY_META[cat];
 
   return (
-    <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px 36px 0' }}>
+    <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
           Circuit <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Guide</em>
@@ -145,7 +145,7 @@ export default function CircuitGuide() {
                         {res.Driver.givenName} {res.Driver.familyName}
                       </span>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-                        P{res.grid} start
+                        {res.grid === '0' ? 'Pit lane' : `P${res.grid}`} start
                       </span>
                     </div>
                   );

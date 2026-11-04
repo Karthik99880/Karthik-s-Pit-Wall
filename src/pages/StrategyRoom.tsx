@@ -35,7 +35,7 @@ export default function StrategyRoom() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--paper)' }}>
       {}
-      <header style={{ maxWidth: 1440, margin: '0 auto', padding: '48px 36px 28px', position: 'relative' }}>
+      <header style={{ maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 28px', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink-2)', marginBottom: 22, animation: 'fadeUpSlow 0.8s ease both' }}>
           <span style={{ width: 28, height: 3, background: 'var(--mercedes)', display: 'inline-block' }} />
           Pit Wall F1 · Analysis
@@ -60,7 +60,7 @@ export default function StrategyRoom() {
       <SectionNav sections={SECTIONS} />
 
       {/* Sections */}
-      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '12px 36px 0' }}>
+      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '12px clamp(16px, 4vw, 36px) 0' }}>
         <Suspense fallback={
           <div style={{ padding: '64px 0', textAlign: 'center', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
             Loading Analysis Modules...

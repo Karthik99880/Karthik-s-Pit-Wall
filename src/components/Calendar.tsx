@@ -36,7 +36,7 @@ export default function Calendar() {
   };
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '48px 36px 0', animation: 'fadeUpSlow 1s ease both 3.5s' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 0', animation: 'fadeUpSlow 1s ease both 3.5s' }}>
       {showClue2Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,

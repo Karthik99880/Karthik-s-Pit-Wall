@@ -22,6 +22,10 @@ export default function Standings() {
   const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
   const isMobile = useIsMobile();
+  // Hover cards need a real mouse: touch tablets fire mouseenter on tap and
+  // the card then sticks on screen.
+  const canHover = !isMobile && typeof window !== 'undefined'
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const [tab, setTab] = useState(0); 
 
   useEffect(() => {
@@ -193,7 +197,7 @@ export default function Standings() {
           >
             {dLoad ? <Skeleton /> : filteredDrivers.length === 0 ? (
               <div style={{ padding: '28px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>
-                No drivers match “{query}”.
+                {q ? `No drivers match “${query}”.` : 'No standings available yet.'}
               </div>
             ) : filteredDrivers.map((d, i) => {
               const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
@@ -318,8 +322,8 @@ export default function Standings() {
       {}
 
       {}
-      {!isMobile && hovD && <DriverCard data={hovD} />}
-      {!isMobile && hovC && <CtorCard data={hovC} />}
+      {canHover && !modalDriver && hovD && <DriverCard data={hovD} />}
+      {canHover && !modalDriver && hovC && <CtorCard data={hovC} />}
 
       {modalDriver && <DriverModal d={modalDriver} sheet={isMobile} onClose={() => setModalDriver(null)} />}
     </div>

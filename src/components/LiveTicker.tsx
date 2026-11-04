@@ -17,7 +17,7 @@ export default function LiveTicker() {
   const raceName = demo ? 'Demo Grand Prix' : (liveRace?.raceName ?? 'Race');
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '20px 36px 0' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '20px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ background: 'var(--carbon)', color: '#fff', border: '2px solid var(--mercedes)', boxShadow: '0 0 30px rgba(39,244,210,0.18)' }}>
 
         {/* Header */}

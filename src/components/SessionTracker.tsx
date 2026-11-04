@@ -49,7 +49,7 @@ export default function SessionTracker({ race }: { race: Race }) {
   const doneCount = sessions.filter(s => f1Date(s.date, s.time).getTime() < now - 7_200_000).length;
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 36px', animation: 'fadeUpSlow 1s ease both 4s' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 clamp(16px, 4vw, 36px)', animation: 'fadeUpSlow 1s ease both 4s' }}>
       <div style={{ background: 'var(--paper-2)', border: '2px solid var(--ink)', borderTop: 'none' }}>
         {}
         <div style={{ padding: '14px 28px 12px', borderBottom: '1px solid var(--rule-light)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

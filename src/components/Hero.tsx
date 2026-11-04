@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <div style={{
       background: 'var(--paper)',
-      padding: '52px 36px 28px',
+      padding: '52px clamp(16px, 4vw, 36px) 28px',
       maxWidth: 1440,
       margin: '0 auto',
       position: 'relative',

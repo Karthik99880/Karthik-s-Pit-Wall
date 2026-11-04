@@ -22,7 +22,7 @@ export default function SiteNav() {
   return (
     <nav style={{
       background: 'var(--carbon)', borderBottom: '1px solid rgba(255,255,255,0.08)',
-      display: 'flex', alignItems: 'center', gap: 4, padding: '0 36px', height: 40,
+      display: 'flex', alignItems: 'center', gap: 4, padding: '0 clamp(16px, 4vw, 36px)', height: 40,
       position: 'relative', zIndex: 50,
     }}>
       <NavItem to="/" label="Pit Wall" icon={<Gauge size={13} />} exact />

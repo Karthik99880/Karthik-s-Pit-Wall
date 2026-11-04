@@ -149,10 +149,10 @@ export default function ChampionPredictor() {
         </div>
         <div style={{ textAlign: 'right' }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>
-            {model.clinchRace ? 'Clinches at' : 'Title fight'}
+            {model.remaining === 0 ? 'Season complete' : model.clinchRace ? 'Clinches at' : 'Title fight'}
           </div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: 'var(--mercedes)' }}>
-            {model.clinchRace ?? 'Down to the wire'}
+            {model.remaining === 0 ? 'Champion' : model.clinchRace ?? 'Down to the wire'}
           </div>
         </div>
       </div>

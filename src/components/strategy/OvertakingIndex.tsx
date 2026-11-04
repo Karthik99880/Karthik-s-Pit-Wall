@@ -9,7 +9,8 @@ import Panel from './Panel';
 import { advanceHunt, readHuntStage } from '@/lib/hunt';
 
 
-const startPos = (g: string) => { const n = Number(g); return n === 0 ? 20 : n; };
+// Grid 0 = pit-lane start: count it as the back of that round's field (22 cars in 2026).
+const startPos = (g: string, field: number) => { const n = Number(g); return n === 0 ? field : n; };
 
 interface DriverCraft {
   id: string; label: string; color: string; fav: boolean;
@@ -25,7 +26,7 @@ export default function OvertakingIndex() {
     for (const round of rounds) {
       for (const r of round.results) {
         const id = r.Driver.driverId;
-        const grid = startPos(r.grid);
+        const grid = startPos(r.grid, round.results.length);
         const fin = Number(r.position);
         if (!fin) continue;
         const cur = map.get(id) ?? {
@@ -130,7 +131,7 @@ export default function OvertakingIndex() {
       )}
 
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 28, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: 28, alignItems: 'start' }}>
         {}
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
@@ -140,13 +141,13 @@ export default function OvertakingIndex() {
             <ResponsiveContainer>
               <ScatterChart margin={{ top: 8, right: 16, bottom: 20, left: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke="var(--rule-light)" />
-                <XAxis type="number" dataKey="x" name="Avg grid" domain={[1, 20]} reversed
+                <XAxis type="number" dataKey="x" name="Avg grid" domain={[1, 22]} reversed
                   tick={{ fontSize: 10, fontFamily: 'var(--font-mono)', fill: 'var(--ink-3)' }}
                   label={{ value: 'AVG GRID', position: 'insideBottom', offset: -8, fontSize: 9, fill: 'var(--ink-3)', fontFamily: 'var(--font-mono)' }} />
-                <YAxis type="number" dataKey="y" name="Avg finish" domain={[1, 20]} reversed
+                <YAxis type="number" dataKey="y" name="Avg finish" domain={[1, 22]} reversed
                   tick={{ fontSize: 10, fontFamily: 'var(--font-mono)', fill: 'var(--ink-3)' }} width={28} />
                 <ZAxis range={[80, 80]} />
-                <ReferenceLine segment={[{ x: 1, y: 1 }, { x: 20, y: 20 }]} stroke="var(--ink-3)" strokeDasharray="4 4" />
+                <ReferenceLine segment={[{ x: 1, y: 1 }, { x: 22, y: 22 }]} stroke="var(--ink-3)" strokeDasharray="4 4" />
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<ScatterTip />} />
                 <Scatter data={scatter}>
                   {scatter.map((d, i) => <Cell key={i} fill={d.color} stroke={d.fav ? '#fff' : 'none'} strokeWidth={d.fav ? 2 : 0} />)}

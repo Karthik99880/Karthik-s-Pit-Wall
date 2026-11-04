@@ -99,7 +99,7 @@ export default function RaceWeather() {
     : [];
 
   return (
-    <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px 36px 0' }}>
+    <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
           Weekend <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Forecast</em>

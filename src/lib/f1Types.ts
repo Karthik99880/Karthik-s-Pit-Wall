@@ -70,6 +70,7 @@ export interface SessionInfo {
 }
 
 export interface RaceResult {
+  number?: string;      // car number raced this round (e.g. '1' for the champion)
   position: string;
   points: string;
   Driver: {

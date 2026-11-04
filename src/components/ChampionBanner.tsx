@@ -15,7 +15,7 @@ export default function ChampionBanner() {
   return (
     <section
       aria-label="2026 World Champion"
-      style={{ maxWidth: 1440, margin: '0 auto', padding: isMobile ? '8px 16px 0' : '8px 36px 0' }}
+      style={{ maxWidth: 1440, margin: '0 auto', padding: '8px clamp(16px, 4vw, 36px) 0' }}
     >
       <div style={{
         position: 'relative', overflow: 'hidden',

@@ -2,8 +2,8 @@ import { useDriverStandings, useConstructorStandings } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 
 export default function Ticker() {
-  const { data: drivers } = useDriverStandings();
-  const { data: constructors } = useConstructorStandings();
+  const { data: drivers, isPending: dPending } = useDriverStandings();
+  const { data: constructors, isPending: cPending } = useConstructorStandings();
 
   const driverTicks = (drivers ?? []).slice(0, 10).map(d => ({
     key: d.Driver.driverId,
@@ -30,7 +30,7 @@ export default function Ticker() {
   if (items.length === 0) {
     return (
       <div style={{ background: 'var(--carbon)', height: 44, borderBottom: '2px solid var(--mercedes)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.2em' }}>LOADING STANDINGS...</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.2em' }}>{dPending || cPending ? 'LOADING STANDINGS...' : 'STANDINGS UNAVAILABLE RIGHT NOW'}</span>
       </div>
     );
   }
