@@ -203,7 +203,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
         alignItems: 'center',
         gap: 6,
       }}>
-        <span>Karthik's Pit Wall</span>
+        <span>Pit Wall F1</span>
         <span style={{ fontSize: 9, color: 'var(--mercedes)', letterSpacing: '0.18em', opacity: 0.8 }}>
           {loop ? 'Streaming live session telemetry...' : 'Initializing Silver Arrow telemetry...'}
         </span>

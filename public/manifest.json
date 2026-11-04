@@ -1,7 +1,7 @@
 {
-  "name": "Mercedes Pit Wall",
+  "name": "Pit Wall F1",
   "short_name": "Pit Wall",
-  "description": "Live F1 2026 standings, calendar and race-day timing dashboard.",
+  "description": "Unofficial fan-made F1 2026 standings, calendar and strategy dashboard.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",

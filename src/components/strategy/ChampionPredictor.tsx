@@ -4,6 +4,7 @@ import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
 import { POINTS } from '@/lib/constants';
 import Panel from './Panel';
+import { advanceHunt, readHuntStage } from '@/lib/hunt';
 
 
 
@@ -56,30 +57,20 @@ export default function ChampionPredictor() {
   }, [drivers, races]);
 
   const [showClue4Modal, setShowClue4Modal] = useState(false);
-  const [showDeniedModal, setShowDeniedModal] = useState(false);
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);
   }, []);
 
   const handleP3Click = () => {
-    const sVal = localStorage.getItem('pitwall_hunt_stage');
-    if (sVal && Number(sVal) >= 3) {
-      localStorage.setItem('pitwall_hunt_stage', '4');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue4Modal(true);
-    } else {
-      setShowDeniedModal(true);
-    }
+    if (advanceHunt(3, 4)) setShowClue4Modal(true);
   };
 
   if (!model) {
@@ -146,59 +137,6 @@ export default function ChampionPredictor() {
         </div>
       )}
 
-      {showDeniedModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {}
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center', justifyContent: 'space-between', marginBottom: 22, padding: '16px 18px', background: 'var(--carbon)', borderLeft: `4px solid ${model.champion.color}` }}>

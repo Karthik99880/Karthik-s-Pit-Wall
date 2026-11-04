@@ -212,7 +212,7 @@ function OffAir() {
 /* ── Page root ──────────────────────────────────────── */
 export default function RaceDay() {
   useDocumentMeta(
-    'F1 Live Timing — Sector Times, Tyre Compounds & Gaps | Mercedes Pit Wall',
+    "F1 Live Timing — Sector Times, Tyre Compounds & Gaps | Pit Wall F1",
     'Free F1 live timing board: lap-by-lap positions, sector 1/2/3 times, current tyre compound and age, pit stop counts, gaps to leader, track weather and race control messages.',
   );
 

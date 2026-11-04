@@ -70,7 +70,7 @@ export default function FormGuide() {
         };
       })
       .sort((x, y) => y.recentTotal - x.recentTotal)
-      .slice(0, 12);
+      .slice(0, 10);
 
     return { rows: out, windowRounds: windowSlice.map(r => r.raceName) };
   }, [rounds]);
@@ -149,7 +149,7 @@ export default function FormGuide() {
       </div>
 
       <div style={{ marginTop: 14, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.04em', lineHeight: 1.5 }}>
-        Bars are points per round · right column is recent average against season average · top 12 by recent points
+        Bars are points per round · right column is recent average against season average · top 10 by recent points
       </div>
     </Panel>
   );

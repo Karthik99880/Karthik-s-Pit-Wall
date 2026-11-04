@@ -5,6 +5,7 @@ import { useDriverStandings, useConstructorStandings, useLastRaceResults } from 
 import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
 import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
 
 
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
@@ -25,11 +26,9 @@ export default function Standings() {
 
   useEffect(() => {
     if (query.trim().toLowerCase() === 'llessur') {
-      const stage = localStorage.getItem('pitwall_hunt_stage');
-      if (stage === '7') {
-        localStorage.setItem('pitwall_hunt_stage', '8');
+      if (readHuntStage() === 7) {
+        setHuntStage(8);
         setQuery('');
-        window.dispatchEvent(new Event('pitwall-stage-update'));
         window.dispatchEvent(new CustomEvent('trigger-easter-egg'));
       }
     }
@@ -57,32 +56,16 @@ export default function Standings() {
   const clearHov = useCallback(() => { setHovD(null); setHovC(null); }, []);
 
   const [showClue3Modal, setShowClue3Modal] = useState(false);
-  const [showDeniedCtorModal, setShowDeniedCtorModal] = useState(false);
   const [showClue7Modal, setShowClue7Modal] = useState(false);
-  const [showDeniedTagModal, setShowDeniedTagModal] = useState(false);
 
   const handleCtorClick = (isFav: boolean) => {
     if (!isFav) return;
-    const stage = localStorage.getItem('pitwall_hunt_stage');
-    if (stage && Number(stage) >= 2) {
-      localStorage.setItem('pitwall_hunt_stage', '3');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue3Modal(true);
-    } else {
-      setShowDeniedCtorModal(true);
-    }
+    if (advanceHunt(2, 3)) setShowClue3Modal(true);
   };
 
   const handleTagClick = (num: string) => {
     if (num !== '44') return;
-    const stage = localStorage.getItem('pitwall_hunt_stage');
-    if (stage && Number(stage) >= 6) {
-      localStorage.setItem('pitwall_hunt_stage', '7');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue7Modal(true);
-    } else {
-      setShowDeniedTagModal(true);
-    }
+    if (advanceHunt(6, 7)) setShowClue7Modal(true);
   };
 
   return (
@@ -141,59 +124,6 @@ export default function Standings() {
         </div>
       )}
 
-      {showDeniedCtorModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedCtorModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showClue7Modal && (
         <div style={{
@@ -249,59 +179,6 @@ export default function Standings() {
         </div>
       )}
 
-      {showDeniedTagModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedTagModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {isMobile && (
         <SegmentedControl tabs={['Drivers', 'Constructors', 'Last Race']} active={tab} onChange={setTab} />
@@ -628,14 +505,12 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
   const ref = useRef<HTMLDivElement>(null);
   const pos = Number(d.position);
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);
@@ -707,14 +582,12 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
   const ref = useRef<HTMLDivElement>(null);
   const bar = maxPts > 0 ? Math.max(4, (Number(c.points) / maxPts) * 100) : 4;
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);
