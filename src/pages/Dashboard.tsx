@@ -37,7 +37,7 @@ function Section({ id, children }: { id: string; children: React.ReactNode }) {
 
 export default function Dashboard() {
   useDocumentMeta(
-    "Pit Wall F1 — F1 2026 Live Standings, Calendar & Championship Tracker",
+    "Pit Wall F1 | F1 2026 Live Standings, Calendar & Championship Tracker",
     'Live F1 2026 driver and constructor standings, next race countdown, circuit guide, weekend weather forecast, full season calendar, and championship points progression.',
   );
 

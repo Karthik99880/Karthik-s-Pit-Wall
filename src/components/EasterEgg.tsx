@@ -30,7 +30,7 @@ export default function EasterEgg() {
       onClick={handleClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200000,
-        background: 'rgba(0,0,0,0.82)', backdropFilter: 'blur(6px)',
+        background: 'rgba(0,0,0,0.92)',
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         gap: 22, padding: 24, cursor: 'pointer',
         animation: 'fadeSlow 0.25s ease both',
@@ -46,7 +46,7 @@ export default function EasterEgg() {
         style={{
           maxWidth: 'min(420px, 86vw)', width: '100%', height: 'auto',
           border: '3px solid var(--mercedes)',
-          boxShadow: '0 30px 90px rgba(0,0,0,0.7), 0 0 40px rgba(39,244,210,0.35)',
+          boxShadow: '0 30px 90px rgba(0,0,0,0.7)',
           animation: 'eggPop 0.55s cubic-bezier(.2,.9,.25,1.2) both 0.12s',
         }}
         onError={(e) => { e.currentTarget.style.display = 'none'; }}

@@ -3,6 +3,7 @@ import { useRaceStints, useLastRaceResults, usePredictiveStints, useLatestRaceSe
 import type { StintRow } from '@/hooks/useF1Data';
 import type { TyreCompound } from '@/lib/openF1Api';
 import Panel from './Panel';
+import Skeleton from '@/components/Skeleton';
 
 
 const COMPOUND_COLOR: Record<TyreCompound, string> = {
@@ -238,7 +239,7 @@ export default function TyreStrategy() {
   if (sessionPending || (!!session && isPending && !isError)) {
     return (
       <Panel title="Tyre" accent="Strategy" num="03" meta="Loading…">
-        <Msg>Fetching stint data from OpenF1…</Msg>
+        <Skeleton />
       </Panel>
     );
   }
@@ -246,7 +247,7 @@ export default function TyreStrategy() {
   if (isError || !stintsData || stintsData.byDriver.size === 0) {
     return (
       <Panel title="Tyre" accent="Strategy" num="03">
-        <Msg>No stint data available — OpenF1 may not have the latest race yet.</Msg>
+        <Msg>No stint data available. OpenF1 may not have the latest race yet.</Msg>
       </Panel>
     );
   }
@@ -328,7 +329,7 @@ export default function TyreStrategy() {
       }}>
         <span style={{ width: 38, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', flexShrink: 0 }}>DRV</span>
         <span style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
-          Stint bars · Lap 1 → {totalLaps} · hover for details
+          Stint bars · Lap 1 to {totalLaps} · hover for details
         </span>
         <span style={{ width: 16, fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', textAlign: 'right' }}>STS</span>
       </div>

@@ -6,7 +6,9 @@ import {
 import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import Panel from './Panel';
+import Skeleton from '@/components/Skeleton';
 import { advanceHunt, readHuntStage } from '@/lib/hunt';
+import DecryptText from '@/components/motion/DecryptText';
 
 
 // Grid 0 = pit-lane start: count it as the back of that round's field (22 cars in 2026).
@@ -67,7 +69,7 @@ export default function OvertakingIndex() {
   };
 
   if (!drivers.length) {
-    return <Panel title="Overtaking" accent="Index" num="02"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
+    return <Panel title="Overtaking" accent="Index" num="02">{isLoading ? <Skeleton /> : <Msg>No race data yet.</Msg>}</Panel>;
   }
 
   const ranked = [...drivers].sort((a, b) => b.gained - a.gained);
@@ -75,18 +77,17 @@ export default function OvertakingIndex() {
   const scatter = drivers.map(d => ({ x: d.avgGrid, y: d.avgFinish, label: d.label, color: d.color, fav: d.fav, gained: d.gained, starts: d.starts }));
 
   return (
-    <Panel title="Overtaking" accent="Index" num="02" meta="Grid → finish race craft">
+    <Panel title="Overtaking" accent="Index" num="02" meta="Grid to finish race craft">
       {showClue5Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          background: 'rgba(0,0,0,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 24,
         }}>
           <div style={{
             background: 'var(--carbon)',
             border: '2px solid var(--mercedes)',
-            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
             maxWidth: 460, width: '100%',
             color: '#fff',
             fontFamily: 'var(--font-mono)',
@@ -95,10 +96,10 @@ export default function OvertakingIndex() {
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
             <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
-              📁 ARCHIVE ENCRYPTION: LEVEL 5
+              ARCHIVE ENCRYPTION: LEVEL 5
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Descend to the base of the interface to find the Layout Demand Panel. Locate the geometry where the margin for error is absolute zero, track width is compressed to a minimum, and grid position is essentially destiny. Select the crown jewel of tight street circuits."
+              <DecryptText text={`"Descend to the base of the interface to find the Layout Demand Panel. Locate the geometry where the margin for error is absolute zero, track width is compressed to a minimum, and grid position is essentially destiny. Select the crown jewel of tight street circuits."`} />
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -135,7 +136,7 @@ export default function OvertakingIndex() {
         {}
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
-            Avg Start vs Avg Finish — below the line = net gainer
+            Avg Start vs Avg Finish: below the line = net gainer
           </div>
           <div style={{ width: '100%', height: 300 }}>
             <ResponsiveContainer>

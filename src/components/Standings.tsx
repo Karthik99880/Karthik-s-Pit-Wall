@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect, useId, forwardRef, useImperat
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import AnimatedNumber from '@/components/motion/AnimatedNumber';
+import Skeleton from '@/components/Skeleton';
 import { EASE_OUT, SPRING_SNAP, SPRING_SOFT } from '@/lib/motion';
 import { Search, X } from 'lucide-react';
 import { useDriverStandings, useConstructorStandings, useLastRaceResults, useLatestQualifying } from '@/hooks/useF1Data';
@@ -9,6 +10,7 @@ import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDr
 import type { DriverStanding, ConstructorStanding, QualifyingResult } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
+import DecryptText from '@/components/motion/DecryptText';
 
 
 const pts = (v: string) => <AnimatedNumber value={Number(v)} decimals={Number.isInteger(Number(v)) ? 0 : 1} />;
@@ -87,14 +89,13 @@ export default function Standings() {
       {showClue3Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          background: 'rgba(0,0,0,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 24,
         }}>
           <div style={{
             background: 'var(--carbon)',
             border: '2px solid var(--mercedes)',
-            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
             maxWidth: 460, width: '100%',
             color: '#fff',
             fontFamily: 'var(--font-mono)',
@@ -103,10 +104,10 @@ export default function Standings() {
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
             <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
-              📁 ARCHIVE ENCRYPTION: LEVEL 3
+              ARCHIVE ENCRYPTION: LEVEL 3
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Enter the Strategy Room, where overtaking defines raw craft. Seek the index of passes. Find the driver who has carved his way forward the most positions this season and click their code."
+              <DecryptText text={`"Enter the Strategy Room, where overtaking defines raw craft. Seek the index of passes. Find the driver who has carved his way forward the most positions this season and click their code."`} />
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -142,14 +143,13 @@ export default function Standings() {
       {showClue7Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          background: 'rgba(0,0,0,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 24,
         }}>
           <div style={{
             background: 'var(--carbon)',
             border: '2px solid var(--mercedes)',
-            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
             maxWidth: 460, width: '100%',
             color: '#fff',
             fontFamily: 'var(--font-mono)',
@@ -158,10 +158,10 @@ export default function Standings() {
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
             <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
-              📁 ARCHIVE ENCRYPTION: LEVEL 7 (FINAL)
+              ARCHIVE ENCRYPTION: LEVEL 7 (FINAL)
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "To unseal the final vault, look to the apex of the 2018 feeder series. A rookie king took the crown before ascending to the silver arrows. Find his family name on the grid, but do not look at it head-on. Like a trailing driver chasing his slipstream."
+              <DecryptText text={`"To unseal the final vault, look to the apex of the 2018 feeder series. A rookie king took the crown before ascending to the silver arrows. Find his family name on the grid, but do not look at it head-on. Like a trailing driver chasing his slipstream."`} />
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -272,7 +272,7 @@ export default function Standings() {
                 {(lastRace.results ?? []).slice(0, 3).map((r, i) => {
                   const color = getTeamColor(r.Constructor.constructorId);
                   const isFav = isFavoriteTeam(r.Constructor.constructorId);
-                  const medals = ['🥇', '🥈', '🥉'];
+                  const medals = [['P1', 'var(--gold)'], ['P2', '#a8adb5'], ['P3', '#b87333']] as const;
                   return (
                     <div key={r.Driver.driverId} style={{
                       padding: '18px 24px', borderBottom: '1px solid var(--rule-light)',
@@ -280,7 +280,7 @@ export default function Standings() {
                       background: isFav ? 'rgba(255,242,0,0.08)' : 'transparent',
                       animation: `rowSlide 0.5s ease both ${i * 0.1}s`,
                     }}>
-                      <span style={{ fontSize: 22 }}>{medals[i]}</span>
+                      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 16, fontWeight: 700, color: medals[i][1], minWidth: 30 }}>{medals[i][0]}</span>
                       <div style={{ flex: 1 }}>
                         <div style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>
                           {r.Driver.givenName[0]}. {r.Driver.familyName}
@@ -445,7 +445,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
       transition={{ duration: 0.25 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 100001,
-        background: 'rgba(0,0,0,0.62)', backdropFilter: 'blur(3px)',
+        background: 'rgba(0,0,0,0.92)',
         display: 'flex', alignItems: sheet ? 'flex-end' : 'center', justifyContent: 'center',
         padding: sheet ? 0 : 20,
       }}
@@ -608,7 +608,6 @@ const DriverRow = forwardRef<HTMLDivElement, {
         background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
         animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
-        boxShadow: isFav ? 'inset 0 0 10px rgba(39,244,210,0.1)' : 'none',
         outlineOffset: -1,
         cursor: 'pointer',
         transition: 'background 0.15s, transform 0.25s cubic-bezier(.16,1,.3,1)',
@@ -682,7 +681,6 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
         background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
         animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
-        boxShadow: isFav ? 'inset 0 0 10px rgba(39,244,210,0.1)' : 'none',
         outlineOffset: -1, cursor: (isFav && stage >= 2) ? 'pointer' : 'default', transition: 'background 0.15s, transform 0.25s cubic-bezier(.16,1,.3,1)',
       }}
     >
@@ -756,7 +754,6 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
           zIndex: 0,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
-          filter: `drop-shadow(0 4px 16px ${color}55)`,
         }}
         onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
@@ -827,7 +824,6 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
           zIndex: 0,
           pointerEvents: 'none',
           animation: 'carZoom 0.9s cubic-bezier(0.16, 1, 0.3, 1) both 0.08s',
-          filter: `drop-shadow(0 4px 16px ${color}55)`,
         }}
         onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
@@ -862,7 +858,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
       </div>
 
       {isFav && (
-        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', backdropFilter: 'blur(4px)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, boxShadow: '0 0 15px rgba(39,244,210,0.3)', position: 'relative', zIndex: 1 }}>
+        <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, position: 'relative', zIndex: 1 }}>
           ★ Mercedes-AMG F1 Team
         </div>
       )}
@@ -881,14 +877,5 @@ function Stat2({ label, value, accent, small }: { label: string; value: string; 
   );
 }
 
-function Skeleton() {
-  return (
-    <div style={{ padding: '24px' }}>
-      {[1, 2, 3].map(i => (
-        <div key={i} style={{ height: 46, background: 'var(--paper-2)', marginBottom: 8, animation: 'fadeSlow 1s ease infinite alternate' }} />
-      ))}
-    </div>
-  );
-}
 
 

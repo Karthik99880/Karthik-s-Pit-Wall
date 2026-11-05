@@ -2,19 +2,37 @@ import { useQuery } from '@tanstack/react-query';
 import { useNextRace, buildSessions } from '@/hooks/useF1Data';
 import { f1Date } from '@/lib/dateUtils';
 import type { Race } from '@/lib/f1Types';
+import Skeleton from '@/components/Skeleton';
 
-/* WMO weather codes → short label */
-function wmo(code: number): { icon: string; label: string } {
-  if (code === 0) return { icon: '☀️', label: 'Clear' };
-  if (code <= 2)  return { icon: '🌤️', label: 'Partly cloudy' };
-  if (code === 3) return { icon: '☁️', label: 'Overcast' };
-  if (code <= 48) return { icon: '🌫️', label: 'Fog' };
-  if (code <= 57) return { icon: '🌦️', label: 'Drizzle' };
-  if (code <= 67) return { icon: '🌧️', label: 'Rain' };
-  if (code <= 77) return { icon: '🌨️', label: 'Snow' };
-  if (code <= 82) return { icon: '🌧️', label: 'Showers' };
-  if (code <= 86) return { icon: '🌨️', label: 'Snow showers' };
-  return { icon: '⛈️', label: 'Thunderstorm' };
+type Glyph = 'sun' | 'cloud' | 'rain' | 'snow' | 'storm' | 'fog';
+
+const CLOUD = 'M7 17a4 4 0 0 1-.5-7.97A5.5 5.5 0 0 1 17 8.5a4.25 4.25 0 0 1 0 8.5Z';
+
+function WeatherGlyph({ kind }: { kind: Glyph }) {
+  return (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      {kind === 'sun' && (<><circle cx="12" cy="12" r="4" /><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" /></>)}
+      {kind === 'cloud' && <path d="M7 19a4.5 4.5 0 0 1-.6-8.96A6 6 0 0 1 18 9.5a4.75 4.75 0 0 1 0 9.5Z" />}
+      {kind === 'rain' && (<><path d={CLOUD} transform="translate(0 -3)" /><path d="M8 17l-1 3M12 17l-1 3M16 17l-1 3" /></>)}
+      {kind === 'snow' && (<><path d={CLOUD} transform="translate(0 -3)" /><path d="M8 18v.01M12 20v.01M16 18v.01M10 21v.01M14 21v.01" strokeWidth="2.4" /></>)}
+      {kind === 'storm' && (<><path d={CLOUD} transform="translate(0 -3)" /><path d="m12.5 14-2.5 4h3.5l-2 3.5" /></>)}
+      {kind === 'fog' && <path d="M4 8h16M3 12h18M5 16h14M8 20h8" />}
+    </svg>
+  );
+}
+
+/* WMO weather codes to glyph and short label */
+function wmo(code: number): { icon: Glyph; label: string } {
+  if (code === 0) return { icon: 'sun', label: 'Clear' };
+  if (code <= 2)  return { icon: 'cloud', label: 'Partly cloudy' };
+  if (code === 3) return { icon: 'cloud', label: 'Overcast' };
+  if (code <= 48) return { icon: 'fog', label: 'Fog' };
+  if (code <= 57) return { icon: 'rain', label: 'Drizzle' };
+  if (code <= 67) return { icon: 'rain', label: 'Rain' };
+  if (code <= 77) return { icon: 'snow', label: 'Snow' };
+  if (code <= 82) return { icon: 'rain', label: 'Showers' };
+  if (code <= 86) return { icon: 'snow', label: 'Snow showers' };
+  return { icon: 'storm', label: 'Thunderstorm' };
 }
 
 interface HourlyBlock {
@@ -111,11 +129,11 @@ export default function RaceWeather() {
 
       <div style={{ border: '2px solid var(--ink)', background: 'var(--paper-2)', padding: '20px 24px 22px' }}>
         {!rows.length ? (
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.04em', lineHeight: 1.6 }}>
-            {isLoading
-              ? 'Loading forecast…'
-              : 'The forecast window opens roughly two weeks before the race weekend. Check back closer to the event.'}
-          </div>
+          isLoading ? <Skeleton /> : (
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.04em', lineHeight: 1.6 }}>
+              The forecast window opens roughly two weeks before the race weekend. Check back closer to the event.
+            </div>
+          )
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(130px, 100%), 1fr))', gap: 12 }}>
             {rows.map(r => {
@@ -133,7 +151,7 @@ export default function RaceWeather() {
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: r.isRace ? 'var(--mercedes)' : 'var(--ink-3)', marginBottom: 8 }}>
                     {r.label}
                   </div>
-                  <div style={{ fontSize: 24, lineHeight: 1, marginBottom: 8 }}>{w.icon}</div>
+                  <div style={{ color: 'var(--ink-2)', lineHeight: 0, marginBottom: 8 }}><WeatherGlyph kind={w.icon} /></div>
                   <div style={{ fontFamily: 'var(--font-mono)', fontSize: 20, fontWeight: 800, color: 'var(--ink)', lineHeight: 1 }}>
                     {Math.round(r.temp)}°<span style={{ fontSize: 11 }}>C</span>
                   </div>

@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react';
 import { useInView } from 'motion/react';
+import Skeleton from '@/components/Skeleton';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -34,7 +35,7 @@ export default function ProgressionChart() {
   );
 
   if (isLoading && chartData.length === 0) {
-    return <Shell><Msg>Building season history…</Msg></Shell>;
+    return <Shell><Skeleton /></Shell>;
   }
   if (chartData.length < 2) {
     return <Shell><Msg>Not enough completed rounds to chart yet.</Msg></Shell>;

@@ -3,6 +3,7 @@ import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import Panel from './Panel';
+import Skeleton from '@/components/Skeleton';
 
 const WINDOW = 5;
 
@@ -78,7 +79,7 @@ export default function FormGuide() {
   if (!rows || !rows.length) {
     return (
       <Panel title="Form" accent="Guide" num="04">
-        <Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg>
+        {isLoading ? <Skeleton /> : <Msg>No race data yet.</Msg>}
       </Panel>
     );
   }
@@ -89,8 +90,8 @@ export default function FormGuide() {
   return (
     <Panel title="Form" accent="Guide" num="04" meta={`Last ${n} ${n === 1 ? 'round' : 'rounds'}`}>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em', marginBottom: 6, lineHeight: 1.5 }}>
-        Momentum, not totals. Points per round across the last {n}, against each driver's own season average —
-        who's arriving at the back end of the year in form.
+        Recent form for each driver. Points per round across the last {n}, compared with that driver's own season average,
+        to show who is arriving at the back end of the year in form.
       </div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 14 }}>
         {windowRounds.join(' · ')}

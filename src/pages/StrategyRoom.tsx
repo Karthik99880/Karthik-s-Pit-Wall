@@ -26,7 +26,7 @@ const PitLaneLeaderboard = lazy(() => import('@/components/strategy/PitLaneLeade
 
 export default function StrategyRoom() {
   useDocumentMeta(
-    'F1 2026 Strategy Analysis — Tyre Strategy, Teammate Head-to-Head & Title Simulator',
+    'F1 2026 Strategy Analysis | Tyre Strategy, Teammate Head-to-Head & Race Craft',
     'Deep F1 2026 analysis: tyre strategy trends, teammate head-to-head battles, overtaking index, driver form guide and pit lane times.',
   );
 
@@ -45,9 +45,9 @@ export default function StrategyRoom() {
         </h1>
 
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--ink-2)', maxWidth: 620, marginTop: 18, lineHeight: 1.6, animation: 'fadeUpSlow 1s ease both 0.3s' }}>
-          Where the numbers get interrogated — the teammate
-          benchmark that decides careers, and the race-craft that grid position
-          alone never tells you.
+          Where the numbers get interrogated. The teammate
+          benchmark that decides careers, and the race craft that grid position
+          only partly explains.
         </p>
 
         <div style={{ marginTop: 26, paddingTop: 18, borderTop: '1px solid var(--ink)', fontFamily: 'var(--font-mono)', fontSize: 11, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', animation: 'fadeUpSlow 1s ease both 0.5s' }}>

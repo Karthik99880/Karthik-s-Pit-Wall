@@ -21,7 +21,6 @@ export default function ChampionBanner() {
         position: 'relative', overflow: 'hidden',
         background: 'var(--carbon)', color: '#fff',
         border: '2px solid var(--mercedes)',
-        boxShadow: '0 0 40px rgba(39,244,210,0.22)',
         display: 'flex', flexDirection: isMobile ? 'column' : 'row',
         alignItems: isMobile ? 'flex-start' : 'center', gap: isMobile ? 16 : 28,
         padding: isMobile ? '22px 18px' : '26px 32px',
@@ -52,7 +51,7 @@ export default function ChampionBanner() {
 
         <div style={{ flex: 1, minWidth: 0, position: 'relative' }}>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: isMobile ? 9 : 10, fontWeight: 700, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'var(--mercedes)', marginBottom: 8 }}>
-            🏆 2026 Formula 1 World Champion
+            2026 Formula 1 World Champion
           </div>
           <h2 style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, lineHeight: 1, letterSpacing: '-0.02em', fontSize: isMobile ? 30 : 'clamp(32px, 4vw, 52px)', margin: 0 }}>
             Congratulations, <em style={{ color: 'var(--mercedes)' }}>Kimi</em>

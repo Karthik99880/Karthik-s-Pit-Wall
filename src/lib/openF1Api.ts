@@ -77,7 +77,7 @@ export async function openF1Fetch<T>(path: string, params: Record<string, string
     if (r.ok) return r.data as T;
     if (r.retryable && attempt < MAX_RETRIES) {
       
-      const backoff = r.retryAfterMs ?? Math.min(8000, 500 * 2 ** attempt) + Math.random() * 250;
+      const backoff = r.retryAfterMs ?? Math.min(8000, 500 * 2 ** attempt) + crypto.getRandomValues(new Uint32Array(1))[0] % 250;
       await sleep(backoff);
       continue;
     }

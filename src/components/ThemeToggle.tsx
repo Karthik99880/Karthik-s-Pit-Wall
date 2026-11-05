@@ -23,7 +23,7 @@ export default function ThemeToggle() {
         background: 'var(--carbon)', color: 'var(--mercedes)',
         border: '2px solid var(--mercedes)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        boxShadow: '0 8px 28px rgba(0,0,0,0.35), 0 0 18px rgba(39,244,210,0.25)',
+        boxShadow: '0 8px 28px rgba(0,0,0,0.35)',
         transition: 'transform 0.18s ease',
       }}
       onMouseEnter={e => (e.currentTarget.style.transform = 'scale(1.08)')}

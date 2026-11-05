@@ -93,7 +93,7 @@ export default function Hero() {
           </span>
         </motion.h1>
         <motion.div
-          style={{ position: 'absolute', left: 0, bottom: 0, height: 5, width: '100%', background: 'linear-gradient(90deg, var(--mercedes), var(--carbon))', originX: 0 }}
+          style={{ position: 'absolute', left: 0, bottom: 0, height: 5, width: '100%', background: 'var(--mercedes)', originX: 0 }}
           initial={{ scaleX: 0 }} animate={{ scaleX: 1 }}
           transition={{ duration: 1, ease: EASE_OUT, delay: start + 0.6 }}
         />
@@ -137,7 +137,6 @@ function LiveBadge() {
       padding: '8px 16px',
       background: 'var(--carbon)',
       color: '#fff', fontWeight: 700, letterSpacing: '0.2em',
-      boxShadow: '0 0 20px rgba(39,244,210,0.3)',
       border: '2px solid var(--mercedes)',
     }}>
       <span style={{

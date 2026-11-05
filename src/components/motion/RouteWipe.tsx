@@ -4,7 +4,7 @@ import { useLocation } from 'wouter';
 import { useLenis } from 'lenis/react';
 import { EASE_IN_OUT } from '@/lib/motion';
 
-const NAMES: Record<string, string> = { '/': 'Pit Wall', '/strategy': 'Strategy Room' };
+const NAMES: Record<string, string> = { '/': 'Pit Wall', '/strategy': 'Strategy Room', '/legal': 'Privacy & Terms' };
 const CHECKER = 'repeating-conic-gradient(#fff 0 25%, #0a0a0a 0 50%)';
 
 // The route only swaps once the panel fully covers the screen, so pages never visibly jump.

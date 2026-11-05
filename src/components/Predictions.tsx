@@ -12,7 +12,7 @@ type Store = Record<string, Entry>;
 
 const EXACT_PTS = 5;
 const PODIUM_PTS = 2;
-const SLOT_LABELS = ['🥇 First', '🥈 Second', '🥉 Third'];
+const SLOT_LABELS = ['First', 'Second', 'Third'];
 
 /** Entries close five minutes before lights out. */
 const LOCK_BEFORE_MS = 5 * 60_000;
@@ -163,14 +163,14 @@ export default function Predictions() {
   const confirm = () => {
     if (!complete || locked) return;
     write({ picks, confirmed: true });
-    setFlash('Podium confirmed — locked in for this race.');
+    setFlash('Podium confirmed. Locked in for this race.');
     setTimeout(() => setFlash(null), 2600);
   };
 
   const reopen = () => {
     if (locked) return;
     write({ picks, confirmed: false });
-    setFlash('Entry reopened — confirm again to lock it in.');
+    setFlash('Entry reopened. Confirm again to lock it in.');
     setTimeout(() => setFlash(null), 2600);
   };
 
@@ -198,7 +198,7 @@ export default function Predictions() {
       <div style={{ border: '2px solid var(--ink)', background: 'var(--paper-2)', padding: '22px 24px 24px' }}>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em', marginBottom: 18, lineHeight: 1.5 }}>
           Call the podium before the race. {EXACT_PTS} points for the right driver in the right place, {PODIUM_PTS} for the right driver in the wrong place.
-          Only confirmed entries are graded. Saved in this browser only — nothing leaves your device.
+          Only confirmed entries are graded. Saved in this browser only. Nothing leaves your device.
         </div>
 
         {locked && !confirmed ? (
@@ -206,7 +206,7 @@ export default function Predictions() {
             border: '1px solid var(--rule-light)', padding: '20px 18px', marginBottom: 20,
             fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', letterSpacing: '0.04em', lineHeight: 1.6,
           }}>
-            No confirmed entry for {next.raceName} — entries closed five minutes before lights out.
+            No confirmed entry for {next.raceName}: entries closed five minutes before lights out.
             Your next chance opens as soon as this race is done.
           </div>
         ) : (
@@ -228,7 +228,7 @@ export default function Predictions() {
                       }}>
                         {picks[i] && <span style={{ width: 8, height: 8, borderRadius: '50%', background: colorOf(picks[i]), flexShrink: 0 }} />}
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, color: picks[i] ? 'var(--ink)' : 'var(--ink-3)' }}>
-                          {picks[i] ? nameOf(picks[i]) : '— no pick —'}
+                          {picks[i] ? nameOf(picks[i]) : 'No pick'}
                         </span>
                       </div>
                     ) : (
@@ -244,7 +244,7 @@ export default function Predictions() {
                           cursor: 'pointer', boxSizing: 'border-box',
                         }}
                       >
-                        <option value="">— pick a driver —</option>
+                        <option value="">Pick a driver</option>
                         {optionsFor(i).map(d => (
                           <option key={d.id} value={d.id}>{d.name}</option>
                         ))}
@@ -285,7 +285,7 @@ export default function Predictions() {
                     border: '2px solid var(--mercedes)', background: 'rgba(39,244,210,0.1)',
                     padding: '10px 16px',
                   }}>
-                    ✓ Entry confirmed
+                    Entry confirmed
                   </span>
                   {!locked && (
                     <button
@@ -336,7 +336,7 @@ export default function Predictions() {
 
               {totals.best && totals.best.points > 0 && (
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: 14, fontStyle: 'italic', color: 'rgba(255,255,255,0.75)', marginBottom: 16 }}>
-                  Best call so far — <strong style={{ color: 'var(--mercedes)', fontStyle: 'normal' }}>{totals.best.name}</strong>, {totals.best.points} points.
+                  Best call so far: <strong style={{ color: 'var(--mercedes)', fontStyle: 'normal' }}>{totals.best.name}</strong>, {totals.best.points} points.
                 </div>
               )}
 

@@ -14,6 +14,7 @@ import { useRouteWipe } from "@/components/motion/RouteWipe";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
+const Legal = lazy(() => import("@/pages/Legal"));
 // Race Day is switched off for now (re-enable here, in SiteNav and in index.html).
 // const RaceDay = lazy(() => import("@/pages/RaceDay"));
 const NotFound = lazy(() => import("@/pages/not-found"));
@@ -42,6 +43,7 @@ function Routes() {
         <Switch location={shown}>
           <Route path="/" component={Dashboard} />
           <Route path="/strategy" component={StrategyRoom} />
+          <Route path="/legal" component={Legal} />
           {/* <Route path="/raceday" component={RaceDay} /> */}
           <Route component={NotFound} />
         </Switch>

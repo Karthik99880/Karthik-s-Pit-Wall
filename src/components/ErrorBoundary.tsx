@@ -27,7 +27,6 @@ export default class ErrorBoundary extends Component<Props, State> {
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
         gap: 18, padding: 40, textAlign: 'center',
       }}>
-        <div style={{ fontSize: 44 }}>🏳️</div>
         <div style={{ fontFamily: 'var(--font-serif)', fontSize: 30, fontWeight: 700 }}>
           Red Flag · Something broke
         </div>

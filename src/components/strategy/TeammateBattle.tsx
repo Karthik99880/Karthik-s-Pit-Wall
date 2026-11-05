@@ -5,6 +5,7 @@ import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import type { DriverStanding, RaceResult } from '@/lib/f1Types';
 import { Lock } from 'lucide-react';
 import Panel from './Panel';
+import Skeleton from '@/components/Skeleton';
 
 
 interface DriverAgg {
@@ -77,7 +78,7 @@ export default function TeammateBattle() {
   }, [drivers, constructors, rounds]);
 
   if (!teams.length) {
-    return <Panel title="Teammate" accent="Head-to-Head" num="01"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No teammate data yet.'}</Msg></Panel>;
+    return <Panel title="Teammate" accent="Head-to-Head" num="01">{isLoading ? <Skeleton /> : <Msg>No teammate data yet.</Msg>}</Panel>;
   }
 
   return (
@@ -104,7 +105,6 @@ function TeamCard({ t }: { t: TeamH2H }) {
       background: 'var(--carbon)', color: '#fff', padding: '18px 20px 20px',
       borderTop: `4px solid ${t.color}`,
       border: `2px solid ${t.fav ? 'var(--mercedes)' : 'rgba(255,255,255,0.08)'}`,
-      boxShadow: t.fav ? '0 0 22px rgba(39,244,210,0.16)' : 'none',
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <span style={{ fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 700 }}>{t.name}{t.fav && <span style={{ color: 'var(--mercedes)', marginLeft: 6 }}>★</span>}</span>

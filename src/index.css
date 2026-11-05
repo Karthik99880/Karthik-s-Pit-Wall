@@ -22,7 +22,7 @@
   --color-accent: hsl(var(--accent));
   --color-accent-foreground: hsl(var(--accent-foreground));
   --color-destructive: hsl(var(--destructive));
-  --font-sans: 'Inter', sans-serif;
+  --font-sans: 'Archivo', sans-serif;
   --font-serif: 'Playfair Display', serif;
   --font-mono: 'JetBrains Mono', monospace;
   --radius-sm: calc(var(--radius) - 4px);
@@ -84,7 +84,7 @@
 
   --rule-light: #d4cec4;
 
-  --app-font-sans: 'Inter', sans-serif;
+  --app-font-sans: 'Archivo', sans-serif;
   --app-font-serif: 'Playfair Display', serif;
   --app-font-mono: 'JetBrains Mono', monospace;
 }
@@ -110,7 +110,7 @@ html, body { transition: background 0.3s ease, color 0.3s ease; }
   body {
     background: var(--paper);
     color: var(--ink);
-    font-family: 'Inter', sans-serif;
+    font-family: 'Archivo', sans-serif;
     font-weight: 400;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;

@@ -120,7 +120,7 @@ export async function jolpicaFetch<T>(
     const r = await attemptFetch<T>(url);
     if (r.ok) return r.data as T;
     if (r.retryable && attempt < MAX_RETRIES) {
-      const backoff = r.retryAfterMs ?? Math.min(10_000, 700 * 2 ** attempt) + Math.random() * 300;
+      const backoff = r.retryAfterMs ?? Math.min(10_000, 700 * 2 ** attempt) + crypto.getRandomValues(new Uint32Array(1))[0] % 300;
       await sleep(backoff);
       continue;
     }

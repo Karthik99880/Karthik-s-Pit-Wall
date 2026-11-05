@@ -1,19 +1,20 @@
 import { useNextRace, useCountdown } from '@/hooks/useF1Data';
 import { getFlag, parseF1DateTime } from '@/lib/f1Types';
 import SessionTracker from '@/components/SessionTracker';
+import Skeleton from '@/components/Skeleton';
 
 export default function NextRace() {
   const { data: race, isPending, isError, status } = useNextRace();
   const { data: countdown } = useCountdown(race?.date, race?.time);
 
   if (isPending) {
-    return <Wrapper><RaceBlockShell><Msg>Loading race data...</Msg></RaceBlockShell></Wrapper>;
+    return <Wrapper><RaceBlockShell><Skeleton /></RaceBlockShell></Wrapper>;
   }
   if (isError) {
-    return <Wrapper><RaceBlockShell><Msg warn>Could not reach F1 data — retrying...</Msg></RaceBlockShell></Wrapper>;
+    return <Wrapper><RaceBlockShell><Msg warn>Could not reach F1 data. Retrying...</Msg></RaceBlockShell></Wrapper>;
   }
   if (status === 'success' && !race) {
-    return <Wrapper><RaceBlockShell><Msg>Season complete — see you next year 🏁</Msg></RaceBlockShell></Wrapper>;
+    return <Wrapper><RaceBlockShell><Msg>Season complete. See you next year.</Msg></RaceBlockShell></Wrapper>;
   }
   if (!race) return null;
 
@@ -49,7 +50,6 @@ export default function NextRace() {
                     padding: '6px 12px', background: 'var(--carbon)', color: '#fff',
                     fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 800, letterSpacing: '0.18em',
                     border: '1.5px solid var(--mercedes)',
-                    boxShadow: '0 0 15px rgba(39,244,210,0.25)',
                   }}>
                     <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--mercedes)', display: 'inline-block', animation: 'blink 1s ease infinite' }} />
                     RACE LIVE

@@ -3,7 +3,9 @@ import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import { getCircuitCategory, CATEGORY_META, CATEGORY_ORDER, type CircuitCategory } from '@/lib/circuitTypes';
 import Panel from './Panel';
+import Skeleton from '@/components/Skeleton';
 import { advanceHunt, readHuntStage } from '@/lib/hunt';
+import DecryptText from '@/components/motion/DecryptText';
 
 interface Perf { id: string; code: string; color: string; fav: boolean; avg: number; races: number; }
 
@@ -74,7 +76,7 @@ export default function CircuitSpecialization() {
   };
 
   if (!byCategory) {
-    return <Panel title="Circuit" accent="Specialization" num="06"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
+    return <Panel title="Circuit" accent="Specialization" num="06">{isLoading ? <Skeleton /> : <Msg>No race data yet.</Msg>}</Panel>;
   }
 
   return (
@@ -82,14 +84,13 @@ export default function CircuitSpecialization() {
       {showClue6Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          background: 'rgba(0,0,0,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 24,
         }}>
           <div style={{
             background: 'var(--carbon)',
             border: '2px solid var(--mercedes)',
-            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
             maxWidth: 460, width: '100%',
             color: '#fff',
             fontFamily: 'var(--font-mono)',
@@ -98,10 +99,10 @@ export default function CircuitSpecialization() {
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
             <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
-              📁 ARCHIVE ENCRYPTION: LEVEL 6
+              ARCHIVE ENCRYPTION: LEVEL 6
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Navigate to the Driver Roster. Seek the icon of the silver star, but do not look for a Mercedes cockpit. Instead, find the pilot who brought the most famous number in modern racing history over to Maranello. Click the emblem beside his name."
+              <DecryptText text={`"Navigate to the Driver Roster. Seek the icon of the silver star, but do not look for a Mercedes cockpit. Instead, find the pilot who brought the most famous number in modern racing history over to Maranello. Click the emblem beside his name."`} />
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button

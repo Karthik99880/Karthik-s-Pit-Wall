@@ -117,7 +117,7 @@ export default function CircuitGuide() {
                 <Rating label="Overtaking"     value={facts.overtaking} />
                 {facts.lapRecord && (
                   <div style={{ marginTop: 8, paddingTop: 10, borderTop: '1px solid var(--rule-light)', fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em' }}>
-                    Lap record <strong style={{ color: 'var(--ink)' }}>{facts.lapRecord.time}</strong> — {facts.lapRecord.driver}, {facts.lapRecord.year}
+                    Lap record <strong style={{ color: 'var(--ink)' }}>{facts.lapRecord.time}</strong>, {facts.lapRecord.driver}, {facts.lapRecord.year}
                   </div>
                 )}
               </div>

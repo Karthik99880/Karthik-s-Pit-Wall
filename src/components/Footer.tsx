@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'wouter';
 import { setHuntStage } from '@/lib/hunt';
+import DecryptText from '@/components/motion/DecryptText';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -20,14 +22,13 @@ export default function Footer() {
       {showClueModal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
+          background: 'rgba(0,0,0,0.92)',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           padding: 24,
         }}>
           <div style={{
             background: 'var(--carbon)',
             border: '2px solid var(--mercedes)',
-            boxShadow: '0 20px 50px rgba(39,244,210,0.15)',
             maxWidth: 460, width: '100%',
             color: '#fff',
             fontFamily: 'var(--font-mono)',
@@ -36,10 +37,10 @@ export default function Footer() {
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
             <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
-              📁 ARCHIVE ENCRYPTION: LEVEL 1
+              ARCHIVE ENCRYPTION: LEVEL 1
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access the Calendar of Rounds. Track the journey to the birthplace of the world championship, where the apexes slice across old wartime runways and the local heroes claim the ultimate home advantage. Click the nation that guards the gates of Silverstone."
+              <DecryptText text={`"Access the Calendar of Rounds. Track the journey to the birthplace of the world championship, where the apexes slice across old wartime runways and the local heroes claim the ultimate home advantage. Click the nation that guards the gates of Silverstone."`} />
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -98,7 +99,7 @@ export default function Footer() {
             onMouseEnter={(e) => { e.currentTarget.style.opacity = '0.7'; }}
             onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.4'; }}
             >
-              🔒 Classified
+              Classified
             </div>
           </div>
 
@@ -120,7 +121,8 @@ export default function Footer() {
           endorsed by or connected to Formula 1, the FIA, Mercedes-Benz, the Mercedes-AMG
           PETRONAS F1 Team or any other team. F1, FORMULA 1 and related marks, and all team
           names and logos, are trademarks of their respective owners. Data from the
-          community Jolpica/Ergast and OpenF1 APIs.
+          community Jolpica/Ergast and OpenF1 APIs.{' '}
+          <Link href="/legal" style={{ color: 'var(--ink-2)', textDecoration: 'underline' }}>Privacy &amp; Terms</Link>
         </p>
       </div>
 
@@ -138,7 +140,7 @@ const ACCEPTED = ['mercedes', 'silver', 'silver arrows', 'silver arrow', 'merc',
 
 const TAUNTS = [
   'Wrong. The obvious answer is the trap.',
-  'Nope — you’re reading it exactly as it wants you to. That’s the mistake.',
+  'Nope. You’re reading it exactly as it wants you to. That’s the mistake.',
   'Still wrong. Stop trusting what the riddle is telling you.',
 ];
 
@@ -174,7 +176,7 @@ function RiddleGate({ onClose }: { onClose: () => void }) {
       onClick={onClose}
       style={{
         position: 'fixed', inset: 0, zIndex: 200000,
-        background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(5px)',
+        background: 'rgba(0,0,0,0.92)',
         display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24,
         animation: 'fadeSlow 0.22s ease both',
       }}
@@ -190,12 +192,12 @@ function RiddleGate({ onClose }: { onClose: () => void }) {
         }}
       >
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.3em', textTransform: 'uppercase', color: 'var(--racing)', marginBottom: 18 }}>
-          🔒 Encrypted File · Access Riddle
+          Encrypted File · Access Riddle
         </div>
 
-        {/* The misleading riddle — points hard at Ferrari/red */}
+        {/* The misleading riddle: points hard at Ferrari/red */}
         <p style={{ fontFamily: 'var(--font-serif)', fontSize: 19, lineHeight: 1.5, color: '#fff', fontStyle: 'italic', marginBottom: 6 }}>
-          “The Tifosi sing my name. I am scarlet, I am Scuderia — the prancing
+          “The Tifosi sing my name. I am scarlet, I am Scuderia, the prancing
           horse's fire, the only true colour of speed.
         </p>
         <p style={{ fontFamily: 'var(--font-serif)', fontSize: 19, lineHeight: 1.5, color: '#fff', fontStyle: 'italic', marginBottom: 22 }}>

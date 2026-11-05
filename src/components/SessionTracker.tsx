@@ -92,7 +92,6 @@ export default function SessionTracker({ race }: { race: Race }) {
                   {s.shortLabel}
                   {isLive && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--mercedes)', display: 'inline-block', animation: 'ferrariPulse 1s ease infinite' }} />}
                   {isNext && <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--mercedes)', display: 'inline-block', animation: 'ferrariPulse 1.4s ease infinite' }} />}
-                  {isDone && <span style={{ fontSize: 9, color: 'var(--gold)' }}>✓</span>}
                 </div>
 
                 <div style={{ fontFamily: 'var(--font-serif)', fontSize: 13, fontWeight: 500, color: isLive ? '#fff' : 'var(--ink)', marginBottom: 10, letterSpacing: '-0.01em', lineHeight: 1.2 }}>{s.label}</div>
@@ -103,7 +102,7 @@ export default function SessionTracker({ race }: { race: Race }) {
                 </div>
 
                 {isLive ? (
-                  <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.15)', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--mercedes)', fontWeight: 700, animation: 'yellowBlink 2s ease infinite' }}>🔴 LIVE NOW</div>
+                  <div style={{ paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.15)', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--mercedes)', fontWeight: 700, animation: 'yellowBlink 2s ease infinite' }}>LIVE NOW</div>
                 ) : isDone ? (
                   <div style={{ paddingTop: 8, borderTop: '1px solid var(--rule-light)', fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold)', fontWeight: 600, letterSpacing: '0.1em' }}>COMPLETED</div>
                 ) : cd ? (

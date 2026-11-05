@@ -98,7 +98,6 @@ function BattleCard({
       style={{
       background: 'var(--carbon)', color: '#fff', border: `2px solid ${leaderFav ? 'var(--mercedes)' : 'rgba(255,255,255,0.1)'}`,
       borderTop: `4px solid ${leaderColor}`, padding: '22px 24px 24px', position: 'relative', overflow: 'hidden',
-      boxShadow: leaderFav ? '0 0 24px rgba(39,244,210,0.18)' : 'none',
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 18px)', pointerEvents: 'none' }} />
       <div style={{ position: 'relative' }}>
@@ -135,7 +134,7 @@ function BattleCard({
           </span>
           {clinched ? (
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', color: 'var(--mercedes)', textTransform: 'uppercase' }}>
-              🏆 Title secured
+              Title secured
             </span>
           ) : (
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, letterSpacing: '0.1em', color: 'rgba(255,255,255,0.7)', textTransform: 'uppercase' }}>

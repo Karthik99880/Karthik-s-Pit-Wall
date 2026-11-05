@@ -73,7 +73,6 @@ export default function Ticker() {
               color: item.isFav ? 'var(--mercedes)' : item.color,
               fontWeight: 700,
               letterSpacing: '0.14em',
-              textShadow: item.isFav ? '0 0 8px rgba(39,244,210,0.5)' : 'none',
             }}>{item.label}</span>
             <span style={{ color: '#fff', fontWeight: 600 }}>{item.val}</span>
             <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{item.pts}</span>
