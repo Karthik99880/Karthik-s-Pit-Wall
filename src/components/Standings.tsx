@@ -1,9 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, X } from 'lucide-react';
-import { useDriverStandings, useConstructorStandings, useLastRaceResults } from '@/hooks/useF1Data';
+import { useDriverStandings, useConstructorStandings, useLastRaceResults, useLatestQualifying } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
-import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
+import type { DriverStanding, ConstructorStanding, QualifyingResult } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
 
@@ -16,6 +16,11 @@ export default function Standings() {
   const { data: drivers, isLoading: dLoad } = useDriverStandings();
   const { data: constructors, isLoading: cLoad } = useConstructorStandings();
   const { data: lastRace, isLoading: rLoad } = useLastRaceResults();
+  const { data: quali } = useLatestQualifying();
+  const [resultsView, setResultsView] = useState<number | null>(null);
+  const qualiIsNewer = !!quali && Number(quali.race.round) > Number(lastRace?.race?.round ?? 0);
+  const showQuali = !!quali && (resultsView === null ? qualiIsNewer : resultsView === 1);
+  const resultsRace = showQuali ? quali.race : lastRace?.race;
 
   const [hovD, setHovD] = useState<HoveredDriver | null>(null);
   const [hovC, setHovC] = useState<HoveredCtor | null>(null);
@@ -64,7 +69,7 @@ export default function Standings() {
 
   const handleCtorClick = (isFav: boolean) => {
     if (!isFav) return;
-    if (advanceHunt(2, 3)) setShowClue3Modal(true);
+    if (advanceHunt(2, 4)) setShowClue3Modal(true);
   };
 
   const handleTagClick = (num: string) => {
@@ -96,7 +101,7 @@ export default function Standings() {
               📁 ARCHIVE ENCRYPTION: LEVEL 3
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Enter the Strategy Room and pull up the Champion Projection Panel. Scan the data matrix predicting the final hierarchy. Do not select the leader, nor the runner-up chasing the crown. Click the designation for the final step on the championship's theoretical podium."
+              "Enter the Strategy Room, where overtaking defines raw craft. Seek the index of passes. Find the driver who has carved his way forward the most positions this season and click their code."
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -185,7 +190,7 @@ export default function Standings() {
 
 
       {isMobile && (
-        <SegmentedControl tabs={['Drivers', 'Constructors', 'Last Race']} active={tab} onChange={setTab} />
+        <SegmentedControl tabs={['Drivers', 'Constructors', 'Results']} active={tab} onChange={setTab} />
       )}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr 1fr', border: '2px solid var(--ink)', background: 'var(--paper)' }}>
 
@@ -241,10 +246,15 @@ export default function Standings() {
         {}
         {(!isMobile || tab === 2) && (
           <ColWrap
-            title={lastRace?.race?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
-            subtitle="Podium Results" num="03"
+            title={resultsRace?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
+            subtitle={showQuali ? 'Qualifying · Full Order' : 'Podium Results'} num="03"
+            headerExtra={quali && (
+              <div style={{ marginTop: 12, marginBottom: -12 }}>
+                <SegmentedControl tabs={['Race', 'Qualifying']} active={showQuali ? 1 : 0} onChange={setResultsView} />
+              </div>
+            )}
           >
-            {rLoad ? <Skeleton /> : !lastRace?.race ? (
+            {rLoad ? <Skeleton /> : showQuali ? <QualifyingList results={quali.results} /> : !lastRace?.race ? (
               <div style={{ padding: '32px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>No results yet</div>
             ) : (
               <>
@@ -479,6 +489,38 @@ function BigStat({ label, value, accent }: { label: string; value: string; accen
     <div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>{label}</div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 22, fontWeight: 800, color: accent ?? '#fff', lineHeight: 1 }}>{value}</div>
+    </div>
+  );
+}
+
+
+function QualifyingList({ results }: { results: QualifyingResult[] }) {
+  return (
+    <div style={{ padding: '10px 24px 14px' }}>
+      {results.map((r, i) => {
+        const isFav = isFavoriteTeam(r.Constructor.constructorId);
+        const session = r.Q3 ? 'Q3' : r.Q2 ? 'Q2' : r.Q1 ? 'Q1' : '';
+        return (
+          <div key={r.Driver.driverId} style={{
+            display: 'flex', alignItems: 'center', gap: 6, padding: '6px 0',
+            borderBottom: '1px solid var(--rule-light)',
+            background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
+            animation: `rowSlide 0.5s ease both ${i * 0.03}s`,
+          }}>
+            {/* Numbered by row: the API can repeat a position. */}
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{i + 1}</span>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: getTeamColor(r.Constructor.constructorId), flexShrink: 0 }} />
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {r.Driver.givenName[0]}. {r.Driver.familyName}
+              {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
+            </span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.1em' }}>{session}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink)', fontWeight: 600, width: 56, textAlign: 'right' }}>
+              {r.Q3 || r.Q2 || r.Q1 || 'No time'}
+            </span>
+          </div>
+        );
+      })}
     </div>
   );
 }

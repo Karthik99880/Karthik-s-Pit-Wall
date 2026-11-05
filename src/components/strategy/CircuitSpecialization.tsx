@@ -74,11 +74,11 @@ export default function CircuitSpecialization() {
   };
 
   if (!byCategory) {
-    return <Panel title="Circuit" accent="Specialization" num="05"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
+    return <Panel title="Circuit" accent="Specialization" num="06"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
   }
 
   return (
-    <Panel title="Circuit" accent="Specialization" num="05" meta="Who excels where">
+    <Panel title="Circuit" accent="Specialization" num="06" meta="Who excels where">
       {showClue6Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,

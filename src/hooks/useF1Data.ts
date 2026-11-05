@@ -81,6 +81,24 @@ export function useNextRace() {
 }
 
 
+export function useLatestQualifying() {
+  const { data: next, isPending } = useNextRace();
+  return useQuery({
+    queryKey: ['f1', 'qualifying', YEAR, next?.round ?? 'last'],
+    enabled: !isPending,
+    queryFn: async () => {
+      const load = async (round: string) =>
+        racesOf((await jolpicaFetch<RaceTableResponse>(`/${YEAR}/${round}/qualifying/`)).MRData)[0];
+      // Ask for the upcoming round by number: 'last' may not reach it until the race has run.
+      const race = (next && await load(next.round)) || await load('last');
+      return race?.QualifyingResults?.length ? { race, results: race.QualifyingResults } : null;
+    },
+    staleTime: CACHE.NEXT_RACE,
+    refetchInterval: CACHE.NEXT_RACE,
+  });
+}
+
+
 export interface ProgressionPoint {
   round: number;
   raceName: string;

@@ -77,7 +77,7 @@ export default function FormGuide() {
 
   if (!rows || !rows.length) {
     return (
-      <Panel title="Form" accent="Guide" num="06">
+      <Panel title="Form" accent="Guide" num="04">
         <Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg>
       </Panel>
     );
@@ -87,7 +87,7 @@ export default function FormGuide() {
   const n = rows[0].recent.length;
 
   return (
-    <Panel title="Form" accent="Guide" num="06" meta={`Last ${n} ${n === 1 ? 'round' : 'rounds'}`}>
+    <Panel title="Form" accent="Guide" num="04" meta={`Last ${n} ${n === 1 ? 'round' : 'rounds'}`}>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em', marginBottom: 6, lineHeight: 1.5 }}>
         Momentum, not totals. Points per round across the last {n}, against each driver's own season average —
         who's arriving at the back end of the year in form.

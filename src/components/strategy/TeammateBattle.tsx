@@ -77,11 +77,11 @@ export default function TeammateBattle() {
   }, [drivers, constructors, rounds]);
 
   if (!teams.length) {
-    return <Panel title="Teammate" accent="Head-to-Head" num="02"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No teammate data yet.'}</Msg></Panel>;
+    return <Panel title="Teammate" accent="Head-to-Head" num="01"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No teammate data yet.'}</Msg></Panel>;
   }
 
   return (
-    <Panel title="Teammate" accent="Head-to-Head" num="02" meta="Same car · true baseline">
+    <Panel title="Teammate" accent="Head-to-Head" num="01" meta="Same car · true baseline">
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(330px, 100%), 1fr))', gap: 16 }}>
         {teams.map(t => <TeamCard key={t.id} t={t} />)}
       </div>

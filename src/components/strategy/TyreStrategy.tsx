@@ -237,7 +237,7 @@ export default function TyreStrategy() {
   // A disabled query (waiting on the session lookup) is 'pending', not 'loading'.
   if (sessionPending || (!!session && isPending && !isError)) {
     return (
-      <Panel title="Tyre" accent="Strategy" num="04" meta="Loading…">
+      <Panel title="Tyre" accent="Strategy" num="03" meta="Loading…">
         <Msg>Fetching stint data from OpenF1…</Msg>
       </Panel>
     );
@@ -245,7 +245,7 @@ export default function TyreStrategy() {
 
   if (isError || !stintsData || stintsData.byDriver.size === 0) {
     return (
-      <Panel title="Tyre" accent="Strategy" num="04">
+      <Panel title="Tyre" accent="Strategy" num="03">
         <Msg>No stint data available — OpenF1 may not have the latest race yet.</Msg>
       </Panel>
     );
@@ -273,7 +273,7 @@ export default function TyreStrategy() {
     <Panel
       title="Tyre"
       accent="Strategy"
-      num="04"
+      num="03"
       meta={raceName}
     >
       {tooltip && <StintTooltip data={tooltip} />}

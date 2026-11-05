@@ -67,7 +67,7 @@ export default function OvertakingIndex() {
   };
 
   if (!drivers.length) {
-    return <Panel title="Overtaking" accent="Index" num="03"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
+    return <Panel title="Overtaking" accent="Index" num="02"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
   }
 
   const ranked = [...drivers].sort((a, b) => b.gained - a.gained);
@@ -75,7 +75,7 @@ export default function OvertakingIndex() {
   const scatter = drivers.map(d => ({ x: d.avgGrid, y: d.avgFinish, label: d.label, color: d.color, fav: d.fav, gained: d.gained, starts: d.starts }));
 
   return (
-    <Panel title="Overtaking" accent="Index" num="03" meta="Grid → finish race craft">
+    <Panel title="Overtaking" accent="Index" num="02" meta="Grid → finish race craft">
       {showClue5Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
