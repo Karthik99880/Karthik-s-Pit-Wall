@@ -1,3 +1,6 @@
+import { motion } from 'motion/react';
+import AnimatedNumber from '@/components/motion/AnimatedNumber';
+import { EASE_OUT } from '@/lib/motion';
 import { useDriverStandings, useConstructorStandings, useRaceSchedule } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
@@ -47,6 +50,7 @@ export default function ChampionshipBattle() {
           leadPts={dLead.lead}
           leaderPts={dLead.leaderPts}
           maxRemaining={maxDriverRemaining}
+          fromX={-40} delay={0}
         />
         <BattleCard
           kind="Constructors"
@@ -58,6 +62,7 @@ export default function ChampionshipBattle() {
           leadPts={cLead.lead}
           leaderPts={cLead.leaderPts}
           maxRemaining={maxCtorRemaining}
+          fromX={40} delay={0.12}
         />
       </div>
     </div>
@@ -71,11 +76,11 @@ function leadGap(points: number[]) {
 
 function BattleCard({
   kind, leaderName, chaserName, leaderColor, chaserColor, leaderFav,
-  leadPts, leaderPts, maxRemaining,
+  leadPts, leaderPts, maxRemaining, fromX, delay,
 }: {
   kind: string; leaderName: string; chaserName: string;
   leaderColor: string; chaserColor: string; leaderFav: boolean;
-  leadPts: number; leaderPts: number; maxRemaining: number;
+  leadPts: number; leaderPts: number; maxRemaining: number; fromX: number; delay: number;
 }) {
   
   // With nothing left to race, any lead is a title.
@@ -85,7 +90,12 @@ function BattleCard({
   const safety = maxRemaining > 0 ? Math.min(100, (leadPts / maxRemaining) * 100) : 100;
 
   return (
-    <div style={{
+    <motion.div
+      initial={{ x: fromX, opacity: 0 }}
+      whileInView={{ x: 0, opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.9, ease: EASE_OUT, delay }}
+      style={{
       background: 'var(--carbon)', color: '#fff', border: `2px solid ${leaderFav ? 'var(--mercedes)' : 'rgba(255,255,255,0.1)'}`,
       borderTop: `4px solid ${leaderColor}`, padding: '22px 24px 24px', position: 'relative', overflow: 'hidden',
       boxShadow: leaderFav ? '0 0 24px rgba(39,244,210,0.18)' : 'none',
@@ -99,16 +109,24 @@ function BattleCard({
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 12, marginBottom: 4 }}>
           <span style={{ width: 12, height: 12, borderRadius: '50%', background: leaderColor, flexShrink: 0 }} />
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: 24, fontWeight: 700, lineHeight: 1 }}>{leaderName}</span>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--gold)', fontWeight: 700, marginLeft: 'auto' }}>{leaderPts} pts</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, color: 'var(--gold)', fontWeight: 700, marginLeft: 'auto' }}>
+            <AnimatedNumber value={leaderPts} decimals={Number.isInteger(leaderPts) ? 0 : 1} /> pts
+          </span>
         </div>
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(255,255,255,0.5)', letterSpacing: '0.08em', marginBottom: 16 }}>
           leads <span style={{ color: chaserColor, fontWeight: 700 }}>{chaserName}</span> by{' '}
-          <span style={{ color: '#fff', fontWeight: 700 }}>{leadPts}</span> pts
+          <span style={{ color: '#fff', fontWeight: 700 }}>
+            <AnimatedNumber value={leadPts} decimals={Number.isInteger(leadPts) ? 0 : 1} />
+          </span> pts
         </div>
 
         {}
         <div style={{ height: 6, background: 'rgba(255,255,255,0.08)', overflow: 'hidden', marginBottom: 8 }}>
-          <div style={{ height: '100%', width: `${safety}%`, background: clinched ? 'var(--mercedes)' : leaderColor, transition: 'width 0.8s ease' }} />
+          <motion.div
+            initial={{ scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }}
+            transition={{ duration: 1.4, ease: EASE_OUT }}
+            style={{ height: '100%', width: `${safety}%`, originX: 0, background: clinched ? 'var(--mercedes)' : leaderColor }}
+          />
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -126,6 +144,6 @@ function BattleCard({
           )}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

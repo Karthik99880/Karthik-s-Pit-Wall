@@ -10,7 +10,10 @@ import Calendar from '@/components/Calendar';
 import ProgressionChart from '@/components/ProgressionChart';
 import Standings from '@/components/Standings';
 import Footer from '@/components/Footer';
+import { useEffect, useState } from 'react';
 import SilverArrowLoader from '@/components/SilverArrowLoader';
+import { introDone, introPending } from '@/lib/intro';
+import Reveal from '@/components/motion/Reveal';
 import SectionNav from '@/components/SectionNav';
 // Live race-day timing strip is switched off along with the Race Day page.
 // import LiveTicker from '@/components/LiveTicker';
@@ -29,7 +32,7 @@ const SECTIONS = [
 
 
 function Section({ id, children }: { id: string; children: React.ReactNode }) {
-  return <div id={id} style={{ scrollMarginTop: 64 }}>{children}</div>;
+  return <Reveal id={id} style={{ scrollMarginTop: 64 }}>{children}</Reveal>;
 }
 
 export default function Dashboard() {
@@ -38,12 +41,15 @@ export default function Dashboard() {
     'Live F1 2026 driver and constructor standings, next race countdown, circuit guide, weekend weather forecast, full season calendar, and championship points progression.',
   );
 
+  const [intro] = useState(introPending);
+  useEffect(() => introDone, []);
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--paper)' }}>
-      <SilverArrowLoader />
+      {intro && <SilverArrowLoader />}
       <Ticker />
       <Hero />
-      <ChampionBanner />
+      <Reveal><ChampionBanner /></Reveal>
       <SectionNav sections={SECTIONS} />
       {/* <LiveTicker /> */}
       <Section id="dash-race"><NextRace /></Section>

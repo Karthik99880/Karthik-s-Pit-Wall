@@ -1,5 +1,8 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useRef, useCallback, useEffect, useId, forwardRef, useImperativeHandle } from 'react';
 import { createPortal } from 'react-dom';
+import { motion, AnimatePresence } from 'motion/react';
+import AnimatedNumber from '@/components/motion/AnimatedNumber';
+import { EASE_OUT, SPRING_SNAP, SPRING_SOFT } from '@/lib/motion';
 import { Search, X } from 'lucide-react';
 import { useDriverStandings, useConstructorStandings, useLastRaceResults, useLatestQualifying } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
@@ -7,6 +10,8 @@ import type { DriverStanding, ConstructorStanding, QualifyingResult } from '@/li
 import { useIsMobile } from '@/hooks/use-mobile';
 import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
 
+
+const pts = (v: string) => <AnimatedNumber value={Number(v)} decimals={Number.isInteger(Number(v)) ? 0 : 1} />;
 
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
 type HoveredCtor = { ctor: ConstructorStanding; allDrivers: DriverStanding[]; rect: DOMRect };
@@ -204,7 +209,7 @@ export default function Standings() {
               <div style={{ padding: '28px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>
                 {q ? `No drivers match “${query}”.` : 'No standings available yet.'}
               </div>
-            ) : filteredDrivers.map((d, i) => {
+            ) : <AnimatePresence initial={false} mode="popLayout">{filteredDrivers.map((d, i) => {
               const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
               const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
               const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
@@ -217,7 +222,7 @@ export default function Standings() {
                   onTagClick={handleTagClick}
                 />
               );
-            })}
+            })}</AnimatePresence>}
           </ColWrap>
         )}
 
@@ -254,6 +259,12 @@ export default function Standings() {
               </div>
             )}
           >
+            <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={showQuali ? 'quali' : 'race'}
+              initial={{ x: 24, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: -24, opacity: 0 }}
+              transition={{ duration: 0.25, ease: EASE_OUT }}
+            >
             {rLoad ? <Skeleton /> : showQuali ? <QualifyingList results={quali.results} /> : !lastRace?.race ? (
               <div style={{ padding: '32px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>No results yet</div>
             ) : (
@@ -324,6 +335,8 @@ export default function Standings() {
                 })()}
               </>
             )}
+            </motion.div>
+            </AnimatePresence>
           </ColWrap>
         )}
       </div>
@@ -335,7 +348,9 @@ export default function Standings() {
       {canHover && !modalDriver && hovD && <DriverCard data={hovD} />}
       {canHover && !modalDriver && hovC && <CtorCard data={hovC} />}
 
-      {modalDriver && <DriverModal d={modalDriver} sheet={isMobile} onClose={() => setModalDriver(null)} />}
+      <AnimatePresence>
+        {modalDriver && <DriverModal key={modalDriver.Driver.driverId} d={modalDriver} sheet={isMobile} onClose={() => setModalDriver(null)} />}
+      </AnimatePresence>
     </div>
   );
 }
@@ -371,6 +386,7 @@ function SearchBox({ value, onChange }: { value: string; onChange: (v: string) =
 
 
 function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: number; onChange: (i: number) => void }) {
+  const pillId = useId();
   return (
     <div role="tablist" style={{
       display: 'grid', gridTemplateColumns: `repeat(${tabs.length}, 1fr)`,
@@ -384,15 +400,21 @@ function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: 
             key={t} role="tab" aria-selected={on}
             onClick={() => onChange(i)}
             style={{
-              minHeight: 44, cursor: 'pointer', border: 'none',
-              background: on ? 'var(--carbon)' : 'transparent',
+              position: 'relative', minHeight: 44, cursor: 'pointer', border: 'none',
+              background: 'transparent',
               color: on ? 'var(--mercedes)' : 'var(--ink-3)',
               fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
               letterSpacing: '0.1em', textTransform: 'uppercase',
-              transition: 'background 0.2s, color 0.2s',
+              transition: 'color 0.2s',
             }}
           >
-            {t}
+            {on && (
+              <motion.span
+                layoutId={pillId} transition={SPRING_SNAP} aria-hidden
+                style={{ position: 'absolute', inset: 0, background: 'var(--carbon)' }}
+              />
+            )}
+            <span style={{ position: 'relative', zIndex: 1 }}>{t}</span>
           </button>
         );
       })}
@@ -417,18 +439,24 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
   }, [onClose]);
 
   return createPortal(
-    <div
+    <motion.div
       onClick={onClose}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.25 }}
       style={{
         position: 'fixed', inset: 0, zIndex: 100001,
         background: 'rgba(0,0,0,0.62)', backdropFilter: 'blur(3px)',
         display: 'flex', alignItems: sheet ? 'flex-end' : 'center', justifyContent: 'center',
         padding: sheet ? 0 : 20,
-        animation: 'fadeSlow 0.2s ease both',
       }}
     >
-      <div
+      <motion.div
         onClick={e => e.stopPropagation()}
+        data-lenis-prevent
+        initial={sheet ? { y: '100%' } : { scale: 0.92, y: 24, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        exit={sheet ? { y: '100%', transition: { duration: 0.22 } } : { scale: 0.96, y: 12, opacity: 0, transition: { duration: 0.18 } }}
+        transition={SPRING_SOFT}
         style={{
           width: sheet ? '100%' : 'min(440px, 100%)', background: '#111', color: '#fff',
           borderTop: `5px solid ${color}`, position: 'relative',
@@ -436,7 +464,6 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
           borderTopLeftRadius: sheet ? 18 : 0, borderTopRightRadius: sheet ? 18 : 0,
           paddingTop: sheet ? 6 : 0,
           maxHeight: sheet ? '88vh' : undefined, overflowY: sheet ? 'auto' : undefined,
-          animation: sheet ? 'sheetUp 0.34s cubic-bezier(.2,.9,.25,1) both' : 'fadeUpSlow 0.3s cubic-bezier(.2,.9,.25,1) both',
         }}
       >
         {sheet && <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.25)', margin: '0 auto 4px' }} />}
@@ -478,8 +505,8 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
           <BigStat label="Code" value={code} />
         </div>
 
-      </div>
-    </div>,
+      </motion.div>
+    </motion.div>,
     document.body,
   );
 }
@@ -501,11 +528,11 @@ function QualifyingList({ results }: { results: QualifyingResult[] }) {
         const isFav = isFavoriteTeam(r.Constructor.constructorId);
         const session = r.Q3 ? 'Q3' : r.Q2 ? 'Q2' : r.Q1 ? 'Q1' : '';
         return (
-          <div key={r.Driver.driverId} style={{
+          <div key={r.Driver.driverId} data-row style={{
             display: 'flex', alignItems: 'center', gap: 6, padding: '6px 0',
             borderBottom: '1px solid var(--rule-light)',
             background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
-            animation: `rowSlide 0.5s ease both ${i * 0.03}s`,
+            animation: `rowSlide 0.5s ease backwards ${i * 0.03}s`,
           }}>
             {/* Numbered by row: the API can repeat a position. */}
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{i + 1}</span>
@@ -535,20 +562,21 @@ function ColWrap({ title, subtitle, num, children, headerExtra }: { title: strin
         <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.12em', textTransform: 'uppercase', marginTop: 3 }}>{subtitle}</div>
         {headerExtra}
       </div>
-      <div>{children}</div>
+      <div style={{ position: 'relative' }}>{children}</div>
     </div>
   );
 }
 
 
-function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, onTagClick }: {
+const DriverRow = forwardRef<HTMLDivElement, {
   d: DriverStanding; color: string; isFav: boolean; team: string; delay: number;
   onEnter: (d: DriverStanding, el: HTMLElement) => void;
   onLeave: () => void;
   onClick?: () => void;
   onTagClick?: (num: string) => void;
-}) {
+}>(function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, onTagClick }, fwdRef) {
   const ref = useRef<HTMLDivElement>(null);
+  useImperativeHandle(fwdRef, () => ref.current as HTMLDivElement);
   const pos = Number(d.position);
   const [stage, setStage] = useState(() => {
     return readHuntStage();
@@ -563,8 +591,11 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
   }, []);
 
   return (
-    <div
+    <motion.div
       ref={ref}
+      layout="position"
+      exit={{ opacity: 0, x: -24 }}
+      transition={{ duration: 0.3, ease: EASE_OUT }}
       role="button"
       tabIndex={0}
       onClick={onClick}
@@ -575,16 +606,16 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
         display: 'flex', alignItems: 'stretch',
         borderBottom: '1px solid var(--rule-light)',
         background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
-        animation: `rowSlide 0.5s ease both ${delay}s`,
+        animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
         boxShadow: isFav ? 'inset 0 0 10px rgba(39,244,210,0.1)' : 'none',
         outlineOffset: -1,
         cursor: 'pointer',
-        transition: 'background 0.15s',
+        transition: 'background 0.15s, transform 0.25s cubic-bezier(.16,1,.3,1)',
       }}
     >
       <div style={{ width: 4, background: color, flexShrink: 0 }} />
-      <div style={{ flex: 1, padding: '13px 16px', display: 'flex', gap: 10, alignItems: 'center' }}>
+      <div data-row style={{ flex: 1, padding: '13px 16px', display: 'flex', gap: 10, alignItems: 'center' }}>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: pos <= 3 ? 17 : 14, fontWeight: 700, color: pos <= 3 ? 'var(--ink)' : 'var(--ink-3)', width: 28, flexShrink: 0 }}>P{pos}</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 14, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -609,13 +640,13 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginTop: 2, fontWeight: 600 }}>{team}</div>
         </div>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{d.points}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{pts(d.points)}</span>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>pts</div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
-}
+});
 
 
 function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, onLeave, onClick }: {
@@ -645,13 +676,14 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
       onMouseEnter={() => ref.current && onEnter(c, allDrivers, ref.current)}
       onMouseLeave={onLeave}
       onClick={onClick}
+      data-row
       style={{
         padding: '13px 24px', borderBottom: '1px solid var(--rule-light)',
         background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
-        animation: `rowSlide 0.5s ease both ${delay}s`,
+        animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
         boxShadow: isFav ? 'inset 0 0 10px rgba(39,244,210,0.1)' : 'none',
-        outlineOffset: -1, cursor: (isFav && stage >= 2) ? 'pointer' : 'default', transition: 'background 0.15s',
+        outlineOffset: -1, cursor: (isFav && stage >= 2) ? 'pointer' : 'default', transition: 'background 0.15s, transform 0.25s cubic-bezier(.16,1,.3,1)',
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 7 }}>
@@ -663,7 +695,7 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
           </span>
         </div>
         <div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{c.points}</span>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{pts(c.points)}</span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', marginLeft: 3 }}>PTS</span>
         </div>
       </div>

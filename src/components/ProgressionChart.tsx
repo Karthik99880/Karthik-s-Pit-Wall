@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useRef } from 'react';
+import { useInView } from 'motion/react';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
 } from 'recharts';
@@ -50,7 +51,7 @@ export default function ProgressionChart() {
         ))}
       </div>
 
-      <div style={{ width: '100%', height: 320 }}>
+      <InViewBox>
         <ResponsiveContainer>
           <LineChart data={chartData} margin={{ top: 8, right: 16, bottom: 4, left: -12 }}>
             <CartesianGrid strokeDasharray="2 4" stroke="var(--rule-light)" vertical={false} />
@@ -67,14 +68,20 @@ export default function ProgressionChart() {
                 key={d.id} type="monotone" dataKey={d.id} name={d.label}
                 stroke={d.color} strokeWidth={d.fav ? 3.5 : 2}
                 dot={false} activeDot={{ r: 5 }}
-                animationDuration={1400}
+                animationDuration={1800}
               />
             ))}
           </LineChart>
         </ResponsiveContainer>
-      </div>
+      </InViewBox>
     </Shell>
   );
+}
+
+function InViewBox({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: '0px 0px -15% 0px' });
+  return <div ref={ref} style={{ width: '100%', height: 320 }}>{inView && children}</div>;
 }
 
 function Shell({ children }: { children: React.ReactNode }) {

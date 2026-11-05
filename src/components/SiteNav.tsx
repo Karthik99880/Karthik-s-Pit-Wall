@@ -1,4 +1,6 @@
 import { Link, useRoute } from 'wouter';
+import { motion } from 'motion/react';
+import { SPRING_SNAP } from '@/lib/motion';
 import { Gauge, FlaskConical } from 'lucide-react';
 // Race Day is switched off for now. To bring it back, restore these imports,
 // the LiveDot helper below, the liveRace hook call and the nav item.
@@ -32,6 +34,8 @@ export default function SiteNav() {
   );
 }
 
+const NAV_LAYOUT_ID = 'site-nav-indicator';
+
 function NavItem({ to, label, icon, exact, badge }: { to: string; label: string; icon: React.ReactNode; exact?: boolean; badge?: React.ReactNode }) {
   const [active] = useRoute(exact ? to : `${to}/*?`);
   return (
@@ -39,17 +43,22 @@ function NavItem({ to, label, icon, exact, badge }: { to: string; label: string;
       href={to}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 7,
-        padding: '0 16px', height: '100%',
+        position: 'relative', padding: '0 16px', height: '100%',
         fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
         letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none',
         color: active ? 'var(--mercedes)' : 'rgba(255,255,255,0.5)',
-        borderBottom: active ? '2px solid var(--mercedes)' : '2px solid transparent',
         transition: 'color 0.15s',
       }}
     >
       {icon}
       {label}
       {badge}
+      {active && (
+        <motion.span
+          layoutId={NAV_LAYOUT_ID} transition={SPRING_SNAP} aria-hidden
+          style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, background: 'var(--mercedes)' }}
+        />
+      )}
     </Link>
   );
 }

@@ -2,12 +2,15 @@ import { Suspense, lazy } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Route, Switch } from "wouter";
+import { MotionConfig } from "motion/react";
 import SiteNav from "@/components/SiteNav";
 import ThemeToggle from "@/components/ThemeToggle";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SilverArrowLoader from "@/components/SilverArrowLoader";
 import EasterEgg from "@/components/EasterEgg";
 import { Analytics } from "@vercel/analytics/react";
+import SmoothScroll from "@/components/motion/SmoothScroll";
+import { useRouteWipe } from "@/components/motion/RouteWipe";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
@@ -27,8 +30,30 @@ const queryClient = new QueryClient({
   },
 });
 
+function Routes() {
+  const { shown, wipe } = useRouteWipe();
+  return (
+    <>
+      <Suspense fallback={
+        <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
+          <SilverArrowLoader loop={true} />
+        </div>
+      }>
+        <Switch location={shown}>
+          <Route path="/" component={Dashboard} />
+          <Route path="/strategy" component={StrategyRoom} />
+          {/* <Route path="/raceday" component={RaceDay} /> */}
+          <Route component={NotFound} />
+        </Switch>
+      </Suspense>
+      {wipe}
+    </>
+  );
+}
+
 export default function App() {
   return (
+    <MotionConfig reducedMotion="user">
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
       <QueryClientProvider client={queryClient}>
         <ErrorBoundary>
@@ -49,20 +74,10 @@ export default function App() {
           >
             Skip to content
           </a>
+          <SmoothScroll />
           <SiteNav />
           <main id="main-content">
-            <Suspense fallback={
-              <div style={{ height: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'var(--paper)' }}>
-                <SilverArrowLoader loop={true} />
-              </div>
-            }>
-              <Switch>
-                <Route path="/" component={Dashboard} />
-                <Route path="/strategy" component={StrategyRoom} />
-                {/* <Route path="/raceday" component={RaceDay} /> */}
-                <Route component={NotFound} />
-              </Switch>
-            </Suspense>
+            <Routes />
           </main>
           <ThemeToggle />
           <EasterEgg />
@@ -70,5 +85,6 @@ export default function App() {
         </ErrorBoundary>
       </QueryClientProvider>
     </ThemeProvider>
+    </MotionConfig>
   );
 }

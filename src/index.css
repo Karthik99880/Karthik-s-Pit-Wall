@@ -107,7 +107,6 @@ html, body { transition: background 0.3s ease, color 0.3s ease; }
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
   body {
     background: var(--paper);
     color: var(--ink);
@@ -211,4 +210,23 @@ html, body { transition: background 0.3s ease, color 0.3s ease; }
 @keyframes carIdle {
   0%,100% { transform: translateY(0px) rotate(0deg); }
   50%     { transform: translateY(-2px) rotate(0.3deg); }
+}
+
+[data-reveal]:not([data-inview]) *,
+[data-reveal]:not([data-inview]) *::before,
+[data-reveal]:not([data-inview]) *::after { animation-play-state: paused !important; }
+
+@media (hover: hover) {
+  [data-row] { transition: transform 0.25s cubic-bezier(.16,1,.3,1); }
+  [data-row]:hover { transform: translateX(6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
