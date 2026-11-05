@@ -11,7 +11,8 @@ import { Analytics } from "@vercel/analytics/react";
 
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
-const RaceDay = lazy(() => import("@/pages/RaceDay"));
+// Race Day is switched off for now (re-enable here, in SiteNav and in index.html).
+// const RaceDay = lazy(() => import("@/pages/RaceDay"));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 const queryClient = new QueryClient({
@@ -58,7 +59,7 @@ export default function App() {
               <Switch>
                 <Route path="/" component={Dashboard} />
                 <Route path="/strategy" component={StrategyRoom} />
-                <Route path="/raceday" component={RaceDay} />
+                {/* <Route path="/raceday" component={RaceDay} /> */}
                 <Route component={NotFound} />
               </Switch>
             </Suspense>

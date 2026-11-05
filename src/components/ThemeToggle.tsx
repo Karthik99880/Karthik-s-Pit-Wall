@@ -18,7 +18,7 @@ export default function ThemeToggle() {
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
       style={{
-        position: 'fixed', right: 22, bottom: 22, zIndex: 100000,
+        position: 'fixed', right: 22, bottom: 'calc(22px + env(safe-area-inset-bottom))', zIndex: 1000,
         width: 52, height: 52, borderRadius: '50%', cursor: 'pointer',
         background: 'var(--carbon)', color: 'var(--mercedes)',
         border: '2px solid var(--mercedes)',

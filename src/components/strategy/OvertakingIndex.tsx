@@ -6,9 +6,11 @@ import {
 import { useRaceSchedule, useSeasonResults } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 import Panel from './Panel';
+import { advanceHunt, readHuntStage } from '@/lib/hunt';
 
 
-const startPos = (g: string) => { const n = Number(g); return n === 0 ? 20 : n; };
+// Grid 0 = pit-lane start: count it as the back of that round's field (22 cars in 2026).
+const startPos = (g: string, field: number) => { const n = Number(g); return n === 0 ? field : n; };
 
 interface DriverCraft {
   id: string; label: string; color: string; fav: boolean;
@@ -24,7 +26,7 @@ export default function OvertakingIndex() {
     for (const round of rounds) {
       for (const r of round.results) {
         const id = r.Driver.driverId;
-        const grid = startPos(r.grid);
+        const grid = startPos(r.grid, round.results.length);
         const fin = Number(r.position);
         if (!fin) continue;
         const cur = map.get(id) ?? {
@@ -48,34 +50,24 @@ export default function OvertakingIndex() {
   }, [rounds]);
 
   const [showClue5Modal, setShowClue5Modal] = useState(false);
-  const [showDeniedModal, setShowDeniedModal] = useState(false);
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);
   }, []);
 
   const handleTopDriverClick = () => {
-    const sVal = localStorage.getItem('pitwall_hunt_stage');
-    if (sVal && Number(sVal) >= 4) {
-      localStorage.setItem('pitwall_hunt_stage', '5');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue5Modal(true);
-    } else {
-      setShowDeniedModal(true);
-    }
+    if (advanceHunt(4, 5)) setShowClue5Modal(true);
   };
 
   if (!drivers.length) {
-    return <Panel title="Overtaking" accent="Index" num="03"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
+    return <Panel title="Overtaking" accent="Index" num="02"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg></Panel>;
   }
 
   const ranked = [...drivers].sort((a, b) => b.gained - a.gained);
@@ -83,7 +75,7 @@ export default function OvertakingIndex() {
   const scatter = drivers.map(d => ({ x: d.avgGrid, y: d.avgFinish, label: d.label, color: d.color, fav: d.fav, gained: d.gained, starts: d.starts }));
 
   return (
-    <Panel title="Overtaking" accent="Index" num="03" meta="Grid → finish race craft">
+    <Panel title="Overtaking" accent="Index" num="02" meta="Grid → finish race craft">
       {showClue5Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
@@ -138,61 +130,8 @@ export default function OvertakingIndex() {
         </div>
       )}
 
-      {showDeniedModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 28, alignItems: 'start' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: 28, alignItems: 'start' }}>
         {}
         <div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 12, fontWeight: 700 }}>
@@ -202,13 +141,13 @@ export default function OvertakingIndex() {
             <ResponsiveContainer>
               <ScatterChart margin={{ top: 8, right: 16, bottom: 20, left: 0 }}>
                 <CartesianGrid strokeDasharray="2 4" stroke="var(--rule-light)" />
-                <XAxis type="number" dataKey="x" name="Avg grid" domain={[1, 20]} reversed
+                <XAxis type="number" dataKey="x" name="Avg grid" domain={[1, 22]} reversed
                   tick={{ fontSize: 10, fontFamily: 'var(--font-mono)', fill: 'var(--ink-3)' }}
                   label={{ value: 'AVG GRID', position: 'insideBottom', offset: -8, fontSize: 9, fill: 'var(--ink-3)', fontFamily: 'var(--font-mono)' }} />
-                <YAxis type="number" dataKey="y" name="Avg finish" domain={[1, 20]} reversed
+                <YAxis type="number" dataKey="y" name="Avg finish" domain={[1, 22]} reversed
                   tick={{ fontSize: 10, fontFamily: 'var(--font-mono)', fill: 'var(--ink-3)' }} width={28} />
                 <ZAxis range={[80, 80]} />
-                <ReferenceLine segment={[{ x: 1, y: 1 }, { x: 20, y: 20 }]} stroke="var(--ink-3)" strokeDasharray="4 4" />
+                <ReferenceLine segment={[{ x: 1, y: 1 }, { x: 22, y: 22 }]} stroke="var(--ink-3)" strokeDasharray="4 4" />
                 <Tooltip cursor={{ strokeDasharray: '3 3' }} content={<ScatterTip />} />
                 <Scatter data={scatter}>
                   {scatter.map((d, i) => <Cell key={i} fill={d.color} stroke={d.fav ? '#fff' : 'none'} strokeWidth={d.fav ? 2 : 0} />)}

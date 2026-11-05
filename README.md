@@ -1,4 +1,4 @@
-# Karthik's Pit Wall — Mercedes-AMG F1 Dashboard
+# Pit Wall F1 — Mercedes-AMG F1 Dashboard
 
 A premium, highly interactive F1 Dashboard built for the current Formula 1 season. Fully themed with the iconic Mercedes-AMG Petronas styling, featuring live telemetry indicators, constructor progress trackers, championship simulators, and hidden team secrets.
 

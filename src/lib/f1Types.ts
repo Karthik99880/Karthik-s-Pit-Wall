@@ -50,6 +50,7 @@ export interface Race {
   date: string;
   time?: string;
   Results?: RaceResult[];
+  QualifyingResults?: QualifyingResult[];
   
   FirstPractice?: SessionTime;
   SecondPractice?: SessionTime;
@@ -70,6 +71,7 @@ export interface SessionInfo {
 }
 
 export interface RaceResult {
+  number?: string;      // car number raced this round (e.g. '1' for the champion)
   position: string;
   points: string;
   Driver: {
@@ -89,6 +91,12 @@ export interface RaceResult {
   status: string;
   grid: string;
 }
+
+export type QualifyingResult = Pick<RaceResult, 'position' | 'Driver' | 'Constructor'> & {
+  Q1?: string;
+  Q2?: string;
+  Q3?: string;
+};
 
 export const TEAM_COLORS: Record<string, string> = {
   mercedes:      '#27F4D2',

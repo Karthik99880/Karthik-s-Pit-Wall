@@ -70,14 +70,14 @@ export default function FormGuide() {
         };
       })
       .sort((x, y) => y.recentTotal - x.recentTotal)
-      .slice(0, 12);
+      .slice(0, 10);
 
     return { rows: out, windowRounds: windowSlice.map(r => r.raceName) };
   }, [rounds]);
 
   if (!rows || !rows.length) {
     return (
-      <Panel title="Form" accent="Guide" num="06">
+      <Panel title="Form" accent="Guide" num="04">
         <Msg>{isLoading ? 'Loading race-by-race results…' : 'No race data yet.'}</Msg>
       </Panel>
     );
@@ -87,7 +87,7 @@ export default function FormGuide() {
   const n = rows[0].recent.length;
 
   return (
-    <Panel title="Form" accent="Guide" num="06" meta={`Last ${n} ${n === 1 ? 'round' : 'rounds'}`}>
+    <Panel title="Form" accent="Guide" num="04" meta={`Last ${n} ${n === 1 ? 'round' : 'rounds'}`}>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em', marginBottom: 6, lineHeight: 1.5 }}>
         Momentum, not totals. Points per round across the last {n}, against each driver's own season average —
         who's arriving at the back end of the year in form.
@@ -149,7 +149,7 @@ export default function FormGuide() {
       </div>
 
       <div style={{ marginTop: 14, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.04em', lineHeight: 1.5 }}>
-        Bars are points per round · right column is recent average against season average · top 12 by recent points
+        Bars are points per round · right column is recent average against season average · top 10 by recent points
       </div>
     </Panel>
   );

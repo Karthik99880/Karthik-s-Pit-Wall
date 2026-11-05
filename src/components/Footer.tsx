@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { setHuntStage } from '@/lib/hunt';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -6,14 +7,14 @@ export default function Footer() {
   const [showClueModal, setShowClueModal] = useState(false);
 
   const handleClassifiedClick = () => {
-    localStorage.setItem('pitwall_hunt_stage', '1');
-    window.dispatchEvent(new Event('pitwall-stage-update'));
+    // Restart the hunt from clue 1 (never mind any earlier progress).
+    setHuntStage(1);
     setShowClueModal(true);
   };
 
   return (
     <footer style={{
-      maxWidth: 1440, margin: '0 auto', padding: '48px 36px 36px',
+      maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 36px',
       position: 'relative',
     }}>
       {showClueModal && (
@@ -74,10 +75,10 @@ export default function Footer() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>
-              Mercedes <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>Pit Wall</em>
+              Pit Wall <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>F1</em>
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 4 }}>
-              Personal F1 {year} Dashboard · Mercedes AMG Edition
+              Personal F1 {year} Dashboard · Mercedes Fan Edition
             </div>
           </div>
 
@@ -107,12 +108,20 @@ export default function Footer() {
 
         <div style={{ marginTop: 20, paddingTop: 20, borderTop: '1px solid var(--rule-light)', display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Silver Arrows · Race hard · {year}
+            Race hard · {year}
           </span>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
-            Mercedes-AMG Petronas · 2026 Edition
+            Fan Edition · {year}
           </span>
         </div>
+
+        <p style={{ marginTop: 14, fontFamily: 'var(--font-mono)', fontSize: 9, lineHeight: 1.6, color: 'var(--ink-3)', letterSpacing: '0.04em', maxWidth: 760 }}>
+          Unofficial fan project, made for fun and not for profit. Not affiliated with,
+          endorsed by or connected to Formula 1, the FIA, Mercedes-Benz, the Mercedes-AMG
+          PETRONAS F1 Team or any other team. F1, FORMULA 1 and related marks, and all team
+          names and logos, are trademarks of their respective owners. Data from the
+          community Jolpica/Ergast and OpenF1 APIs.
+        </p>
       </div>
 
       {riddleOpen && <RiddleGate onClose={() => setRiddleOpen(false)} />}

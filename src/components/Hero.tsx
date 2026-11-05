@@ -13,7 +13,7 @@ export default function Hero() {
   return (
     <div style={{
       background: 'var(--paper)',
-      padding: '52px 36px 28px',
+      padding: '52px clamp(16px, 4vw, 36px) 28px',
       maxWidth: 1440,
       margin: '0 auto',
       position: 'relative',
@@ -35,11 +35,11 @@ export default function Hero() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, animation: 'fadeUpSlow 1s ease both 0.2s' }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink)', animation: 'checkerFadeIn 0.9s cubic-bezier(.2,.8,.2,1) both 0.5s' }}>
           <CheckerFlag />
-          MERCEDES PETRONAS AMG · F1 {new Date().getFullYear()}
+          UNOFFICIAL FAN DASHBOARD · F1 {new Date().getFullYear()}
         </div>
         <div style={{ textAlign: 'right', animation: 'fadeUpSlow 1s ease both 0.7s' }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink-2)', marginBottom: 4 }}>
-            Silver Arrows · 2026 Edition
+            Mercedes Fan Edition · 2026
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
             {dateStr}
@@ -52,12 +52,12 @@ export default function Hero() {
         <h1 style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink)' }}>
           <span style={{ display: 'block', fontSize: 'clamp(56px, 9vw, 126px)', lineHeight: 1.1, overflow: 'hidden', paddingBottom: '0.05em' }}>
             <span style={{ display: 'inline-block', animation: 'maskRevealUp 1.1s cubic-bezier(.2,.9,.25,1) both 0.9s' }}>
-              MERCEDES
+              PIT WALL
             </span>
           </span>
           <span style={{ display: 'block', fontSize: 'clamp(56px, 9vw, 126px)', fontStyle: 'italic', color: 'var(--mercedes)', lineHeight: 1.1, overflow: 'hidden', marginTop: '-0.05em', paddingBottom: '0.05em' }}>
             <span style={{ display: 'inline-block', animation: 'maskRevealUp 1.1s cubic-bezier(.2,.9,.25,1) both 1.4s' }}>
-              Pit Wall
+              F1
             </span>
           </span>
         </h1>
@@ -77,7 +77,7 @@ export default function Hero() {
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
         animation: 'fadeUpSlow 1s ease both 2.8s',
       }}>
-        <span>Live Data · Auto-Refreshing · Mercedes AMG Petronas Fan Hub</span>
+        <span>Live Data · Auto-Refreshing · Unofficial Fan Hub</span>
         <LiveBadge />
       </div>
     </div>

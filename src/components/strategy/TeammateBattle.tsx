@@ -20,7 +20,8 @@ interface TeamH2H {
 }
 
 
-const gridVal = (g: string) => { const n = Number(g); return n === 0 ? 99 : n; };
+// Grid 0 = pit-lane start: treat as starting from the back of that round's field.
+const gridVal = (g: string, field: number) => { const n = Number(g); return n === 0 ? field : n; };
 
 export default function TeammateBattle() {
   const { data: drivers }      = useDriverStandings();
@@ -51,10 +52,12 @@ export default function TeammateBattle() {
         const find = (id: string): RaceResult | undefined => round.results.find(r => r.Driver.driverId === id);
         const ra = find(da.Driver.driverId);
         const rb = find(db.Driver.driverId);
-        if (!ra || !rb) continue;
+        // Only rounds where both raced for this team (drivers can switch mid-season).
+        if (!ra || !rb || ra.Constructor.constructorId !== cid || rb.Constructor.constructorId !== cid) continue;
         counted++;
         if (Number(ra.position) < Number(rb.position)) raceA++; else raceB++;
-        const ga = gridVal(ra.grid), gb = gridVal(rb.grid);
+        const field = round.results.length;
+        const ga = gridVal(ra.grid, field), gb = gridVal(rb.grid, field);
         if (ga < gb) qualiA++; else qualiB++;
         gridDeltaSum += ga - gb;
       }
@@ -74,11 +77,11 @@ export default function TeammateBattle() {
   }, [drivers, constructors, rounds]);
 
   if (!teams.length) {
-    return <Panel title="Teammate" accent="Head-to-Head" num="02"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No teammate data yet.'}</Msg></Panel>;
+    return <Panel title="Teammate" accent="Head-to-Head" num="01"><Msg>{isLoading ? 'Loading race-by-race results…' : 'No teammate data yet.'}</Msg></Panel>;
   }
 
   return (
-    <Panel title="Teammate" accent="Head-to-Head" num="02" meta="Same car · true baseline">
+    <Panel title="Teammate" accent="Head-to-Head" num="01" meta="Same car · true baseline">
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(330px, 100%), 1fr))', gap: 16 }}>
         {teams.map(t => <TeamCard key={t.id} t={t} />)}
       </div>

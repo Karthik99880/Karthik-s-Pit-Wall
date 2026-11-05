@@ -89,14 +89,14 @@ export default function PitLaneLeaderboard() {
 
   if (nothing) {
     return (
-      <Panel title="Pit Lane &" accent="Fastest Laps" num="09">
+      <Panel title="Pit Lane &" accent="Fastest Laps" num="05">
         <Msg>{loading ? 'Loading pit stop and lap data…' : 'No pit stop data published for this season yet.'}</Msg>
       </Panel>
     );
   }
 
   return (
-    <Panel title="Pit Lane &" accent="Fastest Laps" num="09" meta={stops.length ? `${stops.length} stops logged` : undefined}>
+    <Panel title="Pit Lane &" accent="Fastest Laps" num="05" meta={stops.length ? `${stops.length} stops logged` : undefined}>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', letterSpacing: '0.04em', marginBottom: 18, lineHeight: 1.5 }}>
         Pit lane time measured from entry to exit — not the stationary time quoted in the DHL award, so the numbers run around 20 s rather than 2 s.
         Compared like-for-like it still shows who loses least on a stop. Team figures are medians, so red-flag stoppages don't distort them.

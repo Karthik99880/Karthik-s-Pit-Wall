@@ -1,12 +1,28 @@
 {
-  "name": "Mercedes Pit Wall",
+  "name": "Pit Wall F1",
   "short_name": "Pit Wall",
-  "description": "Live F1 2026 standings, calendar and race-day timing dashboard.",
+  "description": "Unofficial fan-made F1 2026 standings, calendar and strategy dashboard.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
   "theme_color": "#27F4D2",
   "icons": [
-    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
   ]
 }

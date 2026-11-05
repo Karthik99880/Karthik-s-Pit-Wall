@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useRaceStints, useLastRaceResults, usePredictiveStints } from '@/hooks/useF1Data';
+import { useEffect, useState } from 'react';
+import { useRaceStints, useLastRaceResults, usePredictiveStints, useLatestRaceSession } from '@/hooks/useF1Data';
 import type { StintRow } from '@/hooks/useF1Data';
 import type { TyreCompound } from '@/lib/openF1Api';
 import Panel from './Panel';
@@ -37,7 +37,8 @@ function StintTooltip({ data }: { data: TooltipData }) {
   return (
     <div style={{
       position: 'fixed',
-      left: x + 14,
+      // keep it on screen on narrow phones
+      left: Math.max(8, Math.min(x + 14, window.innerWidth - 200)),
       top: y - 10,
       zIndex: 9999,
       background: 'var(--carbon)',
@@ -192,7 +193,7 @@ function LapAxis({ totalLaps }: { totalLaps: number }) {
   const step  = totalLaps <= 30 ? 5 : totalLaps <= 60 ? 10 : 15;
   for (let l = step; l <= totalLaps; l += step) ticks.push(l);
   return (
-    <div style={{ display: 'flex', position: 'relative', height: 16, marginLeft: 48 }}>
+    <div style={{ display: 'flex', position: 'relative', height: 16, marginLeft: 48, marginRight: 26 }}>
       {ticks.map(t => (
         <div key={t} style={{
           position: 'absolute',
@@ -211,28 +212,40 @@ function LapAxis({ totalLaps }: { totalLaps: number }) {
 
 
 export default function TyreStrategy() {
-  const { data: stintsData, isLoading, isError } = useRaceStints();
+  const { data: stintsData, isPending, isError } = useRaceStints();
+  const { data: session, isPending: sessionPending } = useLatestRaceSession();
   const { data: predictiveData } = usePredictiveStints();
   const { data: lastRace } = useLastRaceResults();
   const [tooltip, setTooltip] = useState<TooltipData | null>(null);
 
+  // Touch screens never fire mouseleave, so close the tooltip on scroll.
+  useEffect(() => {
+    if (!tooltip) return;
+    const close = () => setTooltip(null);
+    window.addEventListener('scroll', close, { passive: true });
+    return () => window.removeEventListener('scroll', close);
+  }, [tooltip]);
+
   
   const finishOrder: number[] = (lastRace?.results ?? []).map(r => {
-    const num = r.Driver.permanentNumber ? Number(r.Driver.permanentNumber) : null;
+    // OpenF1 keys by the number raced (the champion runs #1), not the permanent one.
+    const raw = r.number ?? r.Driver.permanentNumber;
+    const num = raw ? Number(raw) : null;
     return num;
   }).filter((n): n is number => n !== null);
 
-  if (isLoading) {
+  // A disabled query (waiting on the session lookup) is 'pending', not 'loading'.
+  if (sessionPending || (!!session && isPending && !isError)) {
     return (
-      <Panel title="Tyre" accent="Strategy" num="04" meta="Loading…">
+      <Panel title="Tyre" accent="Strategy" num="03" meta="Loading…">
         <Msg>Fetching stint data from OpenF1…</Msg>
       </Panel>
     );
   }
 
-  if (isError || !stintsData) {
+  if (isError || !stintsData || stintsData.byDriver.size === 0) {
     return (
-      <Panel title="Tyre" accent="Strategy" num="04">
+      <Panel title="Tyre" accent="Strategy" num="03">
         <Msg>No stint data available — OpenF1 may not have the latest race yet.</Msg>
       </Panel>
     );
@@ -260,7 +273,7 @@ export default function TyreStrategy() {
     <Panel
       title="Tyre"
       accent="Strategy"
-      num="04"
+      num="03"
       meta={raceName}
     >
       {tooltip && <StintTooltip data={tooltip} />}

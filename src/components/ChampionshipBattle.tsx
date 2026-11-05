@@ -1,7 +1,6 @@
 import { useDriverStandings, useConstructorStandings, useRaceSchedule } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
-import { POINTS } from '@/lib/constants';
 
 
 export default function ChampionshipBattle() {
@@ -11,23 +10,24 @@ export default function ChampionshipBattle() {
 
   const now = Date.now();
   const allRaces   = races ?? [];
-  const remaining  = allRaces.filter(r => f1Date(r.date, r.time).getTime() > now).length;
+  // A race stays "in play" until ~3h after lights out (results land later).
+  const left       = allRaces.filter(r => f1Date(r.date, r.time).getTime() + 3 * 3600_000 > now);
+  const remaining  = left.length;
   const totalRaces = allRaces.length;
 
-  
-  
-  
-  const maxDriverRemaining = remaining * (POINTS.RACE_WIN + POINTS.RACE_FASTEST_LAP);
-  const maxCtorRemaining   = remaining * (POINTS.RACE_WIN + POINTS.RACE_FASTEST_LAP) * 2;
+  // 2026 rules: 25 for a win, no fastest-lap point, 8 for a Sprint win.
+  // A team's best weekend is a 1-2: 25+18 in the race, 8+7 in the Sprint.
+  const maxDriverRemaining = left.reduce((t, r) => t + 25 + (r.Sprint ? 8 : 0), 0);
+  const maxCtorRemaining   = left.reduce((t, r) => t + 43 + (r.Sprint ? 15 : 0), 0);
 
   const dLead = leadGap(drivers?.map(d => Number(d.points)) ?? []);
   const cLead = leadGap(constructors?.map(c => Number(c.points)) ?? []);
 
-  if (!drivers?.length && !constructors?.length) return null;
+  if (!races || (!drivers?.length && !constructors?.length)) return null;
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px 36px 0', animation: 'fadeUpSlow 1s ease both 3.4s' }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px clamp(16px, 4vw, 36px) 0', animation: 'fadeUpSlow 1s ease both 3.4s' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
           Title <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Fight</em>
         </h2>
@@ -36,7 +36,7 @@ export default function ChampionshipBattle() {
         </span>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: 18 }}>
         <BattleCard
           kind="Drivers"
           leaderName={drivers?.[0] ? `${drivers[0].Driver.givenName[0]}. ${drivers[0].Driver.familyName}` : '—'}
@@ -78,7 +78,8 @@ function BattleCard({
   leadPts: number; leaderPts: number; maxRemaining: number;
 }) {
   
-  const clinched   = maxRemaining > 0 && leadPts > maxRemaining;
+  // With nothing left to race, any lead is a title.
+  const clinched   = maxRemaining > 0 ? leadPts > maxRemaining : leadPts > 0;
   const magicNumber = Math.max(0, maxRemaining - leadPts + 1); 
   
   const safety = maxRemaining > 0 ? Math.min(100, (leadPts / maxRemaining) * 100) : 100;

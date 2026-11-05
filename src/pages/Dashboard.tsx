@@ -1,5 +1,6 @@
 import Ticker from '@/components/Ticker';
 import Hero from '@/components/Hero';
+import ChampionBanner from '@/components/ChampionBanner';
 import NextRace from '@/components/NextRace';
 import CircuitGuide from '@/components/CircuitGuide';
 import RaceWeather from '@/components/RaceWeather';
@@ -11,7 +12,8 @@ import Standings from '@/components/Standings';
 import Footer from '@/components/Footer';
 import SilverArrowLoader from '@/components/SilverArrowLoader';
 import SectionNav from '@/components/SectionNav';
-import LiveTicker from '@/components/LiveTicker';
+// Live race-day timing strip is switched off along with the Race Day page.
+// import LiveTicker from '@/components/LiveTicker';
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 
 const SECTIONS = [
@@ -32,7 +34,7 @@ function Section({ id, children }: { id: string; children: React.ReactNode }) {
 
 export default function Dashboard() {
   useDocumentMeta(
-    'Mercedes Pit Wall — F1 2026 Live Standings, Calendar & Championship Tracker',
+    "Pit Wall F1 — F1 2026 Live Standings, Calendar & Championship Tracker",
     'Live F1 2026 driver and constructor standings, next race countdown, circuit guide, weekend weather forecast, full season calendar, and championship points progression.',
   );
 
@@ -41,8 +43,9 @@ export default function Dashboard() {
       <SilverArrowLoader />
       <Ticker />
       <Hero />
+      <ChampionBanner />
       <SectionNav sections={SECTIONS} />
-      <LiveTicker />
+      {/* <LiveTicker /> */}
       <Section id="dash-race"><NextRace /></Section>
       <Section id="dash-circuit"><CircuitGuide /></Section>
       <Section id="dash-weather"><RaceWeather /></Section>

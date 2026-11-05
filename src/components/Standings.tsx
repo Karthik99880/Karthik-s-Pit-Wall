@@ -1,10 +1,11 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Search, X } from 'lucide-react';
-import { useDriverStandings, useConstructorStandings, useLastRaceResults } from '@/hooks/useF1Data';
+import { useDriverStandings, useConstructorStandings, useLastRaceResults, useLatestQualifying } from '@/hooks/useF1Data';
 import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
-import type { DriverStanding, ConstructorStanding } from '@/lib/f1Types';
+import type { DriverStanding, ConstructorStanding, QualifyingResult } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
 
 
 type HoveredDriver = { driver: DriverStanding; rect: DOMRect };
@@ -15,21 +16,28 @@ export default function Standings() {
   const { data: drivers, isLoading: dLoad } = useDriverStandings();
   const { data: constructors, isLoading: cLoad } = useConstructorStandings();
   const { data: lastRace, isLoading: rLoad } = useLastRaceResults();
+  const { data: quali } = useLatestQualifying();
+  const [resultsView, setResultsView] = useState<number | null>(null);
+  const qualiIsNewer = !!quali && Number(quali.race.round) > Number(lastRace?.race?.round ?? 0);
+  const showQuali = !!quali && (resultsView === null ? qualiIsNewer : resultsView === 1);
+  const resultsRace = showQuali ? quali.race : lastRace?.race;
 
   const [hovD, setHovD] = useState<HoveredDriver | null>(null);
   const [hovC, setHovC] = useState<HoveredCtor | null>(null);
   const [query, setQuery] = useState('');
   const [modalDriver, setModalDriver] = useState<DriverStanding | null>(null);
   const isMobile = useIsMobile();
+  // Hover cards need a real mouse: touch tablets fire mouseenter on tap and
+  // the card then sticks on screen.
+  const canHover = !isMobile && typeof window !== 'undefined'
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const [tab, setTab] = useState(0); 
 
   useEffect(() => {
     if (query.trim().toLowerCase() === 'llessur') {
-      const stage = localStorage.getItem('pitwall_hunt_stage');
-      if (stage === '7') {
-        localStorage.setItem('pitwall_hunt_stage', '8');
+      if (readHuntStage() === 7) {
+        setHuntStage(8);
         setQuery('');
-        window.dispatchEvent(new Event('pitwall-stage-update'));
         window.dispatchEvent(new CustomEvent('trigger-easter-egg'));
       }
     }
@@ -57,32 +65,16 @@ export default function Standings() {
   const clearHov = useCallback(() => { setHovD(null); setHovC(null); }, []);
 
   const [showClue3Modal, setShowClue3Modal] = useState(false);
-  const [showDeniedCtorModal, setShowDeniedCtorModal] = useState(false);
   const [showClue7Modal, setShowClue7Modal] = useState(false);
-  const [showDeniedTagModal, setShowDeniedTagModal] = useState(false);
 
   const handleCtorClick = (isFav: boolean) => {
     if (!isFav) return;
-    const stage = localStorage.getItem('pitwall_hunt_stage');
-    if (stage && Number(stage) >= 2) {
-      localStorage.setItem('pitwall_hunt_stage', '3');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue3Modal(true);
-    } else {
-      setShowDeniedCtorModal(true);
-    }
+    if (advanceHunt(2, 4)) setShowClue3Modal(true);
   };
 
   const handleTagClick = (num: string) => {
     if (num !== '44') return;
-    const stage = localStorage.getItem('pitwall_hunt_stage');
-    if (stage && Number(stage) >= 6) {
-      localStorage.setItem('pitwall_hunt_stage', '7');
-      window.dispatchEvent(new Event('pitwall-stage-update'));
-      setShowClue7Modal(true);
-    } else {
-      setShowDeniedTagModal(true);
-    }
+    if (advanceHunt(6, 7)) setShowClue7Modal(true);
   };
 
   return (
@@ -109,7 +101,7 @@ export default function Standings() {
               📁 ARCHIVE ENCRYPTION: LEVEL 3
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Enter the Strategy Room and pull up the Champion Projection Panel. Scan the data matrix predicting the final hierarchy. Do not select the leader, nor the runner-up chasing the crown. Click the designation for the final step on the championship's theoretical podium."
+              "Enter the Strategy Room, where overtaking defines raw craft. Seek the index of passes. Find the driver who has carved his way forward the most positions this season and click their code."
             </p>
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
               <button
@@ -141,59 +133,6 @@ export default function Standings() {
         </div>
       )}
 
-      {showDeniedCtorModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedCtorModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {showClue7Modal && (
         <div style={{
@@ -249,62 +188,9 @@ export default function Standings() {
         </div>
       )}
 
-      {showDeniedTagModal && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 100000,
-          background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(8px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          padding: 24,
-        }}>
-          <div style={{
-            background: 'var(--carbon)',
-            border: '2px solid #ff4a4a',
-            boxShadow: '0 20px 50px rgba(255,74,74,0.15)',
-            maxWidth: 460, width: '100%',
-            color: '#fff',
-            fontFamily: 'var(--font-mono)',
-            padding: 28,
-            position: 'relative',
-            animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
-          }}>
-            <div style={{ fontSize: 13, color: '#ff4a4a', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(255,74,74,0.2)', paddingBottom: 8 }}>
-              ⚠️ DECRYPTION ERROR
-            </div>
-            <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
-              "Access Denied. Follow the clues in order starting from the footer classified archive."
-            </p>
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 20 }}>
-              <button
-                onClick={() => setShowDeniedTagModal(false)}
-                style={{
-                  background: 'none',
-                  border: '1px solid #ff4a4a',
-                  color: '#ff4a4a',
-                  padding: '6px 16px',
-                  fontSize: 10,
-                  letterSpacing: '0.12em',
-                  textTransform: 'uppercase',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#ff4a4a';
-                  e.currentTarget.style.color = '#000';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'none';
-                  e.currentTarget.style.color = '#ff4a4a';
-                }}
-              >
-                CLOSE
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {isMobile && (
-        <SegmentedControl tabs={['Drivers', 'Constructors', 'Last Race']} active={tab} onChange={setTab} />
+        <SegmentedControl tabs={['Drivers', 'Constructors', 'Results']} active={tab} onChange={setTab} />
       )}
       <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.1fr 1fr 1fr', border: '2px solid var(--ink)', background: 'var(--paper)' }}>
 
@@ -316,7 +202,7 @@ export default function Standings() {
           >
             {dLoad ? <Skeleton /> : filteredDrivers.length === 0 ? (
               <div style={{ padding: '28px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>
-                No drivers match “{query}”.
+                {q ? `No drivers match “${query}”.` : 'No standings available yet.'}
               </div>
             ) : filteredDrivers.map((d, i) => {
               const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
@@ -360,10 +246,15 @@ export default function Standings() {
         {}
         {(!isMobile || tab === 2) && (
           <ColWrap
-            title={lastRace?.race?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
-            subtitle="Podium Results" num="03"
+            title={resultsRace?.raceName?.replace('Grand Prix', '').trim() ?? 'Last Race'}
+            subtitle={showQuali ? 'Qualifying · Full Order' : 'Podium Results'} num="03"
+            headerExtra={quali && (
+              <div style={{ marginTop: 12, marginBottom: -12 }}>
+                <SegmentedControl tabs={['Race', 'Qualifying']} active={showQuali ? 1 : 0} onChange={setResultsView} />
+              </div>
+            )}
           >
-            {rLoad ? <Skeleton /> : !lastRace?.race ? (
+            {rLoad ? <Skeleton /> : showQuali ? <QualifyingList results={quali.results} /> : !lastRace?.race ? (
               <div style={{ padding: '32px 24px', fontFamily: 'var(--font-mono)', fontSize: 12, color: 'var(--ink-3)' }}>No results yet</div>
             ) : (
               <>
@@ -441,8 +332,8 @@ export default function Standings() {
       {}
 
       {}
-      {!isMobile && hovD && <DriverCard data={hovD} />}
-      {!isMobile && hovC && <CtorCard data={hovC} />}
+      {canHover && !modalDriver && hovD && <DriverCard data={hovD} />}
+      {canHover && !modalDriver && hovC && <CtorCard data={hovC} />}
 
       {modalDriver && <DriverModal d={modalDriver} sheet={isMobile} onClose={() => setModalDriver(null)} />}
     </div>
@@ -603,6 +494,38 @@ function BigStat({ label, value, accent }: { label: string; value: string; accen
 }
 
 
+function QualifyingList({ results }: { results: QualifyingResult[] }) {
+  return (
+    <div style={{ padding: '10px 24px 14px' }}>
+      {results.map((r, i) => {
+        const isFav = isFavoriteTeam(r.Constructor.constructorId);
+        const session = r.Q3 ? 'Q3' : r.Q2 ? 'Q2' : r.Q1 ? 'Q1' : '';
+        return (
+          <div key={r.Driver.driverId} style={{
+            display: 'flex', alignItems: 'center', gap: 6, padding: '6px 0',
+            borderBottom: '1px solid var(--rule-light)',
+            background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
+            animation: `rowSlide 0.5s ease both ${i * 0.03}s`,
+          }}>
+            {/* Numbered by row: the API can repeat a position. */}
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{i + 1}</span>
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: getTeamColor(r.Constructor.constructorId), flexShrink: 0 }} />
+            <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {r.Driver.givenName[0]}. {r.Driver.familyName}
+              {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
+            </span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.1em' }}>{session}</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink)', fontWeight: 600, width: 56, textAlign: 'right' }}>
+              {r.Q3 || r.Q2 || r.Q1 || 'No time'}
+            </span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+
 function ColWrap({ title, subtitle, num, children, headerExtra }: { title: string; subtitle: string; num: string; children: React.ReactNode; headerExtra?: React.ReactNode }) {
   return (
     <div style={{ borderRight: '1px solid var(--rule-light)', display: 'flex', flexDirection: 'column' }}>
@@ -628,14 +551,12 @@ function DriverRow({ d, color, isFav, team, delay, onEnter, onLeave, onClick, on
   const ref = useRef<HTMLDivElement>(null);
   const pos = Number(d.position);
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);
@@ -707,14 +628,12 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
   const ref = useRef<HTMLDivElement>(null);
   const bar = maxPts > 0 ? Math.max(4, (Number(c.points) / maxPts) * 100) : 4;
   const [stage, setStage] = useState(() => {
-    const s = localStorage.getItem('pitwall_hunt_stage');
-    return s ? Number(s) : 0;
+    return readHuntStage();
   });
 
   useEffect(() => {
     const onUpdate = () => {
-      const s = localStorage.getItem('pitwall_hunt_stage');
-      setStage(s ? Number(s) : 0);
+      setStage(readHuntStage());
     };
     window.addEventListener('pitwall-stage-update', onUpdate);
     return () => window.removeEventListener('pitwall-stage-update', onUpdate);

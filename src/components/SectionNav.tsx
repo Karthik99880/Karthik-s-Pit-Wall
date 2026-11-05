@@ -28,7 +28,7 @@ export default function SectionNav({ sections }: { sections: SectionItem[] }) {
 
   return (
     <nav style={{ position: 'sticky', top: 0, zIndex: 40, background: 'var(--paper)', borderBottom: '1px solid var(--rule-light)' }}>
-      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 36px', display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none' }}>
+      <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 clamp(16px, 4vw, 36px)', display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none' }}>
         {sections.map(s => {
           const on = active === s.id;
           return (

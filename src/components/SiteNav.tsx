@@ -1,7 +1,11 @@
 import { Link, useRoute } from 'wouter';
-import { Gauge, FlaskConical, Radio } from 'lucide-react';
-import { useLiveRaceWindow } from '@/hooks/useLiveRace';
+import { Gauge, FlaskConical } from 'lucide-react';
+// Race Day is switched off for now. To bring it back, restore these imports,
+// the LiveDot helper below, the liveRace hook call and the nav item.
+// import { Radio } from 'lucide-react';
+// import { useLiveRaceWindow } from '@/hooks/useLiveRace';
 
+/*
 function LiveDot() {
   return (
     <span style={{
@@ -11,18 +15,19 @@ function LiveDot() {
     }} />
   );
 }
+*/
 
 export default function SiteNav() {
-  const liveRace = useLiveRaceWindow();
+  // const liveRace = useLiveRaceWindow();
   return (
     <nav style={{
       background: 'var(--carbon)', borderBottom: '1px solid rgba(255,255,255,0.08)',
-      display: 'flex', alignItems: 'center', gap: 4, padding: '0 36px', height: 40,
+      display: 'flex', alignItems: 'center', gap: 4, padding: '0 clamp(16px, 4vw, 36px)', height: 40,
       position: 'relative', zIndex: 50,
     }}>
       <NavItem to="/" label="Pit Wall" icon={<Gauge size={13} />} exact />
       <NavItem to="/strategy" label="Strategy Room" icon={<FlaskConical size={13} />} />
-      <NavItem to="/raceday" label="Race Day" icon={<Radio size={13} />} badge={liveRace ? <LiveDot /> : undefined} />
+      {/* <NavItem to="/raceday" label="Race Day" icon={<Radio size={13} />} badge={liveRace ? <LiveDot /> : undefined} /> */}
     </nav>
   );
 }

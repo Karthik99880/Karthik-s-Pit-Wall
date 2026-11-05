@@ -38,6 +38,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
 
   
   useEffect(() => {
+    if (!shouldRender) return; // don't tick forever once the loader is gone
     const interval = setInterval(() => {
       setTelemetry((prev) => {
         
@@ -66,15 +67,16 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
     }, 150);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [shouldRender]);
 
   
   useEffect(() => {
+    if (!shouldRender) return;
     const lapInterval = setInterval(() => {
       setTelemetry((prev) => ({ ...prev, lap: prev.lap + 1 }));
     }, 4000);
     return () => clearInterval(lapInterval);
-  }, []);
+  }, [shouldRender]);
 
   if (!shouldRender) return null;
 
@@ -203,7 +205,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
         alignItems: 'center',
         gap: 6,
       }}>
-        <span>Karthik's Pit Wall</span>
+        <span>Pit Wall F1</span>
         <span style={{ fontSize: 9, color: 'var(--mercedes)', letterSpacing: '0.18em', opacity: 0.8 }}>
           {loop ? 'Streaming live session telemetry...' : 'Initializing Silver Arrow telemetry...'}
         </span>

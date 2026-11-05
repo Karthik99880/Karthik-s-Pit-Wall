@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { setHuntStage } from '@/lib/hunt';
 
 
 export default function EasterEgg() {
@@ -11,8 +12,7 @@ export default function EasterEgg() {
   }, []);
 
   const handleClose = () => {
-    localStorage.removeItem('pitwall_hunt_stage');
-    window.dispatchEvent(new Event('pitwall-stage-update'));
+    setHuntStage(null);
     setOpen(false);
   };
 
