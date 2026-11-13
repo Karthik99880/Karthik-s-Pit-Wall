@@ -36,4 +36,6 @@ export const POINTS = {
 
 export const FAVOURITE_TEAM = 'mercedes';
 
-export const SEASON_YEAR = new Date().getFullYear();
+// ponytail: assumes no race before March; replace with an API lookup if the calendar ever starts earlier.
+const today = new Date();
+export const SEASON_YEAR = today.getFullYear() - (today.getMonth() < 2 ? 1 : 0);

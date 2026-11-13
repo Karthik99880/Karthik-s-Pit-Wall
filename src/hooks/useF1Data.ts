@@ -82,7 +82,8 @@ export function useNextRace() {
 
 
 export function useLatestQualifying() {
-  const { data: next, isPending } = useNextRace();
+  const { data: upcoming, isPending } = useNextRace();
+  const next = upcoming?.season === String(YEAR) ? upcoming : null;
   return useQuery({
     queryKey: ['f1', 'qualifying', YEAR, next?.round ?? 'last'],
     enabled: !isPending,

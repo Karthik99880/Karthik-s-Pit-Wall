@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { INTRO_SECONDS, introPending } from '@/lib/intro';
 import { EASE_OUT, SPRING_SOFT } from '@/lib/motion';
+import { SEASON_YEAR } from '@/lib/constants';
 
 const TITLE = 'PIT WALL';
 
@@ -47,7 +48,7 @@ export default function Hero() {
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 28, animation: `fadeUpSlow 0.8s ease both ${start}s` }}>
         <div style={{ display: 'inline-flex', alignItems: 'center', gap: 18, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 600, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'var(--ink)', animation: 'checkerFadeIn 0.9s cubic-bezier(.2,.8,.2,1) both 0.5s' }}>
           <CheckerFlag />
-          UNOFFICIAL FAN DASHBOARD · F1 {new Date().getFullYear()}
+          UNOFFICIAL FAN DASHBOARD · F1 {SEASON_YEAR}
         </div>
         <div style={{ textAlign: 'right', animation: `fadeUpSlow 0.8s ease both ${start + 0.15}s` }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink-2)', marginBottom: 4 }}>

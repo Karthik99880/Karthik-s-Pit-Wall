@@ -42,7 +42,7 @@ export default function NextRace() {
                   letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--mercedes)',
                   padding: '7px 13px', border: '1.5px solid var(--mercedes)',
                   background: 'rgba(39,244,210,0.08)',
-                }}>RD {race.round} · {new Date().getFullYear()}</span>
+                }}>RD {race.round} · {race.season}</span>
                 <span style={{ fontSize: 32, display: 'inline-block', animation: 'flagWave 2.8s ease-in-out infinite' }}>{flag}</span>
                 {raceIsLive && (
                   <span style={{
@@ -103,7 +103,7 @@ export default function NextRace() {
                       fontFamily: 'var(--font-mono)', fontSize: 'clamp(32px, 4vw, 46px)',
                       fontWeight: 700, color: raceIsLive ? 'var(--mercedes)' : '#fff',
                       lineHeight: 1, letterSpacing: '-0.03em', fontVariantNumeric: 'tabular-nums',
-                      animation: `numCountUp 0.8s ease both ${3.8 + i * 0.15}s`,
+                      animation: `numCountUp 0.8s ease both ${i * 0.15}s`,
                     }}>
                       {c.val !== undefined ? fmt(c.val) : '--'}
                     </div>
@@ -124,7 +124,7 @@ export default function NextRace() {
 }
 
 function Wrapper({ children }: { children: React.ReactNode }) {
-  return <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 clamp(16px, 4vw, 36px)', animation: 'fadeUpSlow 1.1s ease both 3.2s' }}>{children}</div>;
+  return <div style={{ maxWidth: 1440, margin: '0 auto', padding: '0 clamp(16px, 4vw, 36px)' }}>{children}</div>;
 }
 function Msg({ children, warn }: { children: React.ReactNode; warn?: boolean }) {
   return <div style={{ fontFamily: 'var(--font-mono)', fontSize: 12, letterSpacing: '0.15em', textTransform: 'uppercase', color: warn ? 'rgba(255,181,168,0.8)' : 'rgba(255,255,255,0.4)' }}>{children}</div>;

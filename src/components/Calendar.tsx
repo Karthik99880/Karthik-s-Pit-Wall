@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRaceSchedule } from '@/hooks/useF1Data';
 import { getFlag } from '@/lib/f1Types';
 import { f1Date } from '@/lib/dateUtils';
@@ -10,6 +10,7 @@ export default function Calendar() {
   const { data: races, isLoading } = useRaceSchedule();
   const now = Date.now();
   const [showClue2Modal, setShowClue2Modal] = useState(false);
+  const strip = useRef<HTMLDivElement>(null);
   const [stage, setStage] = useState(() => {
     return readHuntStage();
   });
@@ -30,6 +31,14 @@ export default function Calendar() {
     return { ...r, done, next };
   });
 
+  const nextRound = enriched.find(r => r.next)?.round;
+  useEffect(() => {
+    const el = strip.current;
+    if (!el) return;
+    const card = (el.querySelector('[data-next]') ?? el.lastElementChild) as HTMLElement | null;
+    if (card) el.scrollLeft = Math.max(0, card.offsetLeft - el.offsetLeft - card.offsetWidth);
+  }, [isLoading, nextRound]);
+
   const handleRaceClick = (country: string) => {
     const lower = country.toLowerCase();
     if (lower.includes('uk') || lower.includes('britain') || lower.includes('kingdom')) {
@@ -38,7 +47,7 @@ export default function Calendar() {
   };
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 0', animation: 'fadeUpSlow 1s ease both 3.5s' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '48px clamp(16px, 4vw, 36px) 0' }}>
       {showClue2Modal && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 100000,
@@ -108,14 +117,14 @@ export default function Calendar() {
           <div style={{
             height: '100%', background: 'var(--racing)',
             width: enriched.length ? `${(enriched.filter(r => r.done).length / enriched.length) * 100}%` : '0%',
-            transformOrigin: 'left', animation: 'barGrowSlow 1.6s cubic-bezier(.3,.9,.3,1) both 4.2s', transition: 'width 0.8s ease',
+            transformOrigin: 'left', animation: 'barGrowSlow 1.6s cubic-bezier(.3,.9,.3,1) both 0.2s', transition: 'width 0.8s ease',
           }} />
         </div>
 
         {isLoading ? (
           <Skeleton />
         ) : (
-          <div style={{ display: 'grid', gridAutoFlow: 'column', gridAutoColumns: 'minmax(130px, 1fr)', overflowX: 'auto', scrollbarWidth: 'thin' }}>
+          <div ref={strip} style={{ display: 'grid', gridAutoFlow: 'column', gridAutoColumns: 'minmax(130px, 1fr)', overflowX: 'auto', scrollbarWidth: 'thin' }}>
             {enriched.map((race, i) => {
               const flag    = getFlag(race.Circuit.Location.country);
               const fmtDate = f1Date(race.date, race.time).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
@@ -123,6 +132,7 @@ export default function Calendar() {
               return (
                 <div
                   key={race.round}
+                  data-next={race.next || undefined}
                   onClick={() => handleRaceClick(race.Circuit.Location.country)}
                   style={{
                     padding: '20px 16px 18px',

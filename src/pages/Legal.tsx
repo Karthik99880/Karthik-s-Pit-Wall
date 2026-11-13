@@ -80,6 +80,17 @@ export default function Legal() {
             </div>
           </section>
         ))}
+        <section style={{ marginBottom: 28, maxWidth: 760 }}>
+          <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)', marginBottom: 12 }}>
+            Contact
+          </h2>
+          <div style={{ borderTop: '2px solid var(--ink)', paddingTop: 14 }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--ink-2)', lineHeight: 1.65, margin: '0 0 10px' }}>
+              For issues with this site, email{' '}
+              <a href="mailto:karthik@shutbox.im" style={{ color: 'var(--ink)', textDecoration: 'underline', textUnderlineOffset: 3 }}>karthik@shutbox.im</a>.
+            </p>
+          </div>
+        </section>
       </div>
 
       <Footer />

@@ -29,7 +29,7 @@ export default function ChampionshipBattle() {
   if (!races || (!drivers?.length && !constructors?.length)) return null;
 
   return (
-    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px clamp(16px, 4vw, 36px) 0', animation: 'fadeUpSlow 1s ease both 3.4s' }}>
+    <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
           Title <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Fight</em>
