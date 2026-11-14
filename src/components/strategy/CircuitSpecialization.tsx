@@ -135,7 +135,7 @@ export default function CircuitSpecialization() {
       )}
 
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 16 }}>
+      <div className="swipe-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))', gap: 16 }}>
         {byCategory.map(({ cat, races: n, perf }) => {
           const meta = CATEGORY_META[cat];
           const isStreet = cat === 'STREET';

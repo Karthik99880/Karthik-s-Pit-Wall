@@ -1,3 +1,4 @@
+import { getFanTeam } from '@/lib/fanTeam';
 import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useConstructorStandings, useDriverStandings, useLastRaceResults } from '@/hooks/useF1Data';
@@ -88,7 +89,7 @@ export default function TeamPicker({ onPick }: { onPick: (constructorId: string)
   const { data: teams, isPending } = useConstructorStandings();
   const { data: drivers } = useDriverStandings();
   const { data: last } = useLastRaceResults();
-  const [activeId, setActiveId] = useState<string>();
+  const [activeId, setActiveId] = useState<string | undefined>(() => getFanTeam() ?? undefined);
   const reduce = useReducedMotion();
 
   const team = teams?.find(t => t.Constructor.constructorId === activeId) ?? teams?.[0];
@@ -209,6 +210,11 @@ export default function TeamPicker({ onPick }: { onPick: (constructorId: string)
 export function TeamRush({ team, onCovered, onDone }: { team: string; onCovered: () => void; onDone: () => void }) {
   const color = getTeamColor(team);
   const [leaving, setLeaving] = useState(false);
+  useEffect(() => {
+    const covered = setTimeout(() => { onCovered(); setLeaving(true); }, 750);
+    const done = setTimeout(onDone, 1800);
+    return () => { clearTimeout(covered); clearTimeout(done); };
+  }, [onCovered, onDone]);
 
   return (
     <div aria-hidden style={{ position: 'fixed', inset: 0, zIndex: 950, overflow: 'hidden', pointerEvents: 'none' }}>
@@ -216,7 +222,6 @@ export function TeamRush({ team, onCovered, onDone }: { team: string; onCovered:
         initial={{ clipPath: 'inset(0% 100% 0% 0%)' }}
         animate={{ clipPath: leaving ? 'inset(0% 0% 0% 100%)' : 'inset(0% 0% 0% 0%)' }}
         transition={{ duration: 0.7, delay: leaving ? 0.25 : 0, ease: [0.65, 0, 0.35, 1] }}
-        onAnimationComplete={() => { if (leaving) onDone(); else { onCovered(); setLeaving(true); } }}
         style={{ position: 'absolute', inset: 0, background: '#0a0a0a', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         {[18, 31, 67, 82].map((top, i) => (

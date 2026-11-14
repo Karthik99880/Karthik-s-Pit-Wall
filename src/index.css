@@ -237,3 +237,9 @@ html { overflow-x: clip; }
     transition-duration: 0.01ms !important;
   }
 }
+
+@media (max-width: 640px) {
+  .swipe-row { display: flex !important; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;
+    margin: 0 -16px; padding: 0 16px 6px; scroll-padding: 0 16px; }
+  .swipe-row > * { flex: 0 0 86%; scroll-snap-align: start; }
+}

@@ -65,9 +65,10 @@ export default function App() {
   const [rush, setRush] = useState<string | null>(null);
   const reduce = useReducedMotion();
   const closePicker = useCallback(() => setPicking(false), []);
+  const endRush = useCallback(() => setRush(null), []);
   const pick = (id: string) => {
     setFanTeam(id);
-    if (reduce) setPicking(false); else setRush(id);
+    if (reduce || document.hidden) setPicking(false); else setRush(id);
   };
 
   useEffect(() => {
@@ -114,7 +115,7 @@ export default function App() {
           </main>
           <Suspense fallback={null}>
             {picking && <TeamPicker onPick={pick} />}
-            {rush && <TeamRush team={rush} onCovered={closePicker} onDone={() => setRush(null)} />}
+            {rush && <TeamRush team={rush} onCovered={closePicker} onDone={endRush} />}
           </Suspense>
           {!picking && <ThemeToggle />}
           <EasterEgg />
