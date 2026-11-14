@@ -153,7 +153,7 @@ export default function TitleSimulator() {
               const maxTotal = projected[0].total || 1;
               return (
                 <div key={p.id} style={{ display: 'grid', gridTemplateColumns: '26px 54px 1fr 64px', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: i < projected.length - 1 ? '1px solid rgba(255,255,255,0.07)' : 'none' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: lead ? 'var(--mercedes)' : 'rgba(255,255,255,0.35)' }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: lead ? 'var(--mercedes)' : 'rgba(255,255,255,0.62)' }}>
                     {i + 1}
                   </span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 800, color: lead ? '#fff' : 'rgba(255,255,255,0.75)', letterSpacing: '0.04em' }}>

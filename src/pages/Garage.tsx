@@ -1,9 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { motion, useReducedMotion } from 'motion/react';
-import { lazy, Suspense } from 'react';
 import Footer from '@/components/Footer';
 
-const CarTeardown = lazy(() => import('@/components/CarTeardown'));
+// Car teardown is parked for now: restore the lazy import of '@/components/CarTeardown' and render it below the boards.
 import { useDocumentMeta } from '@/hooks/useDocumentMeta';
 import { useConstructorStandings, useDriverStandings, useLastRaceResults } from '@/hooks/useF1Data';
 import { getCarPhoto, getDriverPortrait, getFanTeamId, getFanTeamName, getTeamColor, teamDrivers, type DriverStanding } from '@/lib/f1Types';
@@ -186,12 +185,11 @@ export default function Garage() {
         </Board>
       </section>
 
-      <Suspense fallback={null}><CarTeardown /></Suspense>
 
       <section className="gr-news">
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 16 }}>
           <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-            The <em style={{ color: 'var(--mercedes)', fontWeight: 700 }}>Newsstand</em>
+            The <em style={{ color: 'var(--mercedes-ink)', fontWeight: 700 }}>Newsstand</em>
           </h2>
           <span className="gr-mono" style={{ color: 'var(--ink-3)' }}>
             {news.mine.length ? `${news.mine.length} on ${name} first, then the paddock` : `Nothing on ${name} right now · latest from the paddock`} · via Motorsport.com

@@ -156,7 +156,7 @@ export default function Reliability() {
 
             <span style={{
               fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 800, textAlign: 'right',
-              color: t.fav ? 'var(--mercedes)' : 'var(--ink)',
+              color: t.fav ? 'var(--mercedes-ink)' : 'var(--ink)',
             }}>
               {t.rate.toFixed(0)}%
             </span>

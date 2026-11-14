@@ -108,7 +108,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
         <span style={{ fontFamily: 'var(--font-serif)', fontSize: 18, fontWeight: 700 }}>{t.name}{t.fav && <span style={{ color: 'var(--mercedes)', marginLeft: 6 }}>★</span>}</span>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em' }}>{t.rounds} ROUNDS</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.12em' }}>{t.rounds} ROUNDS</span>
       </div>
 
       <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
@@ -124,7 +124,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
           </ResponsiveContainer>
           <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 17, fontWeight: 800, color: t.color }}>{sharePct}%</span>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 7, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.4)' }}>SHARE</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 7, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.62)' }}>SHARE</span>
           </div>
         </div>
 
@@ -133,7 +133,7 @@ function TeamCard({ t }: { t: TeamH2H }) {
           <H2HRow label="Quali" a={t.qualiA} b={t.qualiB} color={t.color} />
           <H2HRow label="Race"  a={t.raceA}  b={t.raceB}  color={t.color} />
           <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8, paddingTop: 8, borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>Avg grid Δ</span>
+            <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>Avg grid Δ</span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, color: t.avgGridDelta <= 0 ? t.color : '#fff' }}>{deltaTxt} pos</span>
           </div>
         </div>
@@ -157,10 +157,10 @@ function H2HRow({ label, a, b, color }: { label: string; a: number; b: number; c
   return (
     <div style={{ marginBottom: 8 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{label} H2H</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>{label} H2H</span>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700 }}>
           <span style={{ color }}>{a}</span>
-          <span style={{ color: 'rgba(255,255,255,0.3)' }}> – </span>
+          <span style={{ color: 'rgba(255,255,255,0.62)' }}> – </span>
           <span style={{ color: 'rgba(255,255,255,0.7)' }}>{b}</span>
         </span>
       </div>

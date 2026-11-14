@@ -65,7 +65,7 @@ function StintTooltip({ data }: { data: TooltipData }) {
 function TipRow({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 16, padding: '2px 0' }}>
-      <span style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{label}</span>
+      <span style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>{label}</span>
       <span style={{ fontSize: 11, fontWeight: 600, color: '#fff', maxWidth: 130, textAlign: 'right' }}>{value}</span>
     </div>
   );
@@ -121,7 +121,7 @@ function DriverStintRow({
         fontFamily: 'var(--font-mono)',
         fontSize: 11,
         fontWeight: 700,
-        color: isMercedes ? 'var(--mercedes)' : 'var(--ink)',
+        color: isMercedes ? 'var(--mercedes-ink)' : 'var(--ink)',
         flexShrink: 0,
         letterSpacing: '0.04em',
       }}>
@@ -292,24 +292,24 @@ export default function TyreStrategy() {
           gap: 16,
           boxShadow: 'inset 0 4px 20px rgba(0,0,0,0.2)'
         }}>
-          <div style={{ gridColumn: '1 / -1', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 700, marginBottom: -4 }}>
+          <div style={{ gridColumn: '1 / -1', fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', fontWeight: 700, marginBottom: -4 }}>
             Predictive Model (Last {predictiveData.racesAnalyzed} Races)
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>Avg Pit Stops</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 6 }}>Avg Pit Stops</div>
             <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: '#fff' }}>
               {predictiveData.avgPitStops.toFixed(1)}
             </div>
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>Likely Start</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 6 }}>Likely Start</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: COMPOUND_COLOR[predictiveData.likelyStart] }}>
               <span style={{ width: 12, height: 12, borderRadius: '50%', background: COMPOUND_COLOR[predictiveData.likelyStart] }} />
               {predictiveData.likelyStart}
             </div>
           </div>
           <div>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 6 }}>Most Common Combo</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 6 }}>Most Common Combo</div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 16, fontWeight: 800, color: '#fff', marginTop: 4 }}>
               {predictiveData.likelyCombo}
             </div>

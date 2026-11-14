@@ -65,7 +65,7 @@ export default function SectionNav({ sections }: { sections: SectionItem[] }) {
                 transition: 'color 0.2s',
               }}
             >
-              <span style={{ color: on ? 'var(--mercedes)' : 'var(--ink-3)' }}>{s.n}</span>
+              <span style={{ color: on ? 'var(--mercedes-ink)' : 'var(--ink-3)' }}>{s.n}</span>
               {s.label}
               {on && (
                 <motion.span

@@ -27,14 +27,14 @@ export default function LiveTicker() {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 800, letterSpacing: '0.24em', textTransform: 'uppercase', color: '#ff6b6b' }}>Live</span>
             <span style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 700, marginLeft: 6 }}>{raceName}</span>
           </div>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>
             {demo ? 'Demo Data' : 'OpenF1 · ~30s delay'}
           </span>
         </div>
 
         {/* Standings strip — horizontal scroll of position chips */}
         {!ticker || ticker.rows.length === 0 ? (
-          <div style={{ padding: '18px', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.08em' }}>
+          <div style={{ padding: '18px', fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.08em' }}>
             Waiting for the live feed…
           </div>
         ) : (
@@ -42,11 +42,11 @@ export default function LiveTicker() {
             {ticker.rows.map(r => (
               <div key={r.code} style={{ flexShrink: 0, minWidth: 92, padding: '10px 12px', margin: '0 4px', background: 'rgba(255,255,255,0.04)', borderTop: `3px solid #${r.teamColour}` }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(255,255,255,0.45)', fontWeight: 700 }}>P{r.pos}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(255,255,255,0.62)', fontWeight: 700 }}>P{r.pos}</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 800, color: `#${r.teamColour}` }}>{r.code}</span>
                 </div>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: '#fff', marginTop: 5, fontWeight: 600 }}>{r.gap}</div>
-                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.4)', marginTop: 3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.62)', marginTop: 3, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
                   {r.pits} stop{r.pits === 1 ? '' : 's'}{r.lastPitLap ? ` · L${r.lastPitLap}` : ''}
                 </div>
               </div>

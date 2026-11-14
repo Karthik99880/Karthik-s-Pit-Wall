@@ -41,7 +41,7 @@ export default function StrategyRoom() {
 
         <h1 style={{ fontFamily: 'var(--font-serif)', fontWeight: 800, lineHeight: 0.95, letterSpacing: '-0.03em', color: 'var(--ink)', animation: 'fadeUpSlow 0.9s ease both 0.1s' }}>
           <span style={{ display: 'block', fontSize: 'clamp(44px, 7vw, 92px)' }}>The Strategy</span>
-          <span style={{ display: 'block', fontSize: 'clamp(44px, 7vw, 92px)', fontStyle: 'italic', color: 'var(--mercedes)' }}>Room</span>
+          <span style={{ display: 'block', fontSize: 'clamp(44px, 7vw, 92px)', fontStyle: 'italic', color: 'var(--mercedes-ink)' }}>Room</span>
         </h1>
 
         <p style={{ fontFamily: 'var(--font-sans)', fontSize: 15, color: 'var(--ink-2)', maxWidth: 620, marginTop: 18, lineHeight: 1.6, animation: 'fadeUpSlow 1s ease both 0.3s' }}>

@@ -77,7 +77,7 @@ export default function SessionTracker({ race }: { race: Race }) {
             const dt     = f1Date(s.date, s.time);
             const dayStr = dt.toLocaleDateString('en-GB', { weekday: 'short', month: 'short', day: 'numeric' });
             const tStr   = dt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
-            const accent = s.isRace ? 'var(--mercedes)' : s.isSprint ? 'var(--mercedes)' : 'var(--ink-2)';
+            const accent = s.isRace ? 'var(--mercedes-ink)' : s.isSprint ? 'var(--mercedes-ink)' : 'var(--ink-2)';
 
             return (
               <div key={s.key} style={{
@@ -108,7 +108,7 @@ export default function SessionTracker({ race }: { race: Race }) {
                 ) : cd ? (
                   <div style={{ paddingTop: 8, borderTop: `1px solid ${isNext ? 'rgba(var(--mercedes-rgb),0.2)' : 'var(--rule-light)'}` }}>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 3 }}>In</div>
-                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: isNext ? 'var(--mercedes)' : 'var(--ink)', fontVariantNumeric: 'tabular-nums' }}>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: isNext ? 'var(--mercedes-ink)' : 'var(--ink)', fontVariantNumeric: 'tabular-nums' }}>
                       {cd.days > 0 ? `${cd.days}d ${pad(cd.hrs)}h` : cd.hrs > 0 ? `${pad(cd.hrs)}h ${pad(cd.mins)}m` : `${pad(cd.mins)}m ${pad(cd.secs)}s`}
                     </div>
                   </div>

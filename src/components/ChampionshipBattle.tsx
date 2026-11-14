@@ -32,7 +32,7 @@ export default function ChampionshipBattle() {
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Title <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Fight</em>
+          Title <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Fight</em>
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 }}>
           {remaining} of {totalRaces} races left
@@ -101,7 +101,7 @@ function BattleCard({
     }}>
       <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg, rgba(255,255,255,0.025) 0 2px, transparent 2px 18px)', pointerEvents: 'none' }} />
       <div style={{ position: 'relative' }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)', marginBottom: 14 }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.24em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 14 }}>
           {kind} Championship
         </div>
 
@@ -129,7 +129,7 @@ function BattleCard({
         </div>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)' }}>
+          <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.14em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>
             {maxRemaining} pts still in play
           </span>
           {clinched ? (

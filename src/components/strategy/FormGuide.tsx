@@ -141,7 +141,7 @@ export default function FormGuide() {
 
             <span style={{
               fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, textAlign: 'right',
-              color: r.swing > 0.05 ? 'var(--mercedes)' : r.swing < -0.05 ? '#E8002D' : 'var(--ink-3)',
+              color: r.swing > 0.05 ? 'var(--mercedes-ink)' : r.swing < -0.05 ? '#E8002D' : 'var(--ink-3)',
             }}>
               {r.swing > 0.05 ? '▲' : r.swing < -0.05 ? '▼' : '—'} {Math.abs(r.swing).toFixed(1)}
             </span>

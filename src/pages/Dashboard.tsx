@@ -1,5 +1,6 @@
 import Ticker from '@/components/Ticker';
 import Hero from '@/components/Hero';
+import TeamBand from '@/components/TeamBand';
 import ChampionBanner from '@/components/ChampionBanner';
 import NextRace from '@/components/NextRace';
 import CircuitGuide from '@/components/CircuitGuide';
@@ -49,6 +50,7 @@ export default function Dashboard() {
       {intro && <SilverArrowLoader />}
       <Ticker />
       <Hero />
+      <Reveal><TeamBand /></Reveal>
       <Reveal><ChampionBanner /></Reveal>
       <SectionNav sections={SECTIONS} />
       {/* <LiveTicker /> */}

@@ -1,6 +1,6 @@
 import { Suspense, lazy, useCallback, useEffect, useState } from "react";
 import { useReducedMotion } from "motion/react";
-import { getFanTeam, setFanTeam } from "@/lib/fanTeam";
+import { getFanTeam, legible, setFanTeam } from "@/lib/fanTeam";
 import { getFanTeamId, getTeamColor } from "@/lib/f1Types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
@@ -73,7 +73,9 @@ export default function App() {
   useEffect(() => {
     const hex = getTeamColor(getFanTeamId());
     const root = document.documentElement.style;
-    root.setProperty('--mercedes', hex);
+    root.setProperty('--mercedes', legible(hex, '#131313'));
+    root.setProperty('--accent-on-light', legible(hex, '#e8e1d2'));
+    root.setProperty('--accent-on-dark', legible(hex, '#23262a'));
     root.setProperty('--mercedes-rgb', [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(','));
   }, [picking]);
 

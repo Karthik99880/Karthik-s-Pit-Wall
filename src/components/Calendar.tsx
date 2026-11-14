@@ -104,7 +104,7 @@ export default function Calendar() {
 
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          F1 <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Season</em> Calendar
+          F1 <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Season</em> Calendar
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', fontWeight: 500 }}>
           {isLoading ? 'Loading...' : `${enriched.filter(r => r.done).length} / ${enriched.length} Races`}

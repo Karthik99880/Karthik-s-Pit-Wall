@@ -12,7 +12,7 @@ export default function Panel({
         <div style={{ display: 'flex', alignItems: 'baseline', gap: 14 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.2em', color: 'var(--ink-3)' }}>{num}</span>
           <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-            {title} <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>{accent}</em>
+            {title} <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>{accent}</em>
           </h2>
         </div>
         {meta && (

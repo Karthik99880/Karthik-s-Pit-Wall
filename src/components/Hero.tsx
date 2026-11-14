@@ -81,7 +81,7 @@ export default function Hero() {
               </span>
             ))}
           </span>
-          <span aria-hidden style={{ display: 'block', fontSize: 'clamp(56px, 9vw, 126px)', fontStyle: 'italic', color: 'var(--mercedes)', lineHeight: 1.1, overflow: 'hidden', marginTop: '-0.05em', paddingBottom: '0.05em' }}>
+          <span aria-hidden style={{ display: 'block', fontSize: 'clamp(56px, 9vw, 126px)', fontStyle: 'italic', color: 'var(--mercedes-ink)', lineHeight: 1.1, overflow: 'hidden', marginTop: '-0.05em', paddingBottom: '0.05em' }}>
             <motion.span style={{ display: 'inline-block', ...(reduced ? {} : { x: f1X }) }}>
               <motion.span
                 style={{ display: 'inline-block' }}

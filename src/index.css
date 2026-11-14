@@ -60,7 +60,7 @@
   --paper-3:    #d8d0bf;
   --ink:        #0a0a0a;
   --ink-2:      #4a4438;
-  --ink-3:      #8a8172;
+  --ink-3:      #665f52;
 
   --racing:       #E8002D;
   --racing-hot:   #FF2800;
@@ -72,6 +72,8 @@
 
   --mercedes:   #27F4D2;
   --mercedes-rgb: 39,244,210;
+  --mercedes-ink: var(--accent-on-light, #0b7767);
+  --gold-ink:   #866200;
   --ferrari:    #E8002D;
   --mclaren:    #FF8000;
   --redbull:    #3671C6;
@@ -100,6 +102,8 @@
   --ink-3:      #8a8172;
   --rule-light: #2a2d31;
   --gold:       #e6b938;
+  --gold-ink:   #e6b938;
+  --mercedes-ink: var(--accent-on-dark, #27F4D2);
 }
 .dark body { background: var(--paper); color: var(--ink); }
 

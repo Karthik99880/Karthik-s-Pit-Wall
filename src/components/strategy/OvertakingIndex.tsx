@@ -175,7 +175,7 @@ export default function OvertakingIndex() {
                     fontFamily: 'var(--font-mono)',
                     fontSize: 11,
                     fontWeight: 700,
-                    color: (isTop && stage >= 4) ? 'var(--mercedes)' : (d.fav ? 'var(--mercedes)' : 'var(--ink)'),
+                    color: (isTop && stage >= 4) ? 'var(--mercedes-ink)' : (d.fav ? 'var(--mercedes-ink)' : 'var(--ink)'),
                     cursor: (isTop && stage >= 4) ? 'pointer' : 'default',
                     textDecoration: (isTop && stage >= 4) ? 'underline' : 'none',
                   }}
@@ -223,7 +223,7 @@ function ScatterTip({ active, payload }: { active?: boolean; payload?: Array<{ p
 function Row({ label, value, color }: { label: string; value: string; color?: string }) {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', gap: 18, padding: '2px 0' }}>
-      <span style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.45)' }}>{label}</span>
+      <span style={{ fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>{label}</span>
       <span style={{ fontSize: 11, fontWeight: 700, color: color ?? '#fff' }}>{value}</span>
     </div>
   );

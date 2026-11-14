@@ -155,25 +155,25 @@ export default function CircuitSpecialization() {
                 >
                   {meta.label}
                 </span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.12em' }}>{n} {n === 1 ? 'RACE' : 'RACES'}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.12em' }}>{n} {n === 1 ? 'RACE' : 'RACES'}</span>
               </div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.4)', marginBottom: 14 }}>{meta.blurb}</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.06em', color: 'rgba(255,255,255,0.62)', marginBottom: 14 }}>{meta.blurb}</div>
 
 
               {perf.map((d, i) => (
                 <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', background: d.fav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', width: 16 }}>{i + 1}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.62)', width: 16 }}>{i + 1}</span>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
                   <span style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: d.fav ? 'var(--mercedes)' : '#fff', letterSpacing: '0.04em' }}>
                     {d.code}{d.fav && ' ★'}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>{d.races}r</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)' }}>{d.races}r</span>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 800, color: meta.color, width: 42, textAlign: 'right' }}>
                     P{d.avg.toFixed(1)}
                   </span>
                 </div>
               ))}
-              <div style={{ marginTop: 10, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+              <div style={{ marginTop: 10, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>
                 Ranked by average finish
               </div>
             </div>

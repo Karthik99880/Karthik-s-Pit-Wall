@@ -45,7 +45,7 @@ export default function ProgressionChart() {
     <Shell>
       <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap', marginBottom: 18 }}>
         {topDrivers.map(d => (
-          <span key={d.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: d.fav ? 'var(--mercedes)' : 'var(--ink-2)' }}>
+          <span key={d.id} style={{ display: 'inline-flex', alignItems: 'center', gap: 7, fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700, letterSpacing: '0.08em', color: d.fav ? 'var(--mercedes-ink)' : 'var(--ink-2)' }}>
             <span style={{ width: 14, height: 3, background: d.color, display: 'inline-block' }} />
             {d.label}{d.fav && ' ★'}
           </span>
@@ -90,7 +90,7 @@ function Shell({ children }: { children: React.ReactNode }) {
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '56px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 28, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Points <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Progression</em>
+          Points <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Progression</em>
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>Top 5 · Season</span>
       </div>

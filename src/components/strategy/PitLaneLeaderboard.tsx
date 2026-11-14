@@ -112,7 +112,7 @@ export default function PitLaneLeaderboard() {
               <Row key={`${s.driverId}-${s.round}-${s.stopNo}`} rank={i + 1} fav={!!s.meta?.fav}>
                 <Dot color={s.meta?.color ?? '#888'} />
                 <Code fav={!!s.meta?.fav}>{s.meta?.code ?? s.driverId.slice(0, 3).toUpperCase()}</Code>
-                <span style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.4)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                <span style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {s.raceName} · L{s.lap}
                 </span>
                 <Value>{s.duration.toFixed(2)}s</Value>
@@ -130,7 +130,7 @@ export default function PitLaneLeaderboard() {
                 <span style={{ flex: 1, fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, color: t.fav ? 'var(--mercedes)' : '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                   {t.name}
                 </span>
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.35)' }}>{t.n}</span>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)' }}>{t.n}</span>
                 <Value>{t.med.toFixed(2)}s</Value>
               </Row>
             ))}
@@ -175,7 +175,7 @@ function Row({ rank, fav, children }: { rank: number; fav: boolean; children: Re
       borderBottom: '1px solid rgba(255,255,255,0.07)',
       background: fav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent',
     }}>
-      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', width: 16, flexShrink: 0 }}>{rank}</span>
+      <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.62)', width: 16, flexShrink: 0 }}>{rank}</span>
       {children}
     </div>
   );

@@ -178,6 +178,8 @@ export function getTeamColor(constructorId: string): string {
   return TEAM_COLORS[constructorId.toLowerCase()] ?? '#888';
 }
 
+export const teamInk = (hex: string) => `color-mix(in oklab, ${hex} 50%, var(--ink))`;
+
 export function getTeamDisplay(constructorId: string, fallback: string): string {
   return TEAM_DISPLAY[constructorId.toLowerCase()] ?? fallback;
 }

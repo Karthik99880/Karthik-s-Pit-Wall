@@ -77,7 +77,7 @@ export default function Footer() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
           <div>
             <div style={{ fontFamily: 'var(--font-serif)', fontSize: 22, fontWeight: 700, color: 'var(--ink)' }}>
-              Pit Wall <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>F1</em>
+              Pit Wall <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)' }}>F1</em>
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 4 }}>
               Personal F1 {year} Dashboard · {getFanTeamName()} Fan Edition
@@ -257,7 +257,7 @@ function RiddleGate({ onClose }: { onClose: () => void }) {
           </div>
         )}
         {attempts > 0 && (
-          <div style={{ marginTop: 8, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.3)' }}>
+          <div style={{ marginTop: 8, fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)' }}>
             {attempts} failed {attempts === 1 ? 'attempt' : 'attempts'}
           </div>
         )}

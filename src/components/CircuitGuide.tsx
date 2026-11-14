@@ -5,7 +5,8 @@ import { getCircuitCategory, CATEGORY_META } from '@/lib/circuitTypes';
 import { jolpicaFetch, racesOf, type RaceTableResponse } from '@/lib/f1Api';
 import { getTeamColor, getFlag, isFavoriteTeam } from '@/lib/f1Types';
 import { CACHE } from '@/lib/constants';
-import { CIRCUIT_PATHS, CIRCUIT_VIEWBOX } from '@/lib/circuitPaths';
+import { CIRCUIT_PATHS } from '@/lib/circuitPaths';
+import CircuitMap from '@/components/CircuitMap';
 
 /** Past winners at this circuit, most recent first. */
 function useCircuitWinners(circuitId: string | undefined) {
@@ -65,13 +66,13 @@ export default function CircuitGuide() {
   const cat = getCircuitCategory(circuitId ?? '');
   const meta = CATEGORY_META[cat];
   const trackPath = CIRCUIT_PATHS[circuitId?.toLowerCase() ?? ''];
-  const [startX, startY] = trackPath?.slice(1).split('L')[0].split(' ') ?? [];
+  const lapSeconds = facts?.lapRecord?.time.split(':').reduce((t, v) => t * 60 + Number(v), 0);
 
   return (
     <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Circuit <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Guide</em>
+          Circuit <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Guide</em>
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {getFlag(race.Circuit.Location.country)} {race.Circuit.circuitName}
@@ -110,12 +111,7 @@ export default function CircuitGuide() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: 24 }}>
-              {trackPath && (
-                <svg viewBox={CIRCUIT_VIEWBOX} role="img" aria-label={`${race.Circuit.circuitName} track layout`} style={{ width: '100%', maxHeight: 220 }}>
-                  <path d={trackPath} fill="none" stroke="var(--ink)" strokeWidth={3} strokeLinejoin="round" />
-                  <circle cx={startX} cy={startY} r={5} fill="var(--mercedes)" stroke="var(--ink)" strokeWidth={1.5} />
-                </svg>
-              )}
+              {trackPath && <CircuitMap id={circuitId!.toLowerCase()} d={trackPath} name={race.Circuit.circuitName} lengthKm={facts.lengthKm} lapSeconds={lapSeconds} />}
 
               {/* demands */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

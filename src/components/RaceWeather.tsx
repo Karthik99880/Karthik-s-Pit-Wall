@@ -120,7 +120,7 @@ export default function RaceWeather() {
     <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Weekend <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Forecast</em>
+          Weekend <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Forecast</em>
         </h2>
         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
           {race.Circuit.Location.locality} · Open-Meteo
@@ -148,7 +148,7 @@ export default function RaceWeather() {
                     padding: '14px 14px 16px',
                   }}
                 >
-                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: r.isRace ? 'var(--mercedes)' : 'var(--ink-3)', marginBottom: 8 }}>
+                  <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', color: r.isRace ? 'var(--mercedes-ink)' : 'var(--ink-3)', marginBottom: 8 }}>
                     {r.label}
                   </div>
                   <div style={{ color: 'var(--ink-2)', lineHeight: 0, marginBottom: 8 }}><WeatherGlyph kind={w.icon} /></div>

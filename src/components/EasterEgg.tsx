@@ -55,7 +55,7 @@ export default function EasterEgg() {
       <div style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 700, fontStyle: 'italic', color: '#fff', textAlign: 'center', animation: 'fadeUpSlow 0.5s ease both 0.3s' }}>
         Osama Bin Russell and Kimi Talibantetonelli welcomes you to this page
       </div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', animation: 'fadeUpSlow 0.5s ease both 0.45s' }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', animation: 'fadeUpSlow 0.5s ease both 0.45s' }}>
         Click anywhere or press Esc
       </div>
     </div>

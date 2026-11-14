@@ -183,7 +183,7 @@ export default function Predictions() {
     <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
       <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16, flexWrap: 'wrap', gap: 10 }}>
         <h2 style={{ fontFamily: 'var(--font-serif)', fontSize: 26, fontWeight: 500, letterSpacing: '-0.015em', color: 'var(--ink)' }}>
-          Your <em style={{ fontStyle: 'italic', color: 'var(--mercedes)', fontWeight: 700 }}>Podium Call</em>
+          Your <em style={{ fontStyle: 'italic', color: 'var(--mercedes-ink)', fontWeight: 700 }}>Podium Call</em>
         </h2>
         <span style={{
           fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase',
@@ -281,7 +281,7 @@ export default function Predictions() {
                   <span style={{
                     display: 'inline-flex', alignItems: 'center', gap: 8,
                     fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
-                    letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--mercedes)',
+                    letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--mercedes-ink)',
                     border: '2px solid var(--mercedes)', background: 'rgba(var(--mercedes-rgb),0.1)',
                     padding: '10px 16px',
                   }}>
@@ -303,7 +303,7 @@ export default function Predictions() {
               )}
 
               {flash && (
-                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--mercedes)', letterSpacing: '0.06em' }}>
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--mercedes-ink)', letterSpacing: '0.06em' }}>
                   {flash}
                 </span>
               )}
@@ -318,7 +318,7 @@ export default function Predictions() {
           </div>
 
           {totals.races === 0 ? (
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)', letterSpacing: '0.04em', lineHeight: 1.6 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.04em', lineHeight: 1.6 }}>
               No graded rounds yet. Confirm a podium above and it'll be scored automatically once the race finishes.
             </div>
           ) : (
@@ -342,14 +342,14 @@ export default function Predictions() {
 
               {scored.map(s => (
                 <div key={s.round} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '7px 0', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(255,255,255,0.35)', width: 28, flexShrink: 0 }}>R{s.round}</span>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'rgba(255,255,255,0.62)', width: 28, flexShrink: 0 }}>R{s.round}</span>
                   <span style={{ flex: 1, fontFamily: 'var(--font-sans)', fontSize: 12, color: '#fff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s.name}</span>
                   <span style={{ display: 'flex', gap: 4, flexShrink: 0 }}>
                     {Array.from({ length: s.exact }).map((_, i) => <Pip key={`e${i}`} color="var(--mercedes)" title="Exact" />)}
                     {Array.from({ length: s.podium }).map((_, i) => <Pip key={`p${i}`} color="#FFC906" title="On podium" />)}
                     {Array.from({ length: Math.max(s.filled - s.exact - s.podium, 0) }).map((_, i) => <Pip key={`m${i}`} color="rgba(255,255,255,0.15)" title="Missed" />)}
                   </span>
-                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 800, color: s.points > 0 ? 'var(--mercedes)' : 'rgba(255,255,255,0.3)', width: 34, textAlign: 'right', flexShrink: 0 }}>
+                  <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 800, color: s.points > 0 ? 'var(--mercedes)' : 'rgba(255,255,255,0.62)', width: 34, textAlign: 'right', flexShrink: 0 }}>
                     {s.points}
                   </span>
                 </div>
@@ -363,7 +363,7 @@ export default function Predictions() {
                 ].map(k => (
                   <div key={k.l} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <span style={{ width: 8, height: 8, borderRadius: '50%', background: k.c }} />
-                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{k.l}</span>
+                    <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>{k.l}</span>
                   </div>
                 ))}
               </div>
@@ -378,14 +378,14 @@ export default function Predictions() {
 function Tile({ label, value, sub, accent }: { label: string; value: React.ReactNode; sub?: string; accent?: boolean }) {
   return (
     <div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 6 }}>
         {label}
       </div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 24, fontWeight: 800, lineHeight: 1, color: accent ? 'var(--mercedes)' : '#fff' }}>
         {value}
       </div>
       {sub && (
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.08em', marginTop: 5, textTransform: 'uppercase' }}>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.08em', marginTop: 5, textTransform: 'uppercase' }}>
           {sub}
         </div>
       )}

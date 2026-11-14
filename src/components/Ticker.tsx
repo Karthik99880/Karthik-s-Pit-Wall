@@ -1,3 +1,4 @@
+import { legible } from '@/lib/fanTeam';
 import { useDriverStandings, useConstructorStandings } from '@/hooks/useF1Data';
 import { getTeamColor, isFavoriteTeam } from '@/lib/f1Types';
 
@@ -11,7 +12,7 @@ export default function Ticker() {
     val: d.Driver.familyName,
     pts: `${d.points} PTS`,
     pos: `P${d.position}`,
-    color: getTeamColor(d.Constructors[0]?.constructorId ?? ''),
+    color: legible(getTeamColor(d.Constructors[0]?.constructorId ?? ''), '#0a0a0a'),
     isFav: isFavoriteTeam(d.Constructors[0]?.constructorId ?? ''),
   }));
 
@@ -21,7 +22,7 @@ export default function Ticker() {
     val: c.Constructor.name,
     pts: `${c.points} PTS`,
     pos: `P${c.position}`,
-    color: getTeamColor(c.Constructor.constructorId),
+    color: legible(getTeamColor(c.Constructor.constructorId), '#0a0a0a'),
     isFav: isFavoriteTeam(c.Constructor.constructorId),
   }));
 
@@ -30,7 +31,7 @@ export default function Ticker() {
   if (items.length === 0) {
     return (
       <div style={{ background: 'var(--carbon)', height: 44, borderBottom: '2px solid var(--mercedes)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.4)', letterSpacing: '0.2em' }}>{dPending || cPending ? 'LOADING STANDINGS...' : 'STANDINGS UNAVAILABLE RIGHT NOW'}</span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.2em' }}>{dPending || cPending ? 'LOADING STANDINGS...' : 'STANDINGS UNAVAILABLE RIGHT NOW'}</span>
       </div>
     );
   }
@@ -76,7 +77,7 @@ export default function Ticker() {
             }}>{item.label}</span>
             <span style={{ color: '#fff', fontWeight: 600 }}>{item.val}</span>
             <span style={{ color: 'var(--gold)', fontWeight: 500 }}>{item.pts}</span>
-            <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: 9 }}>·</span>
+            <span style={{ color: 'rgba(255,255,255,0.62)', fontSize: 9 }}>·</span>
           </span>
         ))}
       </div>

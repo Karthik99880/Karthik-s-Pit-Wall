@@ -7,7 +7,7 @@ import Skeleton from '@/components/Skeleton';
 import { EASE_OUT, SPRING_SNAP, SPRING_SOFT } from '@/lib/motion';
 import { Search, X } from 'lucide-react';
 import { useDriverStandings, useConstructorStandings, useLastRaceResults, useLatestQualifying } from '@/hooks/useF1Data';
-import { getTeamColor, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
+import { getTeamColor, teamInk, getTeamDisplay, isFavoriteTeam, getNationalityFlag, getDriverPhoto, getCarPhoto } from '@/lib/f1Types';
 import type { DriverStanding, ConstructorStanding, QualifyingResult } from '@/lib/f1Types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { advanceHunt, readHuntStage, setHuntStage } from '@/lib/hunt';
@@ -273,7 +273,7 @@ export default function Standings() {
                 {(lastRace.results ?? []).slice(0, 3).map((r, i) => {
                   const color = getTeamColor(r.Constructor.constructorId);
                   const isFav = isFavoriteTeam(r.Constructor.constructorId);
-                  const medals = [['P1', 'var(--gold)'], ['P2', '#a8adb5'], ['P3', '#b87333']] as const;
+                  const medals = [['P1', 'var(--gold-ink)'], ['P2', '#a8adb5'], ['P3', '#b87333']] as const;
                   return (
                     <div key={r.Driver.driverId} style={{
                       padding: '18px 24px', borderBottom: '1px solid var(--rule-light)',
@@ -286,12 +286,12 @@ export default function Standings() {
                         <div style={{ fontFamily: 'var(--font-serif)', fontSize: 17, fontWeight: 700, color: 'var(--ink)', letterSpacing: '-0.01em' }}>
                           {r.Driver.givenName[0]}. {r.Driver.familyName}
                         </div>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 3 }}>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: teamInk(color), fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', marginTop: 3 }}>
                           {getTeamDisplay(r.Constructor.constructorId, r.Constructor.name)}
                         </div>
                       </div>
                       <div style={{ textAlign: 'right' }}>
-                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</div>
+                        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--gold-ink)', fontWeight: 600 }}>+{r.points}p</div>
                         {r.Time && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'var(--ink-3)', marginTop: 2 }}>{r.Time.time}</div>}
                       </div>
                     </div>
@@ -313,9 +313,9 @@ export default function Standings() {
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{r.position}</span>
                         <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1 }}>
                           {r.Driver.givenName[0]}. {r.Driver.familyName}
-                          {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
+                          {isFav && <span style={{ color: 'var(--mercedes-ink)', marginLeft: 4, fontSize: 9 }}>★</span>}
                         </span>
-                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold)', fontWeight: 600 }}>+{r.points}p</span>
+                        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold-ink)', fontWeight: 600 }}>+{r.points}p</span>
                       </div>
                     );
                   })}
@@ -480,7 +480,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '26px 26px 18px', borderBottom: '1px solid rgba(255,255,255,0.1)', position: 'relative', minHeight: 120 }}>
           <div style={{ flex: 1 }}>
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 8 }}>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 8 }}>
               Championship · P{pos}
             </div>
             <div style={{ fontFamily: 'var(--font-serif)', fontSize: 30, fontWeight: 800, lineHeight: 1.02 }}>
@@ -489,7 +489,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
               <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color, fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{team}</span>
               <span style={{ fontSize: 18 }}>{natFlag}</span>
-              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.45)' }}>{d.Driver.nationality}</span>
+              <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.62)' }}>{d.Driver.nationality}</span>
             </div>
           </div>
           <img
@@ -516,7 +516,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
 function BigStat({ label, value, accent }: { label: string; value: string; accent?: string }) {
   return (
     <div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 6 }}>{label}</div>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 6 }}>{label}</div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: 22, fontWeight: 800, color: accent ?? '#fff', lineHeight: 1 }}>{value}</div>
     </div>
   );
@@ -541,7 +541,7 @@ function QualifyingList({ results }: { results: QualifyingResult[] }) {
             <span style={{ width: 8, height: 8, borderRadius: '50%', background: getTeamColor(r.Constructor.constructorId), flexShrink: 0 }} />
             <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--ink)', flex: 1, minWidth: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
               {r.Driver.givenName[0]}. {r.Driver.familyName}
-              {isFav && <span style={{ color: 'var(--mercedes)', marginLeft: 4, fontSize: 9 }}>★</span>}
+              {isFav && <span style={{ color: 'var(--mercedes-ink)', marginLeft: 4, fontSize: 9 }}>★</span>}
             </span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 8, color: 'var(--ink-3)', letterSpacing: '0.1em' }}>{session}</span>
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink)', fontWeight: 600, width: 56, textAlign: 'right' }}>
@@ -638,7 +638,7 @@ const DriverRow = forwardRef<HTMLDivElement, {
               </span>
             )}
           </div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color, marginTop: 2, fontWeight: 600 }}>{team}</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: teamInk(color), marginTop: 2, fontWeight: 600 }}>{team}</div>
         </div>
         <div style={{ textAlign: 'right', flexShrink: 0 }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: 'var(--ink)' }}>{pts(d.points)}</span>
@@ -765,7 +765,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
 
       <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
         <div style={{ flex: 1 }}>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 5 }}>Driver · P{pos}</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 5 }}>Driver · P{pos}</div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 19, fontWeight: 700, lineHeight: 1.1 }}>
             {d.Driver.givenName}<br />{d.Driver.familyName}
           </div>
@@ -780,7 +780,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
           />
           <div style={{ textAlign: 'right', flexShrink: 0 }}>
             {num && <div style={{ fontFamily: 'var(--font-mono)', fontSize: 26, fontWeight: 800, lineHeight: 1, color, opacity: 0.9 }}>#{num}</div>}
-            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.45)', marginTop: 3 }}>{code}</div>
+            <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, letterSpacing: '0.12em', color: 'rgba(255,255,255,0.62)', marginTop: 3 }}>{code}</div>
           </div>
         </div>
       </div>
@@ -834,25 +834,25 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
 
       <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
         <div>
-          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 5 }}>Constructor · P{c.position}</div>
+          <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 5 }}>Constructor · P{c.position}</div>
           <div style={{ fontFamily: 'var(--font-serif)', fontSize: 20, fontWeight: 700 }}>{name}</div>
         </div>
         <div style={{ width: 32, height: 32, borderRadius: '50%', background: color, border: '2px solid rgba(255,255,255,0.15)', flexShrink: 0 }} />
       </div>
 
       <div style={{ padding: '10px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.08)', position: 'relative', zIndex: 1 }}>
-        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: 8, fontWeight: 600 }}>Drivers</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 8, fontWeight: 600 }}>Drivers</div>
         {teamDrivers.length > 0 ? teamDrivers.map(td => (
           <div key={td.Driver.driverId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '5px 0', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
             <div>
               <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600 }}>{td.Driver.givenName[0]}. {td.Driver.familyName}</div>
-              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.35)', letterSpacing: '0.06em' }}>P{td.position} in drivers</div>
+              <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, color: 'rgba(255,255,255,0.62)', letterSpacing: '0.06em' }}>P{td.position} in drivers</div>
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 700, color }}>
-              {td.points}<span style={{ fontSize: 8, color: 'rgba(255,255,255,0.35)', marginLeft: 2 }}>pts</span>
+              {td.points}<span style={{ fontSize: 8, color: 'rgba(255,255,255,0.62)', marginLeft: 2 }}>pts</span>
             </div>
           </div>
-        )) : <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.35)' }}>No driver data</div>}
+        )) : <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'rgba(255,255,255,0.62)' }}>No driver data</div>}
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', padding: '12px 18px 14px', gap: 12, position: 'relative', zIndex: 1 }}>
@@ -874,7 +874,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
 function Stat2({ label, value, accent, small }: { label: string; value: string; accent?: string; small?: boolean }) {
   return (
     <div>
-      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.4)', marginBottom: 4 }}>{label}</div>
+      <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'rgba(255,255,255,0.62)', marginBottom: 4 }}>{label}</div>
       <div style={{ fontFamily: 'var(--font-mono)', fontSize: small ? 11 : 16, fontWeight: 700, color: accent ?? '#fff' }}>{value}</div>
     </div>
   );
