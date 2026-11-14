@@ -41,6 +41,31 @@ export function useConstructorStandings() {
 }
 
 
+export function useDriverPhoto(driver: { code?: string; url?: string }): string | undefined {
+  const headshots = useQuery({
+    queryKey: ['openf1', 'headshots'],
+    queryFn: async () => {
+      const drivers = await openF1Fetch<OpenF1Driver[]>('/drivers', { session_key: 'latest' });
+      return Object.fromEntries(drivers.filter(d => d.headshot_url).map(d => [d.name_acronym, d.headshot_url as string]));
+    },
+    staleTime: CACHE.SCHEDULE,
+  });
+  const headshot = driver.code ? headshots.data?.[driver.code] : undefined;
+  const title = driver.url?.split('/wiki/')[1];
+
+  const wiki = useQuery({
+    queryKey: ['wikipedia', 'portrait', title],
+    enabled: !!title && !headshot && !headshots.isPending,
+    queryFn: async (): Promise<string | null> => {
+      const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${title}`);
+      if (!res.ok) return null;
+      return (await res.json()).thumbnail?.source ?? null;
+    },
+    staleTime: Infinity,
+  });
+  return headshot ?? wiki.data ?? undefined;
+}
+
 export function useRaceSchedule() {
   return useQuery({
     queryKey: ['f1', 'schedule', YEAR],

@@ -107,7 +107,7 @@ export default function FormGuide() {
               alignItems: 'center',
               gap: isMobile ? 8 : 12,
               padding: '8px',
-              background: r.fav ? 'rgba(39,244,210,0.07)' : 'transparent',
+              background: r.fav ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
               borderBottom: '1px solid var(--rule-light)',
             }}
           >

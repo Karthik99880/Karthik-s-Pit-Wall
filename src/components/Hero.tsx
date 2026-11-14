@@ -1,3 +1,4 @@
+import { getFanTeamName } from '@/lib/f1Types';
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { INTRO_SECONDS, introPending } from '@/lib/intro';
@@ -52,7 +53,7 @@ export default function Hero() {
         </div>
         <div style={{ textAlign: 'right', animation: `fadeUpSlow 0.8s ease both ${start + 0.15}s` }}>
           <div style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 15, color: 'var(--ink-2)', marginBottom: 4 }}>
-            Mercedes Fan Edition · 2026
+            {getFanTeamName()} Fan Edition · 2026
           </div>
           <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)' }}>
             {dateStr}

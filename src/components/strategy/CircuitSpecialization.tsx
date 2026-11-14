@@ -98,7 +98,7 @@ export default function CircuitSpecialization() {
             position: 'relative',
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
-            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(var(--mercedes-rgb),0.2)', paddingBottom: 8 }}>
               ARCHIVE ENCRYPTION: LEVEL 6
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
@@ -161,7 +161,7 @@ export default function CircuitSpecialization() {
 
 
               {perf.map((d, i) => (
-                <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', background: d.fav ? 'rgba(39,244,210,0.06)' : 'transparent' }}>
+                <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid rgba(255,255,255,0.08)', background: d.fav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent' }}>
                   <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.4)', width: 16 }}>{i + 1}</span>
                   <span style={{ width: 8, height: 8, borderRadius: '50%', background: d.color, flexShrink: 0 }} />
                   <span style={{ flex: 1, fontFamily: 'var(--font-mono)', fontSize: 12, fontWeight: 700, color: d.fav ? 'var(--mercedes)' : '#fff', letterSpacing: '0.04em' }}>

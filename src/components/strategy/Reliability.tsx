@@ -116,7 +116,7 @@ export default function Reliability() {
               alignItems: 'center',
               gap: isMobile ? 8 : 12,
               padding: '9px 8px',
-              background: t.fav ? 'rgba(39,244,210,0.07)' : 'transparent',
+              background: t.fav ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
               borderBottom: '1px solid var(--rule-light)',
             }}
           >

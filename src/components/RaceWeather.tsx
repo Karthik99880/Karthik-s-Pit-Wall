@@ -144,7 +144,7 @@ export default function RaceWeather() {
                   key={r.key}
                   style={{
                     border: r.isRace ? '2px solid var(--mercedes)' : '1px solid var(--rule-light)',
-                    background: r.isRace ? 'rgba(39,244,210,0.07)' : 'transparent',
+                    background: r.isRace ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
                     padding: '14px 14px 16px',
                   }}
                 >

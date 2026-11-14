@@ -41,7 +41,7 @@ export default function NextRace() {
                   fontFamily: 'var(--font-mono)', fontSize: 11, fontWeight: 700,
                   letterSpacing: '0.22em', textTransform: 'uppercase', color: 'var(--mercedes)',
                   padding: '7px 13px', border: '1.5px solid var(--mercedes)',
-                  background: 'rgba(39,244,210,0.08)',
+                  background: 'rgba(var(--mercedes-rgb),0.08)',
                 }}>RD {race.round} · {race.season}</span>
                 <span style={{ fontSize: 32, display: 'inline-block', animation: 'flagWave 2.8s ease-in-out infinite' }}>{flag}</span>
                 {raceIsLive && (
@@ -132,7 +132,7 @@ function Msg({ children, warn }: { children: React.ReactNode; warn?: boolean }) 
 function RaceBlockShell({ children }: { children: React.ReactNode }) {
   return (
     <div style={{ background: 'var(--carbon)', color: '#fff', padding: '44px clamp(18px, 5vw, 48px) 46px', marginTop: 16, position: 'relative', overflow: 'hidden', borderTop: '5px solid var(--mercedes)' }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg, rgba(39,244,210,0.04) 0 2px, transparent 2px 16px)', pointerEvents: 'none', zIndex: 0 }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'repeating-linear-gradient(135deg, rgba(var(--mercedes-rgb),0.04) 0 2px, transparent 2px 16px)', pointerEvents: 'none', zIndex: 0 }} />
       <div style={{ position: 'relative', zIndex: 1 }}>{children}</div>
     </div>
   );

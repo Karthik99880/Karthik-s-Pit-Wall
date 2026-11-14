@@ -71,6 +71,7 @@
   --gold:         #d4a017;
 
   --mercedes:   #27F4D2;
+  --mercedes-rgb: 39,244,210;
   --ferrari:    #E8002D;
   --mclaren:    #FF8000;
   --redbull:    #3671C6;
@@ -170,8 +171,8 @@ html, body { transition: background 0.3s ease, color 0.3s ease; }
   to   { opacity:1; transform:scale(1); }
 }
 @keyframes ferrariPulse {
-  0%,100% { box-shadow: 0 0 0 0 rgba(39,244,210,0.4); }
-  50%     { box-shadow: 0 0 0 6px rgba(39,244,210,0); }
+  0%,100% { box-shadow: 0 0 0 0 rgba(var(--mercedes-rgb),0.4); }
+  50%     { box-shadow: 0 0 0 6px rgba(var(--mercedes-rgb),0); }
 }
 @keyframes yellowBlink {
   0%,100% { color: var(--mercedes); opacity: 1; }

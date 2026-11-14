@@ -1,3 +1,4 @@
+import { getFanTeamName } from '@/lib/f1Types';
 import { Link, useRoute } from 'wouter';
 import { motion } from 'motion/react';
 import { SPRING_SNAP } from '@/lib/motion';
@@ -28,7 +29,21 @@ export default function SiteNav() {
     }}>
       <NavItem to="/" label="Pit Wall" exact />
       <NavItem to="/strategy" label="Strategy Room" />
+      <NavItem to="/garage" label="My Garage" />
       {/* <NavItem to="/raceday" label="Race Day" icon={<Radio size={13} />} badge={liveRace ? <LiveDot /> : undefined} /> */}
+      <button
+        type="button"
+        onClick={() => window.dispatchEvent(new Event('pitwall:pick'))}
+        style={{
+          marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 10px',
+          background: 'none', border: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer',
+          fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 700, letterSpacing: '0.16em',
+          textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)',
+        }}
+      >
+        <span style={{ width: 8, height: 8, background: 'var(--mercedes)' }} />
+        {getFanTeamName()} · Change team
+      </button>
     </nav>
   );
 }

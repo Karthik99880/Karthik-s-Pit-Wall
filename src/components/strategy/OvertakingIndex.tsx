@@ -95,7 +95,7 @@ export default function OvertakingIndex() {
             position: 'relative',
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
-            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(var(--mercedes-rgb),0.2)', paddingBottom: 8 }}>
               ARCHIVE ENCRYPTION: LEVEL 5
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
@@ -167,7 +167,7 @@ export default function OvertakingIndex() {
             const pos = d.gained >= 0;
             const isTop = index === 0;
             return (
-              <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid var(--rule-light)', background: d.fav ? 'rgba(39,244,210,0.06)' : 'transparent' }}>
+              <div key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 0', borderBottom: '1px solid var(--rule-light)', background: d.fav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent' }}>
                 <span
                   onClick={() => (isTop && stage >= 4) && handleTopDriverClick()}
                   style={{

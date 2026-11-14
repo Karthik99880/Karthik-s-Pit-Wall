@@ -223,7 +223,7 @@ export default function Predictions() {
                       <div style={{
                         display: 'flex', alignItems: 'center', gap: 9, padding: '10px 12px', minHeight: 44,
                         border: `2px solid ${picks[i] ? 'var(--mercedes)' : 'var(--rule-light)'}`,
-                        background: picks[i] ? 'rgba(39,244,210,0.07)' : 'transparent',
+                        background: picks[i] ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
                         boxSizing: 'border-box',
                       }}>
                         {picks[i] && <span style={{ width: 8, height: 8, borderRadius: '50%', background: colorOf(picks[i]), flexShrink: 0 }} />}
@@ -282,7 +282,7 @@ export default function Predictions() {
                     display: 'inline-flex', alignItems: 'center', gap: 8,
                     fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
                     letterSpacing: '0.14em', textTransform: 'uppercase', color: 'var(--mercedes)',
-                    border: '2px solid var(--mercedes)', background: 'rgba(39,244,210,0.1)',
+                    border: '2px solid var(--mercedes)', background: 'rgba(var(--mercedes-rgb),0.1)',
                     padding: '10px 16px',
                   }}>
                     Entry confirmed

@@ -173,7 +173,7 @@ function Row({ rank, fav, children }: { rank: number; fav: boolean; children: Re
     <div style={{
       display: 'flex', alignItems: 'center', gap: 9, padding: '6px 0',
       borderBottom: '1px solid rgba(255,255,255,0.07)',
-      background: fav ? 'rgba(39,244,210,0.06)' : 'transparent',
+      background: fav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent',
     }}>
       <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.35)', width: 16, flexShrink: 0 }}>{rank}</span>
       {children}

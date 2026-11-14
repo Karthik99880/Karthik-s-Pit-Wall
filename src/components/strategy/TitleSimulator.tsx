@@ -91,7 +91,7 @@ export default function TitleSimulator() {
                     gridTemplateColumns: isMobile ? '1fr auto' : '76px 1fr 96px',
                     alignItems: 'center',
                     columnGap: 14, rowGap: isMobile ? 6 : 0, padding: '8px',
-                    background: c.fav ? 'rgba(39,244,210,0.07)' : 'transparent',
+                    background: c.fav ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
                     borderBottom: '1px solid var(--rule-light)',
                   }}
                 >

@@ -5,6 +5,7 @@ import { getCircuitCategory, CATEGORY_META } from '@/lib/circuitTypes';
 import { jolpicaFetch, racesOf, type RaceTableResponse } from '@/lib/f1Api';
 import { getTeamColor, getFlag, isFavoriteTeam } from '@/lib/f1Types';
 import { CACHE } from '@/lib/constants';
+import { CIRCUIT_PATHS, CIRCUIT_VIEWBOX } from '@/lib/circuitPaths';
 
 /** Past winners at this circuit, most recent first. */
 function useCircuitWinners(circuitId: string | undefined) {
@@ -63,6 +64,8 @@ export default function CircuitGuide() {
 
   const cat = getCircuitCategory(circuitId ?? '');
   const meta = CATEGORY_META[cat];
+  const trackPath = CIRCUIT_PATHS[circuitId?.toLowerCase() ?? ''];
+  const [startX, startY] = trackPath?.slice(1).split('L')[0].split(' ') ?? [];
 
   return (
     <section style={{ maxWidth: 1440, margin: '0 auto', padding: '30px clamp(16px, 4vw, 36px) 0' }}>
@@ -107,6 +110,13 @@ export default function CircuitGuide() {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: 24 }}>
+              {trackPath && (
+                <svg viewBox={CIRCUIT_VIEWBOX} role="img" aria-label={`${race.Circuit.circuitName} track layout`} style={{ width: '100%', maxHeight: 220 }}>
+                  <path d={trackPath} fill="none" stroke="var(--ink)" strokeWidth={3} strokeLinejoin="round" />
+                  <circle cx={startX} cy={startY} r={5} fill="var(--mercedes)" stroke="var(--ink)" strokeWidth={1.5} />
+                </svg>
+              )}
+
               {/* demands */}
               <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
                 <div style={{ fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 800, letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--ink-2)', marginBottom: 2 }}>
@@ -137,7 +147,7 @@ export default function CircuitGuide() {
                     <div key={w.season + w.round} style={{
                       display: 'flex', alignItems: 'center', gap: 10, padding: '6px 4px',
                       borderBottom: '1px solid var(--rule-light)',
-                      background: fav ? 'rgba(39,244,210,0.07)' : 'transparent',
+                      background: fav ? 'rgba(var(--mercedes-rgb),0.07)' : 'transparent',
                     }}>
                       <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700, color: 'var(--ink-3)', width: 34 }}>{w.season}</span>
                       <span style={{ width: 8, height: 8, borderRadius: '50%', background: getTeamColor(res.Constructor.constructorId), flexShrink: 0 }} />

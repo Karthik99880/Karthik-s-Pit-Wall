@@ -18,7 +18,7 @@ export default function LiveTicker() {
 
   return (
     <div style={{ maxWidth: 1440, margin: '0 auto', padding: '20px clamp(16px, 4vw, 36px) 0' }}>
-      <div style={{ background: 'var(--carbon)', color: '#fff', border: '2px solid var(--mercedes)', boxShadow: '0 0 30px rgba(39,244,210,0.18)' }}>
+      <div style={{ background: 'var(--carbon)', color: '#fff', border: '2px solid var(--mercedes)', boxShadow: '0 0 30px rgba(var(--mercedes-rgb),0.18)' }}>
 
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 18px', borderBottom: '1px solid rgba(255,255,255,0.12)' }}>

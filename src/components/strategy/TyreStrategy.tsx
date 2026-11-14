@@ -1,3 +1,4 @@
+import { getFanTeamId, getFanTeamName, getTeamColor } from '@/lib/f1Types';
 import { useEffect, useState } from 'react';
 import { useRaceStints, useLastRaceResults, usePredictiveStints, useLatestRaceSession } from '@/hooks/useF1Data';
 import type { StintRow } from '@/hooks/useF1Data';
@@ -112,7 +113,7 @@ function DriverStintRow({
       gap: 10,
       padding: '5px 0',
       borderBottom: '1px solid var(--rule-light)',
-      background: isMercedes ? 'rgba(39,244,210,0.05)' : 'transparent',
+      background: isMercedes ? 'rgba(var(--mercedes-rgb),0.05)' : 'transparent',
     }}>
       {}
       <span style={{
@@ -338,8 +339,8 @@ export default function TyreStrategy() {
       {sortedDrivers.map(dNum => {
         const stints = byDriver.get(dNum) ?? [];
         const teamColour = (stints[0]?.teamColour ?? '888888').toLowerCase();
-        const isMercedes = teamColour.includes('27f4d2')
-          || (stints[0]?.teamName ?? '').toLowerCase().includes('mercedes');
+        const isMercedes = teamColour.includes(getTeamColor(getFanTeamId()).slice(1).toLowerCase())
+          || (stints[0]?.teamName ?? '').toLowerCase().includes(getFanTeamName().toLowerCase());
         return (
           <DriverStintRow
             key={dNum}

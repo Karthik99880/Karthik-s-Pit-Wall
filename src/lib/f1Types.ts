@@ -1,3 +1,6 @@
+import { SEASON_YEAR, FAVOURITE_TEAM } from './constants';
+import { getFanTeam } from './fanTeam';
+
 export interface DriverStanding {
   position: string;
   points: string;
@@ -9,6 +12,7 @@ export interface DriverStanding {
     nationality: string;
     code?: string;
     permanentNumber?: string;
+    url?: string;
   };
   Constructors: Array<{
     constructorId: string;
@@ -184,7 +188,22 @@ export function getFlag(country: string): string {
 
 export function isFavoriteTeam(constructorId: string): boolean {
   const id = constructorId.toLowerCase();
-  return id === 'mercedes';
+  return id === getFanTeamId();
+}
+
+export function getFanTeamId(): string {
+  return getFanTeam() ?? FAVOURITE_TEAM;
+}
+
+export function getFanTeamName(): string {
+  const id = getFanTeamId();
+  return TEAM_DISPLAY[id] ?? id;
+}
+
+export function teamDrivers(standings: DriverStanding[], lastRace: RaceResult[], constructorId: string): DriverStanding[] {
+  const racing = lastRace.filter(r => r.Constructor.constructorId === constructorId).map(r => r.Driver.driverId);
+  const current = standings.filter(d => racing.includes(d.Driver.driverId));
+  return current.length ? current : standings.filter(d => d.Constructors.at(-1)?.constructorId === constructorId).slice(0, 2);
 }
 
 
@@ -223,28 +242,27 @@ export function getDriverPhoto(givenName: string, familyName: string): string {
 }
 
 
-export function getCarPhoto(constructorId: string): string {
-  
-  const carMap: Record<string, string> = {
-    mercedes:      'mercedes',
-    ferrari:       'ferrari',
-    red_bull:      'red-bull-racing',
-    mclaren:       'mclaren',
-    aston_martin:  'aston-martin',
-    alpine:        'alpine',
-    haas:          'haas-f1-team',
-    rb:            'rb',
-    racing_bulls:  'rb',
-    williams:      'williams',
-    williams_racing: 'williams',
-    'williams-racing': 'williams',
-    sauber:        'kick-sauber',
-    kick_sauber:   'kick-sauber',
-    audi:          'kick-sauber', 
-    cadillac:      'haas-f1-team', 
+const F1_MEDIA = 'https://media.formula1.com/image/upload';
+
+function teamSlug(constructorId: string): string {
+  const id = constructorId.toLowerCase();
+  const map: Record<string, string> = {
+    red_bull: 'redbullracing',
+    rb:       'racingbulls',
+    sauber:   'audi',
   };
-  const slug = carMap[constructorId.toLowerCase()] ?? constructorId.toLowerCase();
-  
-  
-  return `https://media.formula1.com/content/dam/fom-website/teams/2024/${slug}.png`;
+  return map[id] ?? id.replace(/[^a-z0-9]/g, '');
+}
+
+export function getDriverPortrait(driver: { givenName: string; familyName: string }, constructorId: string): string {
+  const three = (s: string) => s.normalize('NFD').replace(/[^a-zA-Z]/g, '').toLowerCase().slice(0, 3);
+  const slug = teamSlug(constructorId);
+  const code = `${three(driver.givenName)}${three(driver.familyName)}01`;
+  return `${F1_MEDIA}/c_lfill,w_640/q_auto/v1740000000/common/f1/${SEASON_YEAR}/${slug}/${code}/${SEASON_YEAR}${slug}${code}right.webp`;
+}
+
+export function getCarPhoto(constructorId: string): string {
+  const slug = teamSlug(constructorId);
+  // ponytail: assumes formula1.com keeps this path each season; a missing image just hides via onError
+  return `${F1_MEDIA}/c_lfill,w_800/q_auto/v1740000000/common/f1/${SEASON_YEAR}/${slug}/${SEASON_YEAR}${slug}carright.webp`;
 }

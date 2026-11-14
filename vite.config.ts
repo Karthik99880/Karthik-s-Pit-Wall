@@ -17,5 +17,8 @@ export default defineConfig({
   server: {
     port: 5173,
     host: true,
+    proxy: {
+      "/api/news": { target: "https://www.motorsport.com", changeOrigin: true, rewrite: () => "/rss/f1/news/" },
+    },
   },
 });

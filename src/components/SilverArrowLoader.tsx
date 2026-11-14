@@ -107,8 +107,8 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
           100% { width: 90%; opacity: 0; }
         }
         @keyframes textGlow {
-          0%, 100% { opacity: 0.6; text-shadow: 0 0 5px rgba(39, 244, 210, 0.2); }
-          50% { opacity: 1; text-shadow: 0 0 15px rgba(39, 244, 210, 0.7); }
+          0%, 100% { opacity: 0.6; text-shadow: 0 0 5px rgba(var(--mercedes-rgb), 0.2); }
+          50% { opacity: 1; text-shadow: 0 0 15px rgba(var(--mercedes-rgb), 0.7); }
         }
       `}</style>
 
@@ -138,7 +138,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
           justifyContent: 'center',
           alignItems: 'center',
           width: '100%',
-          filter: 'drop-shadow(0 10px 25px rgba(39, 244, 210, 0.4))',
+          filter: 'drop-shadow(0 10px 25px rgba(var(--mercedes-rgb), 0.4))',
         }}>
           <img 
             src={getCarPhoto('mercedes')} 
@@ -152,7 +152,7 @@ export default function SilverArrowLoader({ loop = false }: SilverArrowLoaderPro
       <div style={{
         marginTop: 10,
         background: 'rgba(22, 22, 26, 0.75)',
-        border: '1px solid rgba(39, 244, 210, 0.15)',
+        border: '1px solid rgba(var(--mercedes-rgb), 0.15)',
         borderRadius: 6,
         padding: '10px 24px',
         display: 'flex',

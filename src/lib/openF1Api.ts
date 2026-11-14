@@ -115,6 +115,7 @@ export interface OpenF1Driver {
   full_name: string;
   name_acronym: string;  
   team_name: string;
+  headshot_url: string | null;
   team_colour: string;   
   session_key: number;
   meeting_key: number;

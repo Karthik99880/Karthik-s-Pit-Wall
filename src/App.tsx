@@ -1,4 +1,7 @@
-import { Suspense, lazy } from "react";
+import { Suspense, lazy, useCallback, useEffect, useState } from "react";
+import { useReducedMotion } from "motion/react";
+import { getFanTeam, setFanTeam } from "@/lib/fanTeam";
+import { getFanTeamId, getTeamColor } from "@/lib/f1Types";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { Route, Switch } from "wouter";
@@ -17,6 +20,9 @@ const StrategyRoom = lazy(() => import("@/pages/StrategyRoom"));
 const Legal = lazy(() => import("@/pages/Legal"));
 // Race Day is switched off for now (re-enable here, in SiteNav and in index.html).
 // const RaceDay = lazy(() => import("@/pages/RaceDay"));
+const Garage = lazy(() => import("@/pages/Garage"));
+const TeamPicker = lazy(() => import("@/components/TeamPicker"));
+const TeamRush = lazy(() => import("@/components/TeamPicker").then(m => ({ default: m.TeamRush })));
 const NotFound = lazy(() => import("@/pages/not-found"));
 
 const queryClient = new QueryClient({
@@ -44,6 +50,7 @@ function Routes() {
           <Route path="/" component={Dashboard} />
           <Route path="/strategy" component={StrategyRoom} />
           <Route path="/legal" component={Legal} />
+          <Route path="/garage" component={Garage} />
           {/* <Route path="/raceday" component={RaceDay} /> */}
           <Route component={NotFound} />
         </Switch>
@@ -54,6 +61,28 @@ function Routes() {
 }
 
 export default function App() {
+  const [picking, setPicking] = useState(() => import.meta.env.DEV || !getFanTeam());
+  const [rush, setRush] = useState<string | null>(null);
+  const reduce = useReducedMotion();
+  const closePicker = useCallback(() => setPicking(false), []);
+  const pick = (id: string) => {
+    setFanTeam(id);
+    if (reduce) setPicking(false); else setRush(id);
+  };
+
+  useEffect(() => {
+    const hex = getTeamColor(getFanTeamId());
+    const root = document.documentElement.style;
+    root.setProperty('--mercedes', hex);
+    root.setProperty('--mercedes-rgb', [1, 3, 5].map(i => parseInt(hex.slice(i, i + 2), 16)).join(','));
+  }, [picking]);
+
+  useEffect(() => {
+    const open = () => setPicking(true);
+    window.addEventListener('pitwall:pick', open);
+    return () => window.removeEventListener('pitwall:pick', open);
+  }, []);
+
   return (
     <MotionConfig reducedMotion="user">
     <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
@@ -79,9 +108,13 @@ export default function App() {
           <SmoothScroll />
           <SiteNav />
           <main id="main-content">
-            <Routes />
+            <Routes key={String(picking)} />
           </main>
-          <ThemeToggle />
+          <Suspense fallback={null}>
+            {picking && <TeamPicker onPick={pick} />}
+            {rush && <TeamRush team={rush} onCovered={closePicker} onDone={() => setRush(null)} />}
+          </Suspense>
+          {!picking && <ThemeToggle />}
           <EasterEgg />
           <Analytics />
         </ErrorBoundary>

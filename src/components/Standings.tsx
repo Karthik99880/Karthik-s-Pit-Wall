@@ -1,3 +1,4 @@
+import { useDriverPhoto } from '@/hooks/useF1Data';
 import { useState, useRef, useCallback, useEffect, useId, forwardRef, useImperativeHandle } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
@@ -103,7 +104,7 @@ export default function Standings() {
             position: 'relative',
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
-            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(var(--mercedes-rgb),0.2)', paddingBottom: 8 }}>
               ARCHIVE ENCRYPTION: LEVEL 3
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
@@ -157,7 +158,7 @@ export default function Standings() {
             position: 'relative',
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
-            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(var(--mercedes-rgb),0.2)', paddingBottom: 8 }}>
               ARCHIVE ENCRYPTION: LEVEL 7 (FINAL)
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
@@ -306,7 +307,7 @@ export default function Standings() {
                       <div key={r.Driver.driverId} style={{
                         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                         padding: '5px 0', borderBottom: '1px solid rgba(0,0,0,0.04)',
-                        background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
+                        background: isFav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent',
                         animation: `rowSlide 0.5s ease both ${(i + 3) * 0.06}s`,
                       }}>
                         <span style={{ fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--ink-3)', width: 24 }}>P{r.position}</span>
@@ -424,6 +425,7 @@ function SegmentedControl({ tabs, active, onChange }: { tabs: string[]; active: 
 
 
 function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => void; sheet?: boolean }) {
+  const photo = useDriverPhoto(d.Driver);
   const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
   const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
   const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
@@ -467,7 +469,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
         }}
       >
         {sheet && <div style={{ width: 40, height: 4, borderRadius: 2, background: 'rgba(255,255,255,0.25)', margin: '0 auto 4px' }} />}
-        {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(39,244,210,0.10) 0%,transparent 55%)', pointerEvents: 'none' }} />}
+        {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(var(--mercedes-rgb),0.10) 0%,transparent 55%)', pointerEvents: 'none' }} />}
 
         <button
           aria-label="Close" onClick={onClose}
@@ -491,7 +493,7 @@ function DriverModal({ d, onClose, sheet }: { d: DriverStanding; onClose: () => 
             </div>
           </div>
           <img
-            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)}
+            src={photo}
             alt={`${d.Driver.givenName} ${d.Driver.familyName}`}
             style={{ width: 90, height: 90, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1.5px solid ${color}`, marginLeft: 16 }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -531,7 +533,7 @@ function QualifyingList({ results }: { results: QualifyingResult[] }) {
           <div key={r.Driver.driverId} data-row style={{
             display: 'flex', alignItems: 'center', gap: 6, padding: '6px 0',
             borderBottom: '1px solid var(--rule-light)',
-            background: isFav ? 'rgba(39,244,210,0.06)' : 'transparent',
+            background: isFav ? 'rgba(var(--mercedes-rgb),0.06)' : 'transparent',
             animation: `rowSlide 0.5s ease backwards ${i * 0.03}s`,
           }}>
             {/* Numbered by row: the API can repeat a position. */}
@@ -605,7 +607,7 @@ const DriverRow = forwardRef<HTMLDivElement, {
       style={{
         display: 'flex', alignItems: 'stretch',
         borderBottom: '1px solid var(--rule-light)',
-        background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
+        background: isFav ? 'rgba(var(--mercedes-rgb),0.08)' : 'transparent',
         animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
         outlineOffset: -1,
@@ -678,7 +680,7 @@ function CtorRow({ c, color, isFav, name, maxPts, delay, allDrivers, onEnter, on
       data-row
       style={{
         padding: '13px 24px', borderBottom: '1px solid var(--rule-light)',
-        background: isFav ? 'rgba(39,244,210,0.08)' : 'transparent',
+        background: isFav ? 'rgba(var(--mercedes-rgb),0.08)' : 'transparent',
         animation: `rowSlide 0.5s ease backwards ${delay}s`,
         outline: isFav ? '2px solid var(--mercedes)' : 'none',
         outlineOffset: -1, cursor: (isFav && stage >= 2) ? 'pointer' : 'default', transition: 'background 0.15s, transform 0.25s cubic-bezier(.16,1,.3,1)',
@@ -722,6 +724,7 @@ function cardPos(rect: DOMRect, cardW: number, cardH = 320) {
 
 
 function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
+  const photo = useDriverPhoto(d.Driver);
   const color = getTeamColor(d.Constructors[0]?.constructorId ?? '');
   const isFav = isFavoriteTeam(d.Constructors[0]?.constructorId ?? '');
   const team = getTeamDisplay(d.Constructors[0]?.constructorId ?? '', d.Constructors[0]?.name ?? '');
@@ -758,7 +761,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
         onError={(e) => { e.currentTarget.style.display = 'none'; }}
       />
 
-      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(39,244,210,0.12) 0%,transparent 55%)', zIndex: 0, pointerEvents: 'none' }} />}
+      {isFav && <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(135deg,rgba(var(--mercedes-rgb),0.12) 0%,transparent 55%)', zIndex: 0, pointerEvents: 'none' }} />}
 
       <div style={{ padding: '16px 18px 12px', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', position: 'relative', zIndex: 1 }}>
         <div style={{ flex: 1 }}>
@@ -770,7 +773,7 @@ function DriverCard({ data: { driver: d, rect } }: { data: HoveredDriver }) {
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <img
-            src={getDriverPhoto(d.Driver.givenName, d.Driver.familyName)}
+            src={photo}
             alt=""
             style={{ width: 50, height: 50, objectFit: 'contain', background: 'rgba(255,255,255,0.03)', borderRadius: '50%', border: `1px solid ${color}` }}
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
@@ -859,7 +862,7 @@ function CtorCard({ data: { ctor: c, allDrivers, rect } }: { data: HoveredCtor }
 
       {isFav && (
         <div style={{ margin: '0 18px 14px', padding: '8px 12px', background: 'rgba(10,10,10,0.6)', border: '1.5px solid var(--mercedes)', fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#fff', fontWeight: 700, position: 'relative', zIndex: 1 }}>
-          ★ Mercedes-AMG F1 Team
+          ★ Your team
         </div>
       )}
     </div>,

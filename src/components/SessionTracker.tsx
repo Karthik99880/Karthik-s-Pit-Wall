@@ -83,7 +83,7 @@ export default function SessionTracker({ race }: { race: Race }) {
               <div key={s.key} style={{
                 padding: '18px 16px 16px',
                 borderRight: i < sessions.length - 1 ? '1px solid var(--rule-light)' : 'none',
-                background: isLive ? 'var(--carbon)' : isNext ? 'rgba(39,244,210,0.05)' : isDone ? 'var(--paper-2)' : 'var(--paper)',
+                background: isLive ? 'var(--carbon)' : isNext ? 'rgba(var(--mercedes-rgb),0.05)' : isDone ? 'var(--paper-2)' : 'var(--paper)',
                 borderTop: isLive ? '3px solid var(--mercedes)' : isNext ? '3px solid var(--mercedes)' : isDone ? '3px solid var(--gold)' : '3px solid transparent',
                 minWidth: 120, transition: 'background 0.3s',
               }}>
@@ -106,7 +106,7 @@ export default function SessionTracker({ race }: { race: Race }) {
                 ) : isDone ? (
                   <div style={{ paddingTop: 8, borderTop: '1px solid var(--rule-light)', fontFamily: 'var(--font-mono)', fontSize: 10, color: 'var(--gold)', fontWeight: 600, letterSpacing: '0.1em' }}>COMPLETED</div>
                 ) : cd ? (
-                  <div style={{ paddingTop: 8, borderTop: `1px solid ${isNext ? 'rgba(39,244,210,0.2)' : 'var(--rule-light)'}` }}>
+                  <div style={{ paddingTop: 8, borderTop: `1px solid ${isNext ? 'rgba(var(--mercedes-rgb),0.2)' : 'var(--rule-light)'}` }}>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 8, letterSpacing: '0.16em', textTransform: 'uppercase', color: 'var(--ink-3)', marginBottom: 3 }}>In</div>
                     <div style={{ fontFamily: 'var(--font-mono)', fontSize: 13, fontWeight: 700, color: isNext ? 'var(--mercedes)' : 'var(--ink)', fontVariantNumeric: 'tabular-nums' }}>
                       {cd.days > 0 ? `${cd.days}d ${pad(cd.hrs)}h` : cd.hrs > 0 ? `${pad(cd.hrs)}h ${pad(cd.mins)}m` : `${pad(cd.mins)}m ${pad(cd.secs)}s`}

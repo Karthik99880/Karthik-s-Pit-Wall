@@ -1,3 +1,4 @@
+import { getFanTeamName } from '@/lib/f1Types';
 import { useState, useEffect } from 'react';
 import { Link } from 'wouter';
 import { setHuntStage } from '@/lib/hunt';
@@ -36,7 +37,7 @@ export default function Footer() {
             position: 'relative',
             animation: 'eggPop 0.4s cubic-bezier(.2,.9,.25,1.1) both',
           }}>
-            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(39,244,210,0.2)', paddingBottom: 8 }}>
+            <div style={{ fontSize: 13, color: 'var(--mercedes)', letterSpacing: '0.2em', textTransform: 'uppercase', marginBottom: 12, borderBottom: '1px solid rgba(var(--mercedes-rgb),0.2)', paddingBottom: 8 }}>
               ARCHIVE ENCRYPTION: LEVEL 1
             </div>
             <p style={{ fontSize: 12, lineHeight: 1.6, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.04em', margin: '16px 0' }}>
@@ -79,7 +80,7 @@ export default function Footer() {
               Pit Wall <em style={{ fontStyle: 'italic', color: 'var(--mercedes)' }}>F1</em>
             </div>
             <div style={{ fontFamily: 'var(--font-mono)', fontSize: 10, letterSpacing: '0.18em', textTransform: 'uppercase', color: 'var(--ink-3)', marginTop: 4 }}>
-              Personal F1 {year} Dashboard · Mercedes Fan Edition
+              Personal F1 {year} Dashboard · {getFanTeamName()} Fan Edition
             </div>
           </div>
 
