@@ -109,6 +109,8 @@
 
 
 html, body { transition: background 0.3s ease, color 0.3s ease; }
+html { overflow-x: clip; }
+@media (max-width: 560px) { .nav-team { display: none; } }
 
 @layer base {
   * { box-sizing: border-box; margin: 0; padding: 0; }

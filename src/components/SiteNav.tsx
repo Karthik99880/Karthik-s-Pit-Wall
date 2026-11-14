@@ -24,8 +24,8 @@ export default function SiteNav() {
   return (
     <nav style={{
       background: 'var(--carbon)', borderBottom: '1px solid rgba(255,255,255,0.08)',
-      display: 'flex', alignItems: 'center', gap: 4, padding: '0 clamp(16px, 4vw, 36px)', height: 40,
-      position: 'relative', zIndex: 50,
+      display: 'flex', alignItems: 'center', gap: 0, padding: '0 clamp(6px, 4vw, 36px)', height: 40,
+      position: 'relative', zIndex: 50, overflowX: 'auto', scrollbarWidth: 'none',
     }}>
       <NavItem to="/" label="Pit Wall" exact />
       <NavItem to="/strategy" label="Strategy Room" />
@@ -35,14 +35,14 @@ export default function SiteNav() {
         type="button"
         onClick={() => window.dispatchEvent(new Event('pitwall:pick'))}
         style={{
-          marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 10px',
+          marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: 8, padding: '5px 10px', whiteSpace: 'nowrap', flexShrink: 0,
           background: 'none', border: '1px solid rgba(255,255,255,0.18)', cursor: 'pointer',
           fontFamily: 'var(--font-mono)', fontSize: 9, fontWeight: 700, letterSpacing: '0.16em',
           textTransform: 'uppercase', color: 'rgba(255,255,255,0.75)',
         }}
       >
         <span style={{ width: 8, height: 8, background: 'var(--mercedes)' }} />
-        {getFanTeamName()} · Change team
+        <span className="nav-team">{getFanTeamName()} · Change </span>Team
       </button>
     </nav>
   );
@@ -56,10 +56,10 @@ function NavItem({ to, label, icon, exact, badge }: { to: string; label: string;
     <Link
       href={to}
       style={{
-        display: 'inline-flex', alignItems: 'center', gap: 7,
-        position: 'relative', padding: '0 16px', height: '100%',
+        display: 'inline-flex', alignItems: 'center', gap: 7, whiteSpace: 'nowrap', flexShrink: 0,
+        position: 'relative', padding: '0 clamp(8px, 2.4vw, 16px)', height: '100%',
         fontFamily: 'var(--font-mono)', fontSize: 10, fontWeight: 700,
-        letterSpacing: '0.18em', textTransform: 'uppercase', textDecoration: 'none',
+        letterSpacing: 'min(0.18em, 0.35vw)', textTransform: 'uppercase', textDecoration: 'none',
         color: active ? 'var(--mercedes)' : 'rgba(255,255,255,0.5)',
         transition: 'color 0.15s',
       }}

@@ -26,7 +26,8 @@ const CSS = `
 .gr-scene { position: relative; flex: 1; min-height: 360px; margin-top: 12px; }
 .gr-driver { position: absolute; bottom: 4%; height: 100%; width: auto; -webkit-mask-image: linear-gradient(#000 78%, transparent 97%); mask-image: linear-gradient(#000 78%, transparent 97%); }
 .gr-car { position: absolute; left: 50%; bottom: 3%; width: min(74%, 1080px); filter: drop-shadow(0 30px 24px rgba(0,0,0,.7)); }
-.gr-plate { position: absolute; top: 6%; }
+.gr-plates { position: relative; }
+.gr-plate { position: absolute; top: clamp(18px, 4vh, 40px); }
 .gr-boards { background: #0a0a0a; color: #f2ece0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 1px; border-top: 1px solid #23262a; }
 .gr-board { background: #0d0e10; padding: 26px clamp(20px, 3vw, 40px) 30px; }
@@ -37,8 +38,11 @@ const CSS = `
 .gr-story:hover h3 { text-decoration: underline; text-decoration-color: var(--mercedes); text-decoration-thickness: 2px; text-underline-offset: 4px; }
 .gr-lead { grid-column: 1 / -1; border-top: 2px solid var(--ink); }
 @media (max-width: 760px) {
-  .gr-driver { height: 70%; }
-  .gr-plate { top: 0; }
+  .gr-scene { min-height: 300px; }
+  .gr-driver { height: 88%; }
+  .gr-plates { display: flex; justify-content: space-between; gap: 16px; margin-top: 18px; }
+  .gr-plates .gr-plate { position: static; }
+  .gr-plates .gr-big { font-size: 34px; }
   .gr-car { width: 96%; }
   .gr-news { padding: 32px 20px 12px; }
 }
@@ -125,9 +129,11 @@ export default function Garage() {
           </h1>
         </div>
 
-        <div className="gr-scene">
+        <div className="gr-plates">
           {a && <Plate d={a} side="left" />}
           {b && <Plate d={b} side="right" />}
+        </div>
+        <div className="gr-scene">
           {pair.map((d, i) => (
             <motion.img key={d.Driver.driverId} className="gr-driver" style={i ? { right: '1%' } : { left: '1%' }}
               src={getDriverPortrait(d.Driver, id)} alt={`${d.Driver.givenName} ${d.Driver.familyName}`}

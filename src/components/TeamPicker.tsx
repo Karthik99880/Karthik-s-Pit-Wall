@@ -47,13 +47,20 @@ const CSS = `
   display: flex; justify-content: space-between; gap: 12px; transition: color .25s, border-color .25s; }
 .tp-skip:hover { color: #f2ece0; border-color: #f2ece0; }
 @media (max-width: 860px) {
-  .tp { grid-template-columns: 1fr; grid-template-rows: auto 1fr; overflow-y: auto; }
-  .tp-stage { order: -1; position: sticky; top: 0; z-index: 2; background: #0a0a0a; border-bottom: 1px solid #23262a; }
-  .tp-side { border-right: 0; }
-  .tp-row { flex-basis: 48px; }
-  .tp-center { min-height: 50vh; }
-  .tp-car { width: 88%; }
-  .tp-cta { width: 100%; justify-content: space-between; }
+  .tp { display: flex; flex-direction: column; overflow-y: auto; overscroll-behavior: contain; }
+  .tp-side { display: contents; }
+  .tp-side > .tp-mono { padding: 20px 20px 0; }
+  .tp-side > h1 { padding: 0 20px 14px; }
+  .tp-stage { order: 1; flex: none; position: sticky; top: 0; z-index: 2; background: #0a0a0a; border-bottom: 1px solid #23262a; padding: 12px 20px 14px; }
+  .tp-center { flex: none; height: 34vh; min-height: 210px; }
+  .tp-word { font-size: 64px; }
+  .tp-drivers { top: 14%; bottom: 14%; right: -6%; }
+  .tp-car { width: 94%; left: -6%; }
+  .tp-foot { gap: 12px; }
+  .tp-cta { width: 100%; justify-content: space-between; padding: 14px 18px; }
+  .tp-list { order: 2; flex: none; justify-content: flex-start; margin: 0; padding: 0 20px; }
+  .tp-row { flex: none; height: 52px; }
+  .tp-skip { order: 3; margin: 18px 20px 28px; }
 }
 `;
 
@@ -64,12 +71,12 @@ function DriverCard({ d, color, index }: { d: DriverStanding; color: string; ind
       transition={{ duration: 0.5, ease: EASE, delay: 0.12 + index * 0.07 }}
       style={{ display: 'flex', alignItems: 'center', gap: 14 }}
     >
-      <div className="tp-mono" style={{ color, fontSize: 44, fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1 }}>
+      <div className="tp-mono" style={{ color, fontSize: 'clamp(30px, 8vw, 44px)', fontWeight: 800, letterSpacing: '-0.04em', lineHeight: 1 }}>
         {d.Driver.permanentNumber ?? d.Driver.code}
       </div>
       <div>
         <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: '#c7c1b4' }}>{d.Driver.givenName}</div>
-        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 18, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
+        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 'clamp(14px, 4vw, 18px)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.02em' }}>
           {d.Driver.familyName}
         </div>
       </div>
